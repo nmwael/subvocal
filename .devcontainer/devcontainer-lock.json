@@ -1,5 +1,10 @@
 {
   "features": {
+    "ghcr.io/awf-project/devcontainer-features/flutter:1": {
+      "version": "1.0.0",
+      "resolved": "ghcr.io/awf-project/devcontainer-features/flutter@sha256:e2dba92247159cecc8efdcdafec617911b2f3dde5328dcedbd3daaeb2d99d2de",
+      "integrity": "sha256:e2dba92247159cecc8efdcdafec617911b2f3dde5328dcedbd3daaeb2d99d2de"
+    },
     "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {
       "version": "1.0.7",
       "resolved": "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai@sha256:312520e651f8438c67d6823464fffaf42449e1e05e7020ef721748a4a95fa1fb",
