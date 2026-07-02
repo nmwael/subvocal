@@ -174,7 +174,7 @@ git push
 This project runs in a devcontainer with the following setup:
 
 - **Container base**: Debian Bullseye (`mcr.microsoft.com/devcontainers/base:bullseye`)
-- **Flutter**: Installed via devcontainer feature (`ghcr.io/devcontainers/features/flutter:1`), latest stable channel
+- **Flutter**: Installed via devcontainer feature (`ghcr.io/awf-project/devcontainer-features/flutter:1`), latest stable channel
 - **Dart**: Bundled with Flutter SDK
 - **GitHub CLI (`gh`)**: Authenticated and available. Use `echo "$AI_FUN_TOKEN" | gh auth login --with-token` if re-authentication is needed. The token is a GitHub fine-grained PAT stored in the `AI_FUN_TOKEN` environment variable.
 - **Development**: Run `flutter pub get` in project root, then `flutter run` to launch on connected device/emulator
