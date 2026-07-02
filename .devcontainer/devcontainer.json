@@ -2,10 +2,7 @@
   "name": "subvocal — Flutter",
   "image": "mcr.microsoft.com/devcontainers/base:bullseye",
 
-  "features": {
-    "ghcr.io/devcontainers/features/flutter:1": {
-      "version": "latest"
-    },
+  "features": {    
     "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
