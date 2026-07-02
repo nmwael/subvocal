@@ -1,0 +1,48 @@
+# Flutter
+build/
+.idea/
+*.iml
+.gradle/
+local.properties
+*.lock
+*.tar.gz
+*.snap
+
+# Android
+android/.gradle/
+android/app/build/
+android/local.properties
+android/.idea/
+
+# iOS
+ios/.idea/
+ios/Pods/
+ios/.symlinks/
+
+# Dart
+.packages
+.pub/
+build/
+.dart_tool/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.env
+
+# Logs
+*.log
+
+# Temporary
+tmp/**

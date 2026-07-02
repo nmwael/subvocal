@@ -1,0 +1,37 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/google/gemini-2.5-flash:free",
+  "small_model": "openrouter/google/gemini-2.5-flash:free",
+  "provider": {
+    "openrouter": {
+      "options": {
+        "timeout": 120000,
+        "headerTimeout": 30000,
+        "chunkTimeout": 60000,
+        "setCacheKey": true
+      }
+    }
+  },
+  "agent": {
+    "architect": {
+      "model": "openrouter/meta-llama/llama-3.3-70b-instruct:free",
+      "temperature": 0.5,
+      "steps": 50
+    },
+    "developer": {
+      "model": "openrouter/google/gemini-2.5-flash:free",
+      "temperature": 0.2,
+      "steps": 100
+    },
+    "tester": {
+      "model": "openrouter/google/gemini-2.5-flash:free",
+      "temperature": 0.2,
+      "steps": 100
+    },
+    "security-auditor": {
+      "model": "openrouter/meta-llama/llama-3.3-70b-instruct:free",
+      "temperature": 0.3,
+      "steps": 50
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "groq/llama-3.1-8b-instant",
+  "small_model": "groq/llama-3.1-8b-instant",
+  "provider": {
+    "groq": {
+      "options": {
+        "timeout": 120000,
+        "headerTimeout": 30000,
+        "chunkTimeout": 60000,
+        "setCacheKey": true
+      }
+    }
+  },
+  "agent": {
+    "architect": {
+      "model": "groq/llama-3.3-70b-versatile",
+      "temperature": 0.5,
+      "steps": 50
+    },
+    "developer": {
+      "model": "groq/llama-3.1-8b-instant",
+      "temperature": 0.2,
+      "steps": 100
+    },
+    "tester": {
+      "model": "groq/llama-3.1-8b-instant",
+      "temperature": 0.2,
+      "steps": 100
+    },
+    "security-auditor": {
+      "model": "groq/llama-3.3-70b-versatile",
+      "temperature": 0.3,
+      "steps": 50
+    }
+  }
+}
