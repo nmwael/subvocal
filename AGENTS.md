@@ -94,6 +94,24 @@ Security reviewer. Inspects code for OWASP Top 10, injection risks, authenticati
 > ./scripts/notify.sh "Security audit done" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — audit complete" "$ISSUE_URL"
 > ```
 
+### `@ux-ui`
+Read-only reviewer. Reviews Flutter widget trees, screen layouts, navigation flows, accessibility semantics, visual consistency, and user-facing interaction patterns. Can produce UI mockups/specs using PlantUML (already in the toolchain).
+
+**Capabilities:**
+- Review widget hierarchy for accessibility (semantic labels, focus order, screen reader support)
+- Evaluate layout responsiveness and visual consistency
+- Review user flows and navigation patterns
+- Suggest improvements for onboarding, error states, loading states, and empty states
+- Ensure adherence to Material Design (or chosen design system) guidelines
+- Cannot edit files or run commands
+
+> **Notification gate**: When UX/UI review is complete, run:
+> ```bash
+> ISSUE_NUM=$(gh issue list --label enhancement --state open --json number --jq '.[0].number')
+> ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
+> ./scripts/notify.sh "UX/UI review done" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — review complete" "$ISSUE_URL"
+> ```
+
 ## Reference Books by Role
 
 All reference books sourced from https://github.com/ciembor/agent-rules-books/
@@ -103,6 +121,7 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 - **@developer**: docs/clean-code.mini.md, docs/refactoring.mini.md — code quality and refactoring
 - **@tester**: docs/clean-code.mini.md, docs/refactoring.mini.md — readable tests and safe refactoring
 - **@security-auditor**: all docs — security review benefits from understanding the full design intent
+- **@ux-ui**: all docs — UX/UI review benefits from understanding the full design intent
 
 ## Commit Rules
 
