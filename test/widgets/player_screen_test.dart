@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,19 +40,19 @@ Widget _createTestApp(Subtitle subtitle) {
 }
 
 void main() {
-  final testSubtitle = Subtitle(
+  const testSubtitle = Subtitle(
     title: 'Test Subtitle',
     entries: [
-      SubtitleEntry(
+      const SubtitleEntry(
         index: 1,
-        start: const Duration(seconds: 1),
-        end: const Duration(seconds: 4),
+        start: Duration(seconds: 1),
+        end: Duration(seconds: 4),
         text: 'Hello, world!',
       ),
-      SubtitleEntry(
+      const SubtitleEntry(
         index: 2,
-        start: const Duration(seconds: 5),
-        end: const Duration(seconds: 8),
+        start: Duration(seconds: 5),
+        end: Duration(seconds: 8),
         text: 'Second subtitle line',
       ),
     ],

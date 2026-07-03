@@ -21,7 +21,7 @@
       },
       "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
       "temperature": 0.4,
-      "steps": 100
+      "steps": 60
     },
     "developer": {
       "mode": "subagent",
@@ -32,7 +32,7 @@
       },
       "model": "nvidia/moonshotai/kimi-k2.6",
       "temperature": 0.2,
-      "steps": 100
+      "steps": 60
     },
     "tester": {
       "mode": "subagent",
@@ -85,9 +85,9 @@
       "options": {
         "apiKey": "{env:NVIDIA_API_KEY}",
         "baseURL": "https://integrate.api.nvidia.com/v1",
-        "timeout": 120000,
-        "headerTimeout": 30000,
-        "chunkTimeout": 60000,
+        "timeout": 80000,
+        "headerTimeout": 20000,
+        "chunkTimeout": 50000,
         "setCacheKey": false
       }
     }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:subvocal/data/repositories/tts_repository_impl.dart';
@@ -34,22 +32,22 @@ class _MockFlutterTts extends FlutterTts {
 
 List<SubtitleEntry> _createEntries() {
   return [
-    SubtitleEntry(
+    const SubtitleEntry(
       index: 1,
-      start: const Duration(seconds: 1),
-      end: const Duration(seconds: 4),
+      start: Duration(seconds: 1),
+      end: Duration(seconds: 4),
       text: 'Hello, world!',
     ),
-    SubtitleEntry(
+    const SubtitleEntry(
       index: 2,
-      start: const Duration(seconds: 5),
-      end: const Duration(seconds: 8),
+      start: Duration(seconds: 5),
+      end: Duration(seconds: 8),
       text: 'Second line',
     ),
-    SubtitleEntry(
+    const SubtitleEntry(
       index: 3,
-      start: const Duration(seconds: 9),
-      end: const Duration(seconds: 11),
+      start: Duration(seconds: 9),
+      end: Duration(seconds: 11),
       text: 'Third line',
     ),
   ];

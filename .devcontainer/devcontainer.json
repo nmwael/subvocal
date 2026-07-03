@@ -6,8 +6,7 @@
     "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/awf-project/devcontainer-features/flutter:1": {},
-    "ghcr.io/devcontainers/features/node:2": {},
-    "ghcr.io/NordcomInc/devcontainer-features/android-sdk:1": {}
+    "ghcr.io/devcontainers/features/node:2": {}
   },
 
   "containerEnv": {

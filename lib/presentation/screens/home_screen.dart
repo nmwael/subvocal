@@ -142,6 +142,7 @@ class HomeScreen extends ConsumerWidget {
 
     if (subtitle != null && context.mounted) {
       await ref.read(recentSubtitlesProvider.notifier).add(subtitle, path: filePath);
+      if (!context.mounted) return;
       ref.read(importedSubtitleProvider.notifier).state = subtitle;
       Navigator.of(context).push(
         MaterialPageRoute(
