@@ -1,0 +1,20 @@
+1
+00:00:01,000 --> 00:00:04,000
+Hello and welcome to Subvocal.
+
+2
+00:00:05,000 --> 00:00:08,000
+This is a test subtitle file.
+
+3
+00:00:09,000 --> 00:00:12,000
+It demonstrates SRT formatting.
+
+4
+00:00:13,000 --> 00:00:16,000
+With multiple entries and multi-line
+text content for testing.
+
+5
+00:00:17,000 --> 00:00:20,000
+The final entry in this test file.
