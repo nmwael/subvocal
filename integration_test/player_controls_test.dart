@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:subvocal/app.dart';
 import 'package:subvocal/core/utils/srt_parser.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
-import 'package:subvocal/domain/entities/subtitle_entry.dart';
-import 'package:subvocal/presentation/providers/player_provider.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
 import 'package:subvocal/presentation/widgets/playback_controls.dart';
 
