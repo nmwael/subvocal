@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.subvocal.subvocal"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

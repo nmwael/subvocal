@@ -4,14 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:subvocal/presentation/providers/recent_subtitles_provider.dart';
 import 'package:subvocal/presentation/screens/home_screen.dart';
 
-final _mockRecentProvider = StateNotifierProvider<RecentSubtitlesNotifier, List<RecentSubtitleInfo>>((ref) {
-  return RecentSubtitlesNotifier();
-});
-
 Widget _createTestApp() {
   return ProviderScope(
     overrides: [
-      recentSubtitlesProvider.overrideWithProvider(_mockRecentProvider),
+      recentSubtitlesProvider.overrideWith((ref) => RecentSubtitlesNotifier()),
     ],
     child: const MaterialApp(
       home: HomeScreen(),

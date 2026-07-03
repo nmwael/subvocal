@@ -25,26 +25,15 @@ class _MockFlutterTts extends FlutterTts {
   Future<dynamic> setPitch(double pitch) async {}
 }
 
-final _mockTtsProvider = Provider<FlutterTts>((ref) => _MockFlutterTts());
-
-final _mockRepoProvider = Provider<TtsRepositoryImpl>((ref) {
-  return TtsRepositoryImpl(ref.watch(_mockTtsProvider));
-});
-
-final _mockSequenceProvider = Provider<PlaySubtitleSequence>((ref) {
-  return PlaySubtitleSequence(ref.watch(_mockRepoProvider));
-});
-
-final _mockPlayerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
-  final sequence = ref.watch(_mockSequenceProvider);
-  final ttsRepo = ref.watch(_mockRepoProvider);
-  return PlayerNotifier(sequence, ttsRepo);
-});
-
 Widget _createTestApp(Subtitle subtitle) {
   return ProviderScope(
     overrides: [
-      playerProvider.overrideWithProvider(_mockPlayerProvider),
+      playerProvider.overrideWith((ref) {
+        final tts = _MockFlutterTts();
+        final repo = TtsRepositoryImpl(tts);
+        final sequence = PlaySubtitleSequence(repo);
+        return PlayerNotifier(sequence, repo);
+      }),
     ],
     child: MaterialApp(
       home: PlayerScreen(subtitle: subtitle),
