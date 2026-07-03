@@ -30,7 +30,13 @@ jobs:
         run: dart analyze
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --machine > test-results.json
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-test-results
+          path: test-results.json
 
       - name: Build APK
         run: flutter build apk --debug
