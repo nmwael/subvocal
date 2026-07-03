@@ -19,9 +19,9 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
+      "model": "opencode/big-pickle",
       "temperature": 0.4,
-      "steps": 100
+      "steps": 30
     },
     "developer": {
       "mode": "subagent",
@@ -30,7 +30,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "opencode/big-pickle",
       "temperature": 0.2,
       "steps": 100
     },
@@ -40,7 +40,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "opencode/big-pickle",
       "temperature": 0.2,
       "steps": 80
     },
@@ -52,7 +52,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/nvidia-nemotron-nano-9b-v2",
+      "model": "opencode/big-pickle",
       "temperature": 0.3,
       "steps": 30
     },
@@ -64,7 +64,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "opencode/big-pickle",
       "temperature": 0.4,
       "steps": 30
     }
@@ -78,17 +78,6 @@
         "headerTimeout": 30000,
         "chunkTimeout": 60000,
         "setCacheKey": true
-      }
-    },
-    "nvidia": {
-      "api": "openai",
-      "options": {
-        "apiKey": "{env:NVIDIA_API_KEY}",
-        "baseURL": "https://integrate.api.nvidia.com/v1",
-        "timeout": 120000,
-        "headerTimeout": 30000,
-        "chunkTimeout": 60000,
-        "setCacheKey": false
       }
     }
   }
