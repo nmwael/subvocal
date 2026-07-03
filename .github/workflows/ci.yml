@@ -35,6 +35,7 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v5
@@ -55,14 +56,26 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
+      - name: Cache Android emulator
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.android/avd
+            ~/.android/avd/*.avd/*.qcow2
+            /usr/local/lib/android/sdk/emulator
+          key: ${{ runner.os }}-avd-${{ hashFiles('**/pubspec.yaml') }}-${{ hashFiles('**/integration_test/**') }}
+          restore-keys: |
+            ${{ runner.os }}-avd-
+
       - name: Run integration tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 30
           target: google_apis
           arch: x86_64
-          profile: pixel_6
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          profile: pixel_2
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save
           disable-animations: true
           script: |
             flutter test integration_test/ --machine > integration-results.json
