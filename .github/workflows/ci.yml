@@ -28,7 +28,7 @@ jobs:
         run: flutter test --machine > test-results.json
 
       - name: Upload test report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-results
           path: test-results.json
@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -54,7 +54,7 @@ jobs:
           ls -la /dev/kvm
 
       - name: Cache Gradle
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.gradle/caches
@@ -62,7 +62,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
       - name: Cache Android emulator
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             ~/.android/avd
@@ -86,14 +86,14 @@ jobs:
             flutter test integration_test/ --machine > integration-results.json
 
       - name: Upload screenshots
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: integration-screenshots
           path: screenshots/
 
       - name: Upload integration test report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: integration-test-results
