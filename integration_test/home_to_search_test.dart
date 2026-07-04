@@ -19,6 +19,10 @@ void main() {
       await tester.tap(find.text('Search OpenSubtitles'));
       await tester.pumpAndSettle();
 
+      // Wait for the search screen to fully load
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
+
       expect(find.text('Search Subtitles'), findsOneWidget);
       expect(find.byIcon(Icons.search), findsWidgets);
 
@@ -30,6 +34,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.pumpAndSettle();
+
+      // Wait for the search screen to fully load
+      await tester.pump(const Duration(seconds: 2));
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextField), 'test');
@@ -44,6 +52,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.pumpAndSettle();
+
+      // Wait for the search screen to fully load
+      await tester.pump(const Duration(seconds: 2));
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextField), 'test');
