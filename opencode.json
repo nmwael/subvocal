@@ -21,7 +21,7 @@
       },
       "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
       "temperature": 0.4,
-      "steps": 100
+      "steps": 60
     },
     "developer": {
       "mode": "subagent",
@@ -32,7 +32,7 @@
       },
       "model": "nvidia/moonshotai/kimi-k2.6",
       "temperature": 0.2,
-      "steps": 100
+      "steps": 60
     },
     "tester": {
       "mode": "subagent",
@@ -54,7 +54,7 @@
       },
       "model": "nvidia/nvidia/nvidia-nemotron-nano-9b-v2",
       "temperature": 0.3,
-      "steps": 50
+      "steps": 30
     },
     "ux-ui": {
       "mode": "subagent",
@@ -66,11 +66,11 @@
       },
       "model": "nvidia/moonshotai/kimi-k2.6",
       "temperature": 0.4,
-      "steps": 50
+      "steps": 30
     }
   },
-  "model": "nvidia/nvidia/nemotron-3-ultra-550b-a55b",
-  "small_model": "nvidia/nvidia/nemotron-3-ultra-550b-a55b",
+  "model": "opencode/big-pickle",
+  "small_model": "opencode/big-pickle",
   "provider": {
     "opencode": {
       "options": {
@@ -85,7 +85,7 @@
       "options": {
         "apiKey": "{env:NVIDIA_API_KEY}",
         "baseURL": "https://integrate.api.nvidia.com/v1",
-        "timeout": 100000,
+        "timeout": 80000,
         "headerTimeout": 20000,
         "chunkTimeout": 50000,
         "setCacheKey": false
