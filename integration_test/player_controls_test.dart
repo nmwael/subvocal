@@ -7,6 +7,7 @@ import 'package:subvocal/core/utils/srt_parser.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
 import 'package:subvocal/presentation/widgets/playback_controls.dart';
+import 'package:subvocal/presentation/widgets/subtitle_display.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +67,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      expect(find.byType(SubtitleDisplay), findsOneWidget);
       await binding.takeScreenshot('player_progress');
     });
 

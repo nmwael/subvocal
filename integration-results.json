@@ -1,0 +1,110 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":3329,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":2}
+{"count":4,"time":10,"type":"allSuites"}
+Checking the license for package CMake 3.22.1 in /usr/local/lib/android/sdk/licenses
+License for package CMake 3.22.1 accepted.
+Preparing "Install CMake 3.22.1 v.3.22.1".
+"Install CMake 3.22.1 v.3.22.1" ready.
+Installing CMake 3.22.1 in /usr/local/lib/android/sdk/cmake/3.22.1
+"Install CMake 3.22.1 v.3.22.1" complete.
+"Install CMake 3.22.1 v.3.22.1" finished.
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:39081/0dhFpmecstc=/"}}]
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":262607}
+{"group":{"id":2,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":null,"column":null,"url":null},"type":"group","time":262610}
+{"test":{"id":3,"name":"(setUpAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"testStart","time":262611}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":262662}
+{"group":{"id":4,"suiteID":0,"parentID":2,"name":"Player controls","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":18,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"group","time":262663}
+{"test":{"id":5,"name":"Player controls player screen renders with subtitle content","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":262663}
+{"testID":5,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":264794}
+{"test":{"id":6,"name":"Player controls player screen shows play/pause controls","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":264795}
+{"testID":6,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":265192}
+{"test":{"id":7,"name":"Player controls player screen shows subtitle display area","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":265192}
+{"testID":7,"messageType":"print","message":"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════","type":"print","time":265638}
+{"testID":7,"messageType":"print","message":"The following TestFailure was thrown running a test:","type":"print","time":265639}
+{"testID":7,"messageType":"print","message":"Expected: exactly one matching candidate","type":"print","time":265639}
+{"testID":7,"messageType":"print","message":"  Actual: _TypeWidgetFinder:<Found 0 widgets with type \"LinearProgressIndicator\": []>","type":"print","time":265639}
+{"testID":7,"messageType":"print","message":"   Which: means none were found but one was expected","type":"print","time":265642}
+{"testID":7,"messageType":"print","message":"","type":"print","time":265642}
+{"testID":7,"messageType":"print","message":"When the exception was thrown, this was the stack:","type":"print","time":265643}
+{"testID":7,"messageType":"print","message":"#4      main.<anonymous closure>.<anonymous closure> (file:///home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart:69:7)","type":"print","time":265643}
+{"testID":7,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":265643}
+{"testID":7,"messageType":"print","message":"#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)","type":"print","time":265644}
+{"testID":7,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":265646}
+{"testID":7,"messageType":"print","message":"#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)","type":"print","time":265649}
+{"testID":7,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":265649}
+{"testID":7,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":265649}
+{"testID":7,"messageType":"print","message":"(elided one frame from package:stack_trace)","type":"print","time":265650}
+{"testID":7,"messageType":"print","message":"","type":"print","time":265650}
+{"testID":7,"messageType":"print","message":"This was caught by the test expectation on the following line:","type":"print","time":265650}
+{"testID":7,"messageType":"print","message":"  file:///home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart line 69","type":"print","time":265650}
+{"testID":7,"messageType":"print","message":"The test description was:","type":"print","time":265650}
+{"testID":7,"messageType":"print","message":"  player screen shows subtitle display area","type":"print","time":265651}
+{"testID":7,"messageType":"print","message":"════════════════════════════════════════════════════════════════════════════════════════════════════","type":"print","time":265651}
+{"testID":7,"error":"Test failed. See exception logs above.\nThe test description was: player screen shows subtitle display area","stackTrace":"","isFailure":false,"type":"error","time":265653}
+{"testID":7,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":265653}
+{"test":{"id":8,"name":"Player controls player screen app bar has stop button","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":265654}
+{"testID":8,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":266029}
+{"test":{"id":9,"name":"(tearDownAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":266030}
+{"testID":9,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":266075}
+{"suite":{"id":10,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"suite","time":266441}
+{"test":{"id":11,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart","suiteID":10,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":266442}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:44233/WdkRozJm2Jg=/"}}]
+{"testID":11,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":291345}
+{"group":{"id":12,"suiteID":10,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":291345}
+{"test":{"id":13,"name":"(setUpAll)","suiteID":10,"groupIDs":[12],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"testStart","time":291346}
+{"testID":13,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":291394}
+{"group":{"id":14,"suiteID":10,"parentID":12,"name":"Home to Player flow","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"group","time":291394}
+{"test":{"id":15,"name":"Home to Player flow shows import and search buttons on home screen","suiteID":10,"groupIDs":[12,14],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":291394}
+{"testID":15,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":293092}
+{"test":{"id":16,"name":"Home to Player flow search screen displays empty state","suiteID":10,"groupIDs":[12,14],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":293093}
+{"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":294305}
+{"test":{"id":17,"name":"Home to Player flow navigates back from search to home","suiteID":10,"groupIDs":[12,14],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":294306}
+{"testID":17,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":296670}
+{"test":{"id":18,"name":"(tearDownAll)","suiteID":10,"groupIDs":[12],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":296671}
+{"testID":18,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":296717}
+{"suite":{"id":19,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"suite","time":297111}
+{"test":{"id":20,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart","suiteID":19,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":297111}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:39677/kECwMbObKvE=/"}}]
+{"testID":20,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":320431}
+{"group":{"id":21,"suiteID":19,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":320432}
+{"test":{"id":22,"name":"(setUpAll)","suiteID":19,"groupIDs":[21],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"testStart","time":320432}
+{"testID":22,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":320482}
+{"group":{"id":23,"suiteID":19,"parentID":21,"name":"Search flow","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"group","time":320482}
+{"test":{"id":24,"name":"Search flow search screen renders with all elements","suiteID":19,"groupIDs":[21,23],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":320483}
+{"testID":24,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":323089}
+{"test":{"id":25,"name":"Search flow typing in search field shows clear button","suiteID":19,"groupIDs":[21,23],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":323090}
+{"testID":25,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":325449}
+{"test":{"id":26,"name":"Search flow clearing search field removes results","suiteID":19,"groupIDs":[21,23],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":325449}
+{"testID":26,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":327791}
+{"test":{"id":27,"name":"(tearDownAll)","suiteID":19,"groupIDs":[21],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":327791}
+{"testID":27,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":327837}
+{"suite":{"id":28,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"suite","time":328289}
+{"test":{"id":29,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/app_test.dart","suiteID":28,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":328289}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:33279/bgaWDOqGdb8=/"}}]
+{"testID":29,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":352189}
+{"group":{"id":30,"suiteID":28,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":null,"column":null,"url":null},"type":"group","time":352189}
+{"test":{"id":31,"name":"(setUpAll)","suiteID":28,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"testStart","time":352189}
+{"testID":31,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":352239}
+{"group":{"id":32,"suiteID":28,"parentID":30,"name":"App E2E","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"group","time":352239}
+{"test":{"id":33,"name":"App E2E renders home screen with correct elements","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":352239}
+{"testID":33,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":353916}
+{"test":{"id":34,"name":"App E2E navigates to search screen","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":353917}
+{"testID":34,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":355556}
+{"test":{"id":35,"name":"App E2E search field accepts input","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":355557}
+{"testID":35,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":357781}
+{"test":{"id":36,"name":"App E2E displays empty state on search screen","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":357782}
+{"testID":36,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":358681}
+{"test":{"id":37,"name":"App E2E stop button hidden when no player active","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":358681}
+{"testID":37,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":359304}
+{"test":{"id":38,"name":"(tearDownAll)","suiteID":28,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":359304}
+{"testID":38,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":359348}
+{"success":false,"type":"done","time":359624}
