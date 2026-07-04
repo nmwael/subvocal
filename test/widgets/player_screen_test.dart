@@ -43,13 +43,13 @@ void main() {
   const testSubtitle = Subtitle(
     title: 'Test Subtitle',
     entries: [
-      const SubtitleEntry(
+      SubtitleEntry(
         index: 1,
         start: Duration(seconds: 1),
         end: Duration(seconds: 4),
         text: 'Hello, world!',
       ),
-      const SubtitleEntry(
+      SubtitleEntry(
         index: 2,
         start: Duration(seconds: 5),
         end: Duration(seconds: 8),
