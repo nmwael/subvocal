@@ -1,0 +1,84 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":3230,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":2}
+{"count":4,"time":11,"type":"allSuites"}
+Checking the license for package CMake 3.22.1 in /usr/local/lib/android/sdk/licenses
+License for package CMake 3.22.1 accepted.
+Preparing "Install CMake 3.22.1 v.3.22.1".
+"Install CMake 3.22.1 v.3.22.1" ready.
+Installing CMake 3.22.1 in /usr/local/lib/android/sdk/cmake/3.22.1
+"Install CMake 3.22.1 v.3.22.1" complete.
+"Install CMake 3.22.1 v.3.22.1" finished.
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:46563/YHXqHcnCfBk=/"}}]
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":268855}
+{"group":{"id":2,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":null,"column":null,"url":null},"type":"group","time":268858}
+{"group":{"id":3,"suiteID":0,"parentID":2,"name":"Player controls","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":15,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"group","time":268858}
+{"test":{"id":4,"name":"Player controls player screen renders with subtitle content","suiteID":0,"groupIDs":[2,3],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":268859}
+{"testID":1,"error":"Failed to load \"/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart\": Bad state: addTearDown() may only be called within a test.","stackTrace":"package:test_api                                      addTearDown\npackage:integration_test/src/_callback_io.dart 74:5   _IOCallbackManager.convertFlutterSurfaceToImage\n===== asynchronous gap ===========================\npackage:integration_test/integration_test.dart 205:5  IntegrationTestWidgetsFlutterBinding.convertFlutterSurfaceToImage\n","isFailure":false,"type":"error","time":268866}
+{"testID":4,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":268867}
+{"test":{"id":5,"name":"Player controls player screen shows play/pause controls","suiteID":0,"groupIDs":[2,3],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":268870}
+{"testID":5,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":268870}
+{"test":{"id":6,"name":"Player controls player screen shows subtitle display area","suiteID":0,"groupIDs":[2,3],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":268876}
+{"testID":6,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":268877}
+{"test":{"id":7,"name":"Player controls player screen app bar has stop button","suiteID":0,"groupIDs":[2,3],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":268877}
+{"testID":7,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":268877}
+{"test":{"id":8,"name":"(tearDownAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":268877}
+{"testID":8,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":268878}
+{"suite":{"id":9,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"suite","time":269303}
+{"test":{"id":10,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart","suiteID":9,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":269303}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:35595/B57cDvngIBs=/"}}]
+{"testID":10,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":294777}
+{"group":{"id":11,"suiteID":9,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":294778}
+{"group":{"id":12,"suiteID":9,"parentID":11,"name":"Home to Player flow","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":11,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"group","time":294778}
+{"test":{"id":13,"name":"Home to Player flow shows import and search buttons on home screen","suiteID":9,"groupIDs":[11,12],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":294778}
+{"testID":10,"error":"Failed to load \"/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart\": Bad state: addTearDown() may only be called within a test.","stackTrace":"package:test_api                                      addTearDown\npackage:integration_test/src/_callback_io.dart 74:5   _IOCallbackManager.convertFlutterSurfaceToImage\n===== asynchronous gap ===========================\npackage:integration_test/integration_test.dart 205:5  IntegrationTestWidgetsFlutterBinding.convertFlutterSurfaceToImage\n","isFailure":false,"type":"error","time":294833}
+{"testID":13,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":294833}
+{"test":{"id":14,"name":"Home to Player flow search screen displays empty state","suiteID":9,"groupIDs":[11,12],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":294835}
+{"testID":14,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":294835}
+{"test":{"id":15,"name":"Home to Player flow navigates back from search to home","suiteID":9,"groupIDs":[11,12],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":294843}
+{"testID":15,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":294843}
+{"test":{"id":16,"name":"(tearDownAll)","suiteID":9,"groupIDs":[11],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":294844}
+{"testID":16,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":294844}
+{"suite":{"id":17,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"suite","time":295103}
+{"test":{"id":18,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart","suiteID":17,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":295103}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:40469/P_vbmNU_L6s=/"}}]
+{"testID":18,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":319716}
+{"group":{"id":19,"suiteID":17,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":319716}
+{"group":{"id":20,"suiteID":17,"parentID":19,"name":"Search flow","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":11,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"group","time":319716}
+{"test":{"id":21,"name":"Search flow search screen renders with all elements","suiteID":17,"groupIDs":[19,20],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":319716}
+{"testID":18,"error":"Failed to load \"/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart\": Bad state: addTearDown() may only be called within a test.","stackTrace":"package:test_api                                      addTearDown\npackage:integration_test/src/_callback_io.dart 74:5   _IOCallbackManager.convertFlutterSurfaceToImage\n===== asynchronous gap ===========================\npackage:integration_test/integration_test.dart 205:5  IntegrationTestWidgetsFlutterBinding.convertFlutterSurfaceToImage\n","isFailure":false,"type":"error","time":319722}
+{"testID":21,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":319723}
+{"test":{"id":22,"name":"Search flow typing in search field shows clear button","suiteID":17,"groupIDs":[19,20],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":319724}
+{"testID":22,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":319724}
+{"test":{"id":23,"name":"Search flow clearing search field removes results","suiteID":17,"groupIDs":[19,20],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":319730}
+{"testID":23,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":319731}
+{"test":{"id":24,"name":"(tearDownAll)","suiteID":17,"groupIDs":[19],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":319731}
+{"testID":24,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":319731}
+{"suite":{"id":25,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"suite","time":320025}
+{"test":{"id":26,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/app_test.dart","suiteID":25,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":320026}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:33669/ZjZWShSMRbk=/"}}]
+{"testID":26,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":344686}
+{"group":{"id":27,"suiteID":25,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":null,"column":null,"url":null},"type":"group","time":344686}
+{"group":{"id":28,"suiteID":25,"parentID":27,"name":"App E2E","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":11,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"group","time":344686}
+{"test":{"id":29,"name":"App E2E renders home screen with correct elements","suiteID":25,"groupIDs":[27,28],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":344686}
+{"testID":26,"error":"Failed to load \"/home/runner/work/subvocal/subvocal/integration_test/app_test.dart\": Bad state: addTearDown() may only be called within a test.","stackTrace":"package:test_api                                      addTearDown\npackage:integration_test/src/_callback_io.dart 74:5   _IOCallbackManager.convertFlutterSurfaceToImage\n===== asynchronous gap ===========================\npackage:integration_test/integration_test.dart 205:5  IntegrationTestWidgetsFlutterBinding.convertFlutterSurfaceToImage\n","isFailure":false,"type":"error","time":344740}
+{"testID":29,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":344741}
+{"test":{"id":30,"name":"App E2E navigates to search screen","suiteID":25,"groupIDs":[27,28],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":344742}
+{"testID":30,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":344742}
+{"test":{"id":31,"name":"App E2E search field accepts input","suiteID":25,"groupIDs":[27,28],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":344749}
+{"testID":31,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":344750}
+{"test":{"id":32,"name":"App E2E displays empty state on search screen","suiteID":25,"groupIDs":[27,28],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":344750}
+{"testID":32,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":344750}
+{"test":{"id":33,"name":"App E2E stop button hidden when no player active","suiteID":25,"groupIDs":[27,28],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":344750}
+{"testID":33,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":344750}
+{"test":{"id":34,"name":"(tearDownAll)","suiteID":25,"groupIDs":[27],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":344751}
+{"testID":34,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":344751}
+{"success":false,"type":"done","time":344993}

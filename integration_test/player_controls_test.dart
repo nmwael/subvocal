@@ -10,7 +10,10 @@ import 'package:subvocal/presentation/widgets/playback_controls.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  binding.convertFlutterSurfaceToImage();
+
+  setUpAll(() {
+    binding.convertFlutterSurfaceToImage();
+  });
 
   group('Player controls', () {
     late Subtitle testSubtitle;
