@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,26 +23,15 @@ class _MockFlutterTts extends FlutterTts {
   Future<dynamic> setPitch(double pitch) async {}
 }
 
-final _mockTtsProvider = Provider<FlutterTts>((ref) => _MockFlutterTts());
-
-final _mockRepoProvider = Provider<TtsRepositoryImpl>((ref) {
-  return TtsRepositoryImpl(ref.watch(_mockTtsProvider));
-});
-
-final _mockSequenceProvider = Provider<PlaySubtitleSequence>((ref) {
-  return PlaySubtitleSequence(ref.watch(_mockRepoProvider));
-});
-
-final _mockPlayerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
-  final sequence = ref.watch(_mockSequenceProvider);
-  final ttsRepo = ref.watch(_mockRepoProvider);
-  return PlayerNotifier(sequence, ttsRepo);
-});
-
 Widget _createTestApp(Subtitle subtitle) {
   return ProviderScope(
     overrides: [
-      playerProvider.overrideWithProvider(_mockPlayerProvider),
+      playerProvider.overrideWith((ref) {
+        final tts = _MockFlutterTts();
+        final repo = TtsRepositoryImpl(tts);
+        final sequence = PlaySubtitleSequence(repo);
+        return PlayerNotifier(sequence, repo);
+      }),
     ],
     child: MaterialApp(
       home: PlayerScreen(subtitle: subtitle),
@@ -53,19 +40,19 @@ Widget _createTestApp(Subtitle subtitle) {
 }
 
 void main() {
-  final testSubtitle = Subtitle(
+  const testSubtitle = Subtitle(
     title: 'Test Subtitle',
     entries: [
       SubtitleEntry(
         index: 1,
-        start: const Duration(seconds: 1),
-        end: const Duration(seconds: 4),
+        start: Duration(seconds: 1),
+        end: Duration(seconds: 4),
         text: 'Hello, world!',
       ),
       SubtitleEntry(
         index: 2,
-        start: const Duration(seconds: 5),
-        end: const Duration(seconds: 8),
+        start: Duration(seconds: 5),
+        end: Duration(seconds: 8),
         text: 'Second subtitle line',
       ),
     ],

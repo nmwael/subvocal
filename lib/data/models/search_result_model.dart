@@ -21,7 +21,7 @@ class SearchResultModel {
     final attributes = json['attributes'] as Map<String, dynamic>?;
     final features = attributes?['features'] as List<dynamic>?;
 
-    int _parseFileId() {
+    int parseFileId() {
       final id = json['id'];
       if (id is int) return id;
       if (id is String) {
@@ -32,7 +32,7 @@ class SearchResultModel {
       return 0;
     }
 
-    String? _extractYear() {
+    String? extractYear() {
       final feature = features?.isNotEmpty == true
           ? features!.first
           : null;
@@ -41,7 +41,7 @@ class SearchResultModel {
       return raw?.toString();
     }
 
-    String _extractTitle() {
+    String extractTitle() {
       if (attributes?.containsKey('title') == true) {
         final title = attributes!['title'];
         if (title is String && title.isNotEmpty) return title;
@@ -57,9 +57,9 @@ class SearchResultModel {
     }
 
     return SearchResultModel(
-      fileId: _parseFileId(),
-      title: _extractTitle(),
-      year: _extractYear(),
+      fileId: parseFileId(),
+      title: extractTitle(),
+      year: extractYear(),
       language: attributes?['language'] as String?,
       subtitleCount: attributes?['subtitle_count'] as int?,
       releaseName: attributes?['release'] as String?,

@@ -2,7 +2,7 @@
   "name": "subvocal — Flutter",
   "image": "mcr.microsoft.com/devcontainers/base:bullseye",
 
-  "features": {    
+  "features": {
     "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/awf-project/devcontainer-features/flutter:1": {},
@@ -17,6 +17,8 @@
     "OPENSUBTITLES_API_KEY": "${localEnv:OPENSUBTITLES_API_KEY}",
     "NVIDIA_API_KEY": "${localEnv:NVIDIA_API_KEY}"
   },
+
+  "postCreateCommand": "mkdir -p ~/.config/opencode/plugins && echo '{\"type\":\"module\"}' > ~/.config/opencode/plugins/package.json && git clone https://github.com/tmogeid/opencode-rate-limiter-plugin /tmp/opencode-rate-limiter-plugin && cp /tmp/opencode-rate-limiter-plugin/index.js ~/.config/opencode/plugins/rate-limiter.js && cp /workspaces/subvocal/.devcontainer/opencode-rate-limiter-config.json ~/.config/opencode/plugins/rate-limiter-config.json",
 
   "customizations": {
     "vscode": {

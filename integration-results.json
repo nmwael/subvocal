@@ -1,0 +1,131 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":3231,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":2}
+{"count":4,"time":18,"type":"allSuites"}
+Checking the license for package CMake 3.22.1 in /usr/local/lib/android/sdk/licenses
+License for package CMake 3.22.1 accepted.
+Preparing "Install CMake 3.22.1 v.3.22.1".
+"Install CMake 3.22.1 v.3.22.1" ready.
+Installing CMake 3.22.1 in /usr/local/lib/android/sdk/cmake/3.22.1
+"Install CMake 3.22.1 v.3.22.1" complete.
+"Install CMake 3.22.1 v.3.22.1" finished.
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:41147/gh3jxeBzuuE=/"}}]
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":258057}
+{"group":{"id":2,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":null,"column":null,"url":null},"type":"group","time":258060}
+{"test":{"id":3,"name":"(setUpAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":15,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"testStart","time":258060}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":258110}
+{"group":{"id":4,"suiteID":0,"parentID":2,"name":"Player controls","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":19,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/player_controls_test.dart"},"type":"group","time":258111}
+{"test":{"id":5,"name":"Player controls player screen renders with subtitle content","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":258111}
+{"testID":5,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":260153}
+{"test":{"id":6,"name":"Player controls player screen shows play/pause controls","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":260153}
+{"testID":6,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":260537}
+{"test":{"id":7,"name":"Player controls player screen shows subtitle display area","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":260538}
+{"testID":7,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":260904}
+{"test":{"id":8,"name":"Player controls player screen app bar has stop button","suiteID":0,"groupIDs":[2,4],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":260904}
+{"testID":8,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":261272}
+{"test":{"id":9,"name":"(tearDownAll)","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":261272}
+{"testID":9,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":261318}
+{"suite":{"id":10,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"suite","time":261629}
+{"test":{"id":11,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart","suiteID":10,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":261629}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:37223/R10md3oXRlY=/"}}]
+{"testID":11,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":286029}
+{"group":{"id":12,"suiteID":10,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":286029}
+{"test":{"id":13,"name":"(setUpAll)","suiteID":10,"groupIDs":[12],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"testStart","time":286030}
+{"testID":13,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":286080}
+{"group":{"id":14,"suiteID":10,"parentID":12,"name":"Home to Player flow","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart"},"type":"group","time":286080}
+{"test":{"id":15,"name":"Home to Player flow shows import and search buttons on home screen","suiteID":10,"groupIDs":[12,14],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":286080}
+{"testID":15,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":287715}
+{"test":{"id":16,"name":"Home to Player flow search screen displays empty state","suiteID":10,"groupIDs":[12,14],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":287716}
+{"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":289627}
+{"test":{"id":17,"name":"Home to Player flow navigates back from search to home","suiteID":10,"groupIDs":[12,14],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":289629}
+{"testID":17,"messageType":"print","message":"","type":"print","time":289904}
+{"testID":17,"messageType":"print","message":"Warning: A call to tap() with finder \"Found 1 widget with text \"Search OpenSubtitles\": [","type":"print","time":289906}
+{"testID":17,"messageType":"print","message":"  Text(\"Search OpenSubtitles\", dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"]\" derived an Offset (Offset(214.7, 404.0)) that would not hit test on the specified widget.","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"The finder corresponds to this RenderBox: RenderParagraph#1ccbc relayoutBoundary=up14","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"The hit test result at that offset is: HitTestResult(_RenderInkFeatures#7b392@Offset(214.7, 404.0), RenderPhysicalModel#54ef7@Offset(214.7, 404.0), RenderSemanticsAnnotations#ea2f9@Offset(214.7, 404.0), RenderRepaintBoundary#9264a@Offset(214.7, 404.0), RenderIgnorePointer#96f99@Offset(214.7, 404.0), RenderAnimatedOpacity#1bbc9@Offset(214.7, 404.0), RenderAnimatedOpacity#b2361@Offset(214.7, 404.0), _RenderColoredBox#35a5d@Offset(214.7, 404.0), RenderAnimatedOpacity#7707a@Offset(214.7, 404.0), RenderIgnorePointer#12ad4@Offset(214.7, 404.0), RenderAnimatedOpacity#31775@Offset(214.7, 404.0), RenderRepaintBoundary#dbfaa@Offset(214.7, 404.0), RenderSemanticsAnnotations#de9b1@Offset(214.7, 404.0), RenderOffstage#94a82@Offset(214.7, 404.0), RenderSemanticsAnnotations#6c541@Offset(214.7, 404.0), _RenderTheater#f506a@Offset(214.7, 404.0), RenderAbsorbPointer#445b2@Offset(214.7, 404.0), RenderPointerListener#e9cbc@Offset(214.7, 404.0), RenderSemanticsAnnotations#8a708@Offset(214.7, 404.0), RenderSemanticsAnnotations#5cdfc@Offset(214.7, 404.0), RenderSemanticsAnnotations#46004@Offset(214.7, 404.0), RenderSemanticsAnnotations#200dd@Offset(214.7, 404.0), RenderTapRegionSurface#66640@Offset(214.7, 404.0), RenderSemanticsAnnotations#a1821@Offset(214.7, 404.0), RenderSemanticsAnnotations#35dc8@Offset(214.7, 404.0), HitTestEntry<HitTestTarget>#f7c97(_ReusableRenderView#edc1e), HitTestEntry<HitTestTarget>#be618(<IntegrationTestWidgetsFlutterBinding>))","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)","type":"print","time":289909}
+{"testID":17,"messageType":"print","message":"#3      main.<anonymous closure>.<anonymous closure> (file:///home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart:40:20)","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"To silence this warning, pass \"warnIfMissed: false\" to \"tap()\".","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"","type":"print","time":289910}
+{"testID":17,"messageType":"print","message":"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════","type":"print","time":290327}
+{"testID":17,"messageType":"print","message":"The following TestFailure was thrown running a test:","type":"print","time":290327}
+{"testID":17,"messageType":"print","message":"Expected: exactly one matching candidate","type":"print","time":290332}
+{"testID":17,"messageType":"print","message":"  Actual: _TextWidgetFinder:<Found 0 widgets with text \"Search Subtitles\": []>","type":"print","time":290336}
+{"testID":17,"messageType":"print","message":"   Which: means none were found but one was expected","type":"print","time":290336}
+{"testID":17,"messageType":"print","message":"","type":"print","time":290338}
+{"testID":17,"messageType":"print","message":"When the exception was thrown, this was the stack:","type":"print","time":290338}
+{"testID":17,"messageType":"print","message":"#4      main.<anonymous closure>.<anonymous closure> (file:///home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart:43:7)","type":"print","time":290338}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":290338}
+{"testID":17,"messageType":"print","message":"#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)","type":"print","time":290338}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"<asynchronous suspension>","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"(elided one frame from package:stack_trace)","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"This was caught by the test expectation on the following line:","type":"print","time":290339}
+{"testID":17,"messageType":"print","message":"  file:///home/runner/work/subvocal/subvocal/integration_test/home_to_player_test.dart line 43","type":"print","time":290346}
+{"testID":17,"messageType":"print","message":"The test description was:","type":"print","time":290346}
+{"testID":17,"messageType":"print","message":"  navigates back from search to home","type":"print","time":290349}
+{"testID":17,"messageType":"print","message":"════════════════════════════════════════════════════════════════════════════════════════════════════","type":"print","time":290350}
+{"testID":17,"error":"Test failed. See exception logs above.\nThe test description was: navigates back from search to home","stackTrace":"","isFailure":false,"type":"error","time":290352}
+{"testID":17,"result":"error","skipped":false,"hidden":false,"type":"testDone","time":290353}
+{"test":{"id":18,"name":"(tearDownAll)","suiteID":10,"groupIDs":[12],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":290354}
+{"testID":18,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":290404}
+{"suite":{"id":19,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"suite","time":290903}
+{"test":{"id":20,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart","suiteID":19,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":290904}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:33001/KDpJyuey7FI=/"}}]
+{"testID":20,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":314435}
+{"group":{"id":21,"suiteID":19,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":314435}
+{"test":{"id":22,"name":"(setUpAll)","suiteID":19,"groupIDs":[21],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"testStart","time":314435}
+{"testID":22,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":314484}
+{"group":{"id":23,"suiteID":19,"parentID":21,"name":"Search flow","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/home_to_search_test.dart"},"type":"group","time":314484}
+{"test":{"id":24,"name":"Search flow search screen renders with all elements","suiteID":19,"groupIDs":[21,23],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":314484}
+{"testID":24,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":316987}
+{"test":{"id":25,"name":"Search flow typing in search field shows clear button","suiteID":19,"groupIDs":[21,23],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":316987}
+{"testID":25,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":320050}
+{"test":{"id":26,"name":"Search flow clearing search field removes results","suiteID":19,"groupIDs":[21,23],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":320051}
+{"testID":26,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":322393}
+{"test":{"id":27,"name":"(tearDownAll)","suiteID":19,"groupIDs":[21],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":322394}
+{"testID":27,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":322441}
+{"suite":{"id":28,"platform":"vm","path":"/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"suite","time":322839}
+{"test":{"id":29,"name":"loading /home/runner/work/subvocal/subvocal/integration_test/app_test.dart","suiteID":28,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":322839}
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":"http://127.0.0.1:38739/2DJjf987vPY=/"}}]
+{"testID":29,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":345719}
+{"group":{"id":30,"suiteID":28,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":null,"column":null,"url":null},"type":"group","time":345719}
+{"test":{"id":31,"name":"(setUpAll)","suiteID":28,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":10,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"testStart","time":345719}
+{"testID":31,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":345768}
+{"group":{"id":32,"suiteID":28,"parentID":30,"name":"App E2E","metadata":{"skip":false,"skipReason":null},"testCount":5,"line":14,"column":3,"url":"file:///home/runner/work/subvocal/subvocal/home/runner/work/subvocal/subvocal/integration_test/app_test.dart"},"type":"group","time":345768}
+{"test":{"id":33,"name":"App E2E renders home screen with correct elements","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":345768}
+{"testID":33,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":347327}
+{"test":{"id":34,"name":"App E2E navigates to search screen","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":347328}
+{"testID":34,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":349023}
+{"test":{"id":35,"name":"App E2E search field accepts input","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":349024}
+{"testID":35,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":350667}
+{"test":{"id":36,"name":"App E2E displays empty state on search screen","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":350667}
+{"testID":36,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":351500}
+{"test":{"id":37,"name":"App E2E stop button hidden when no player active","suiteID":28,"groupIDs":[30,32],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart"},"type":"testStart","time":351501}
+{"testID":37,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":352019}
+{"test":{"id":38,"name":"(tearDownAll)","suiteID":28,"groupIDs":[30],"metadata":{"skip":false,"skipReason":null},"line":50,"column":5,"url":"package:integration_test/integration_test.dart"},"type":"testStart","time":352019}
+{"testID":38,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":352066}
+{"success":false,"type":"done","time":352406}

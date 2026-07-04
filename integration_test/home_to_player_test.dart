@@ -7,6 +7,10 @@ import 'package:subvocal/app.dart';
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() {
+    binding.convertFlutterSurfaceToImage();
+  });
+
   group('Home to Player flow', () {
     testWidgets('shows import and search buttons on home screen', (tester) async {
       await tester.pumpWidget(const SubvocalApp());
@@ -34,6 +38,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.pumpAndSettle();
+
+      // Wait for the search screen to fully load
+      await tester.pump(const Duration(seconds: 2));
       await tester.pumpAndSettle();
 
       expect(find.text('Search Subtitles'), findsOneWidget);
