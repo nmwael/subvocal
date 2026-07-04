@@ -18,6 +18,8 @@
     "NVIDIA_API_KEY": "${localEnv:NVIDIA_API_KEY}"
   },
 
+  "postCreateCommand": "mkdir -p ~/.config/opencode/plugins && echo '{\"type\":\"module\"}' > ~/.config/opencode/plugins/package.json && git clone https://github.com/tmogeid/opencode-rate-limiter-plugin /tmp/opencode-rate-limiter-plugin && cp /tmp/opencode-rate-limiter-plugin/index.js ~/.config/opencode/plugins/rate-limiter.js",
+
   "customizations": {
     "vscode": {
       "settings": {
