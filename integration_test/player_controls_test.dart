@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -9,6 +10,7 @@ import 'package:subvocal/presentation/widgets/playback_controls.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  binding.convertFlutterSurfaceToImage();
 
   group('Player controls', () {
     late Subtitle testSubtitle;
@@ -23,8 +25,10 @@ void main() {
 
     testWidgets('player screen renders with subtitle content', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: PlayerScreen(subtitle: testSubtitle),
+        ProviderScope(
+          child: MaterialApp(
+            home: PlayerScreen(subtitle: testSubtitle),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -36,8 +40,10 @@ void main() {
 
     testWidgets('player screen shows play/pause controls', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: PlayerScreen(subtitle: testSubtitle),
+        ProviderScope(
+          child: MaterialApp(
+            home: PlayerScreen(subtitle: testSubtitle),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -49,8 +55,10 @@ void main() {
 
     testWidgets('player screen shows subtitle display area', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: PlayerScreen(subtitle: testSubtitle),
+        ProviderScope(
+          child: MaterialApp(
+            home: PlayerScreen(subtitle: testSubtitle),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -61,8 +69,10 @@ void main() {
 
     testWidgets('player screen app bar has stop button', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: PlayerScreen(subtitle: testSubtitle),
+        ProviderScope(
+          child: MaterialApp(
+            home: PlayerScreen(subtitle: testSubtitle),
+          ),
         ),
       );
       await tester.pumpAndSettle();

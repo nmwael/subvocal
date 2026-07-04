@@ -6,6 +6,7 @@ import 'package:subvocal/app.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  binding.convertFlutterSurfaceToImage();
 
   group('Search flow', () {
     testWidgets('search screen renders with all elements', (tester) async {

@@ -6,6 +6,7 @@ import 'package:subvocal/app.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  binding.convertFlutterSurfaceToImage();
 
   group('App E2E', () {
     testWidgets('renders home screen with correct elements', (tester) async {
