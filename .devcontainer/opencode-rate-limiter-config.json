@@ -1,0 +1,7 @@
+{
+  "maxConcurrent": 5,
+  "maxRatePerWindow": 1,
+  "rateWindowMs": 3000,
+  "requestTimeoutMs": 15000,
+  "checkIntervalMs": 200
+}
