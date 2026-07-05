@@ -13,6 +13,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
 
     steps:
       - uses: actions/checkout@v7
@@ -30,13 +32,22 @@ jobs:
         run: dart analyze
 
       - name: Run tests
-        run: flutter test --machine > test-results.json
+        run: flutter test --machine 2>/dev/null | grep '^{' > test-results.json
 
       - name: Upload test report
         uses: actions/upload-artifact@v7
         with:
           name: flutter-test-results
           path: test-results.json
+
+      - name: Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: Flutter Unit Tests
+          path: test-results.json
+          reporter: flutter-json
+          use-actions-summary: false
 
       - name: Build APK
         run: flutter build apk --debug
