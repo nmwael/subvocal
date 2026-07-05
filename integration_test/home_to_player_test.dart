@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'package:subvocal/app.dart';
+import 'screenshot_helper.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,7 @@ void main() {
       expect(find.text('Import .SRT file'), findsOneWidget);
       expect(find.text('Search OpenSubtitles'), findsOneWidget);
 
-      await binding.takeScreenshot('home_buttons');
+      await takeScreenshot(binding, 'home_buttons');
     });
 
     testWidgets('search screen displays empty state', (tester) async {
@@ -30,7 +31,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Enter a movie or show name to search'), findsOneWidget);
-      await binding.takeScreenshot('search_empty');
+      await takeScreenshot(binding, 'search_empty');
     });
 
     testWidgets('navigates back from search to home', (tester) async {
@@ -50,7 +51,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Import .SRT file'), findsOneWidget);
-      await binding.takeScreenshot('home_after_search');
+      await takeScreenshot(binding, 'home_after_search');
     });
   });
 }

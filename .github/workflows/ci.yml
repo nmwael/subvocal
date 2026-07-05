@@ -83,7 +83,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save
           disable-animations: true
           script: |
-            flutter test integration_test/ --screenshot=screenshots/ --machine > integration-results.json
+            flutter test integration_test/ --machine > integration-results.json
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v7

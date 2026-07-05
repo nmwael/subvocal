@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'package:subvocal/app.dart';
+import 'screenshot_helper.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ void main() {
       expect(find.text('Search Subtitles'), findsOneWidget);
       expect(find.byIcon(Icons.search), findsWidgets);
 
-      await binding.takeScreenshot('search_initial');
+      await takeScreenshot(binding, 'search_initial');
     });
 
     testWidgets('typing in search field shows clear button', (tester) async {
@@ -44,7 +45,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.clear), findsOneWidget);
-      await binding.takeScreenshot('search_with_text');
+      await takeScreenshot(binding, 'search_with_text');
     });
 
     testWidgets('clearing search field removes results', (tester) async {
@@ -65,7 +66,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Enter a movie or show name to search'), findsOneWidget);
-      await binding.takeScreenshot('search_cleared');
+      await takeScreenshot(binding, 'search_cleared');
     });
   });
 }
