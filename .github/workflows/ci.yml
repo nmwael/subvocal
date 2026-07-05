@@ -27,7 +27,7 @@ jobs:
         run: flutter analyze
 
       - name: Unit & widget tests
-        run: flutter test --machine > test-results.json
+        run: flutter test --machine 2>/dev/null | grep '^{' > test-results.json
 
       - name: Upload test report
         uses: actions/upload-artifact@v7
@@ -95,7 +95,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save
           disable-animations: true
           script: |
-            flutter test integration_test/ --machine --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} > integration-results.json
+            flutter test integration_test/ --machine --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} 2>/dev/null | grep '^{' > integration-results.json
             python3 scripts/extract_screenshots.py
 
       - name: Upload screenshots
