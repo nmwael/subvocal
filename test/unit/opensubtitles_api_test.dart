@@ -98,6 +98,49 @@ void main() {
 
       expect(data, isNull);
       expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('HTTP 500'));
+    });
+
+    test('returns descriptive error message from response error field', () async {
+      final client = _MockHttpClient(
+        statusCode: 404,
+        body: {'error': 'Resource not found'},
+      );
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (data, failure) = await api.search('test');
+
+      expect(data, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('Resource not found'));
+    });
+
+    test('returns descriptive error message from response message field', () async {
+      final client = _MockHttpClient(
+        statusCode: 401,
+        body: {'message': 'Invalid API key'},
+      );
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (data, failure) = await api.search('test');
+
+      expect(data, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('Invalid API key'));
+    });
+
+    test('falls back to HTTP status when response body has no error field', () async {
+      final client = _MockHttpClient(
+        statusCode: 503,
+        body: {'status': 503, 'info': 'service unavailable'},
+      );
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (data, failure) = await api.search('test');
+
+      expect(data, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('HTTP 503'));
     });
 
     test('returns NetworkFailure on socket exception', () async {
@@ -151,6 +194,34 @@ void main() {
       expect(failure!.message, contains('Rate limit exceeded'));
     });
 
+    test('uses error field in download failure message', () async {
+      final client = _MockHttpClient(
+        statusCode: 403,
+        body: {'error': 'Payment required'},
+      );
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (link, failure) = await api.download(123);
+
+      expect(link, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('Payment required'));
+    });
+
+    test('uses message field in download failure message', () async {
+      final client = _MockHttpClient(
+        statusCode: 400,
+        body: {'message': 'Invalid file_id'},
+      );
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (link, failure) = await api.download(123);
+
+      expect(link, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('Invalid file_id'));
+    });
+
     test('returns NetworkFailure when link is missing', () async {
       final client = _MockHttpClient(body: {'link': null});
       final api = OpenSubtitlesApi(client, apiKey);
@@ -186,6 +257,31 @@ void main() {
       expect(content, isNull);
       expect(failure, isA<NetworkFailure>());
       expect(failure!.message, contains('Rate limit exceeded'));
+    });
+
+    test('uses error field in fetchContent failure message', () async {
+      final client = _MockHttpClient(
+        statusCode: 500,
+        body: {'error': 'Internal server error'},
+      );
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (content, failure) = await api.fetchContent('https://example.com/file.srt');
+
+      expect(content, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('Internal server error'));
+    });
+
+    test('falls back to HTTP status in fetchContent failure with empty body', () async {
+      final client = _MockHttpClient(statusCode: 502);
+      final api = OpenSubtitlesApi(client, apiKey);
+
+      final (content, failure) = await api.fetchContent('https://example.com/file.srt');
+
+      expect(content, isNull);
+      expect(failure, isA<NetworkFailure>());
+      expect(failure!.message, contains('HTTP 502'));
     });
   });
 }
