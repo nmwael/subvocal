@@ -26,14 +26,20 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep '^version: ' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --output=build/app/outputs/flutter-apk/subvocal-${{ env.VERSION }}.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           name: subvocal-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/subvocal-${{ env.VERSION }}.apk
           retention-days: 30
 
       - name: Create release
@@ -44,4 +50,4 @@ jobs:
           generate_release_notes: true
           fail_on_unmatched_files: true
           files: |
-            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/flutter-apk/subvocal-${{ env.VERSION }}.apk
