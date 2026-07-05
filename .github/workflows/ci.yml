@@ -9,6 +9,8 @@ on:
 jobs:
   analyze-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
 
     steps:
       - uses: actions/checkout@v5
@@ -33,9 +35,19 @@ jobs:
           name: unit-test-results
           path: test-results.json
 
+      - name: Unit Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: Flutter Unit Tests
+          path: test-results.json
+          reporter: flutter-json
+
   integration-test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      checks: write
 
     steps:
       - uses: actions/checkout@v7
@@ -99,3 +111,11 @@ jobs:
         with:
           name: integration-test-results
           path: integration-results.json
+
+      - name: Integration Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: Flutter Integration Tests
+          path: integration-results.json
+          reporter: flutter-json
