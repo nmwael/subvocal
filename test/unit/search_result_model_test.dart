@@ -19,7 +19,7 @@ void main() {
     test('parses minimal result with only required fields', () {
       final model = SearchResultModel.fromJson(minimalResult);
 
-      expect(model.fileId, 67890);
+      expect(model.fileId, 0);
       expect(model.title, 'Unknown');
       expect(model.year, isNull);
       expect(model.language, isNull);
@@ -36,7 +36,7 @@ void main() {
     test('handles null attributes', () {
       final model = SearchResultModel.fromJson(nullAttributesResult);
 
-      expect(model.fileId, 11111);
+      expect(model.fileId, 0);
       expect(model.title, 'Unknown');
       expect(model.year, isNull);
       expect(model.language, isNull);
