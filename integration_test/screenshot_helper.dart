@@ -1,4 +1,6 @@
-import 'dart:io';
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
 
 import 'package:integration_test/integration_test.dart';
 
@@ -7,9 +9,5 @@ Future<void> takeScreenshot(
   String name,
 ) async {
   final bytes = await binding.takeScreenshot(name);
-  final directory = Directory('/sdcard/screenshots');
-  if (!await directory.exists()) {
-    await directory.create(recursive: true);
-  }
-  await File('/sdcard/screenshots/$name.png').writeAsBytes(bytes);
+  print('SCREENSHOT:$name:${base64Encode(bytes)}');
 }
