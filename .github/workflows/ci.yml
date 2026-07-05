@@ -84,6 +84,7 @@ jobs:
           disable-animations: true
           script: |
             flutter test integration_test/ --machine > integration-results.json
+            adb pull /sdcard/screenshots/ ./screenshots/ || true
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v7

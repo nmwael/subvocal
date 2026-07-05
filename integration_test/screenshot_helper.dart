@@ -7,9 +7,9 @@ Future<void> takeScreenshot(
   String name,
 ) async {
   final bytes = await binding.takeScreenshot(name);
-  final directory = Directory('screenshots');
+  final directory = Directory('/sdcard/screenshots');
   if (!await directory.exists()) {
     await directory.create(recursive: true);
   }
-  await File('screenshots/$name.png').writeAsBytes(bytes);
+  await File('/sdcard/screenshots/$name.png').writeAsBytes(bytes);
 }
