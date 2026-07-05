@@ -12,6 +12,15 @@ class OpenSubtitlesApi {
 
   OpenSubtitlesApi(this._client, this._apiKey);
 
+  String _extractErrorMessage(String body, int statusCode) {
+    try {
+      final json = jsonDecode(body) as Map<String, dynamic>;
+      final msg = (json['error'] as String?) ?? (json['message'] as String?);
+      if (msg != null && msg.isNotEmpty) return msg;
+    } catch (_) {}
+    return 'HTTP $statusCode';
+  }
+
   Future<(List<Map<String, dynamic>>?, Failure?)> search(String query, {String? language}) async {
     try {
       final params = <String, String>{'query': query};
@@ -31,7 +40,7 @@ class OpenSubtitlesApi {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Search failed: ${response.statusCode}'));
+        return (null, NetworkFailure('Search failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
       }
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final data = body['data'] as List<dynamic>?;
@@ -61,7 +70,7 @@ class OpenSubtitlesApi {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
       }
       if (response.statusCode != 200 && response.statusCode != 201) {
-        return (null, NetworkFailure('Download failed: ${response.statusCode}'));
+        return (null, NetworkFailure('Download failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
       }
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final link = body['link'] as String?;
@@ -83,7 +92,7 @@ class OpenSubtitlesApi {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Fetch failed: ${response.statusCode}'));
+        return (null, NetworkFailure('Fetch failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
       }
       return (response.body, null);
     } on SocketException catch (e) {
