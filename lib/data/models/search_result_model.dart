@@ -22,13 +22,17 @@ class SearchResultModel {
     final features = attributes?['features'] as List<dynamic>?;
 
     int parseFileId() {
-      final id = json['id'];
-      if (id is int) return id;
-      if (id is String) {
-        final parsed = int.tryParse(id);
-        if (parsed != null) return parsed;
+      final files = attributes?['files'] as List<dynamic>?;
+      final firstFile = files?.isNotEmpty == true ? files!.first : null;
+      if (firstFile is Map<String, dynamic>) {
+        final fileId = firstFile['file_id'];
+        if (fileId is int) return fileId;
+        if (fileId is String) {
+          final parsed = int.tryParse(fileId);
+          if (parsed != null) return parsed;
+        }
+        if (fileId is num) return fileId.toInt();
       }
-      if (id is num) return id.toInt();
       return 0;
     }
 
