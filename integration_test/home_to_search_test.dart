@@ -17,6 +17,7 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.text('Search OpenSubtitles'));
       await tester.tap(find.text('Search OpenSubtitles'));
       await tester.pumpAndSettle();
 
@@ -34,6 +35,7 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.text('Search OpenSubtitles'));
       await tester.tap(find.text('Search OpenSubtitles'));
       await tester.pumpAndSettle();
 
@@ -52,6 +54,7 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.text('Search OpenSubtitles'));
       await tester.tap(find.text('Search OpenSubtitles'));
       await tester.pumpAndSettle();
 
