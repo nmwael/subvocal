@@ -7,15 +7,13 @@ import 'package:subvocal/core/errors/failures.dart';
 import 'package:subvocal/core/utils/srt_parser.dart';
 import 'package:subvocal/data/datasources/local_file_source.dart';
 import 'package:subvocal/data/datasources/opensubtitles_api.dart';
+import 'package:subvocal/data/datasources/translation_service.dart';
 import 'package:subvocal/data/repositories/subtitle_repository_impl.dart';
 
 class _MockHttpClient extends http.BaseClient {
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    return http.StreamedResponse(
-      Stream.value([]),
-      200,
-    );
+    return http.StreamedResponse(Stream.value([]), 200);
   }
 }
 
@@ -38,6 +36,13 @@ class _MockApi extends OpenSubtitlesApi {
   }
 }
 
+class _MockTranslationService implements TranslationService {
+  @override
+  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+    return ('Translated: $text', null);
+  }
+}
+
 void main() {
   late SubtitleRepositoryImpl repository;
   late LocalFileSource localFileSource;
@@ -50,6 +55,7 @@ void main() {
       api: _MockApi(),
       localFileSource: localFileSource,
       srtParser: srtParser,
+      translateService: _MockTranslationService(),
     );
   });
 

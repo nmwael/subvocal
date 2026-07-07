@@ -12,7 +12,6 @@ void main() {
       expect(model.title, 'Inception');
       expect(model.year, '2010');
       expect(model.language, 'en');
-      expect(model.subtitleCount, 42);
       expect(model.releaseName, 'Inception.2010.1080p.BluRay');
     });
 
@@ -23,7 +22,6 @@ void main() {
       expect(model.title, 'Unknown');
       expect(model.year, isNull);
       expect(model.language, isNull);
-      expect(model.subtitleCount, isNull);
       expect(model.releaseName, isNull);
     });
 
@@ -42,23 +40,23 @@ void main() {
       expect(model.language, isNull);
     });
 
-    test('handles missing features list', () {
-      final model = SearchResultModel.fromJson(noFeaturesResult);
+    test('handles missing feature_details', () {
+      final model = SearchResultModel.fromJson(noFeatureDetailsResult);
 
       expect(model.fileId, 22222);
       expect(model.title, 'Test Movie');
       expect(model.year, isNull);
     });
 
-    test('handles null feature entries', () {
-      final model = SearchResultModel.fromJson(nullFeatureResult);
+    test('handles null feature_details', () {
+      final model = SearchResultModel.fromJson(nullFeatureDetailsResult);
 
       expect(model.fileId, 33333);
       expect(model.year, isNull);
     });
 
-    test('handles non-Map feature entry', () {
-      final model = SearchResultModel.fromJson(nonMapFeatureResult);
+    test('handles non-Map feature_details', () {
+      final model = SearchResultModel.fromJson(nonMapFeatureDetailsResult);
 
       expect(model.fileId, 44444);
       expect(model.year, isNull);
@@ -78,7 +76,6 @@ void main() {
       expect(entity.title, model.title);
       expect(entity.year, model.year);
       expect(entity.language, model.language);
-      expect(entity.subtitleCount, model.subtitleCount);
       expect(entity.releaseName, model.releaseName);
     });
   });

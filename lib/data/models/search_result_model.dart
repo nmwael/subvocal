@@ -19,7 +19,6 @@ class SearchResultModel {
 
   factory SearchResultModel.fromJson(Map<String, dynamic> json) {
     final attributes = json['attributes'] as Map<String, dynamic>?;
-    final features = attributes?['features'] as List<dynamic>?;
 
     int parseFileId() {
       final files = attributes?['files'] as List<dynamic>?;
@@ -37,26 +36,22 @@ class SearchResultModel {
     }
 
     String? extractYear() {
-      final feature = features?.isNotEmpty == true
-          ? features!.first
-          : null;
-      if (feature is! Map<String, dynamic>) return null;
-      final raw = feature['year'];
-      return raw?.toString();
+      final featureDetails = attributes?['feature_details'];
+      if (featureDetails is Map<String, dynamic>) {
+        final raw = featureDetails['year'];
+        return raw?.toString();
+      }
+      return null;
     }
 
     String extractTitle() {
-      if (attributes?.containsKey('title') == true) {
-        final title = attributes!['title'];
+      final featureDetails = attributes?['feature_details'];
+      if (featureDetails is Map<String, dynamic>) {
+        final title = featureDetails['title'];
         if (title is String && title.isNotEmpty) return title;
       }
-      final feature = attributes?['feature'];
-      if (feature is Map<String, dynamic>) {
-        final featureTitle = feature['title'];
-        if (featureTitle is String && featureTitle.isNotEmpty) return featureTitle;
-      }
-      final rawTitle = json['title'];
-      if (rawTitle is String && rawTitle.isNotEmpty) return rawTitle;
+      final release = attributes?['release'];
+      if (release is String && release.isNotEmpty) return release;
       return 'Unknown';
     }
 
@@ -65,7 +60,6 @@ class SearchResultModel {
       title: extractTitle(),
       year: extractYear(),
       language: attributes?['language'] as String?,
-      subtitleCount: attributes?['subtitle_count'] as int?,
       releaseName: attributes?['release'] as String?,
     );
   }

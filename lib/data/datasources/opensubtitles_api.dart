@@ -6,11 +6,21 @@ import 'package:http/http.dart' as http;
 import '../../core/errors/failures.dart';
 
 class OpenSubtitlesApi {
-  static const _baseUrl = 'https://api.opensubtitles.com/api/v2';
+  static const _baseUrl = 'https://api.opensubtitles.com/api/v1';
   final http.Client _client;
   final String _apiKey;
+  String? _token;
 
   OpenSubtitlesApi(this._client, this._apiKey);
+
+  Map<String, String> get _baseHeaders => {
+    'Api-Key': _apiKey,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'User-Agent': 'subvocal v1.0',
+  };
+
+  bool get isLoggedIn => _token != null;
 
   String _extractErrorMessage(String body, int statusCode) {
     try {
@@ -21,6 +31,26 @@ class OpenSubtitlesApi {
     return 'HTTP $statusCode';
   }
 
+  Future<String?> login(String username, String password) async {
+    try {
+      final response = await _client.post(
+        Uri.parse('$_baseUrl/login'),
+        headers: _baseHeaders,
+        body: jsonEncode({'username': username, 'password': password}),
+      );
+      if (response.statusCode != 200) return null;
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      _token = body['token'] as String?;
+      return _token;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void logout() {
+    _token = null;
+  }
+
   Future<(List<Map<String, dynamic>>?, Failure?)> search(String query, {String? language}) async {
     try {
       final params = <String, String>{'query': query};
@@ -28,14 +58,7 @@ class OpenSubtitlesApi {
         params['languages'] = language;
       }
       final uri = Uri.parse('$_baseUrl/subtitles').replace(queryParameters: params);
-      final response = await _client.get(
-        uri,
-        headers: {
-          'Api-Key': _apiKey,
-          'Content-Type': 'application/json',
-          'User-Agent': 'subvocal v1.0',
-        },
-      );
+      final response = await _client.get(uri, headers: _baseHeaders);
       if (response.statusCode == 429) {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
       }
@@ -57,13 +80,13 @@ class OpenSubtitlesApi {
 
   Future<(String?, Failure?)> download(int fileId) async {
     try {
+      final headers = <String, String>{..._baseHeaders};
+      if (_token != null) {
+        headers['Authorization'] = 'Bearer $_token';
+      }
       final response = await _client.post(
         Uri.parse('$_baseUrl/download'),
-        headers: {
-          'Api-Key': _apiKey,
-          'Content-Type': 'application/json',
-          'User-Agent': 'subvocal v1.0',
-        },
+        headers: headers,
         body: jsonEncode({'file_id': fileId}),
       );
       if (response.statusCode == 429) {

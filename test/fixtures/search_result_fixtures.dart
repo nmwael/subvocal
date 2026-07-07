@@ -1,19 +1,14 @@
 final Map<String, dynamic> fullResult = {
   'attributes': {
-    'title': 'Inception',
     'language': 'en',
-    'subtitle_count': 42,
     'release': 'Inception.2010.1080p.BluRay',
     'files': [
       {'file_id': 12345},
     ],
-    'feature': {
+    'feature_details': {
       'title': 'Inception',
       'year': 2010,
     },
-    'features': [
-      {'year': 2010},
-    ],
   },
 };
 
@@ -21,12 +16,10 @@ final Map<String, dynamic> minimalResult = {};
 
 final Map<String, dynamic> stringIdResult = {
   'attributes': {
-    'title': 'Test',
     'files': [
       {'file_id': '54321'},
     ],
-    'feature': {'title': 'Test'},
-    'features': [],
+    'feature_details': {'title': 'Test'},
   },
 };
 
@@ -34,41 +27,35 @@ final Map<String, dynamic> nullAttributesResult = {
   'attributes': null,
 };
 
-final Map<String, dynamic> noFeaturesResult = {
+final Map<String, dynamic> noFeatureDetailsResult = {
   'attributes': {
-    'title': 'Test Movie',
     'files': [
       {'file_id': 22222},
     ],
-    'feature': {'title': 'Test Movie'},
+    'release': 'Test Movie',
   },
 };
 
-final Map<String, dynamic> nullFeatureResult = {
+final Map<String, dynamic> nullFeatureDetailsResult = {
   'attributes': {
-    'title': 'Test',
     'files': [
       {'file_id': 33333},
     ],
-    'feature': {'title': 'Test'},
-    'features': null,
+    'feature_details': null,
   },
 };
 
-final Map<String, dynamic> nonMapFeatureResult = {
+final Map<String, dynamic> nonMapFeatureDetailsResult = {
   'attributes': {
-    'title': 'Test',
     'files': [
       {'file_id': 44444},
     ],
-    'feature': {'title': 'Test'},
-    'features': ['not a map'],
+    'feature_details': 'not a map',
   },
 };
 
 final Map<String, dynamic> doubleIdResult = {
   'attributes': {
-    'title': 'Test',
     'files': [
       {'file_id': 99999.0},
     ],
