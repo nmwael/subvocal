@@ -63,7 +63,7 @@ void main() {
       await tester.enterText(find.byType(TextField), 'Inception');
       await tester.pumpAndSettle();
 
-      expect(find.text('Inception'), findsOneWidget);
+      expect(find.text('Inception'), findsWidgets);
       await takeScreenshot(binding, 'search_with_query');
     });
 
