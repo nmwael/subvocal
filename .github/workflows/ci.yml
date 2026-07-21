@@ -9,6 +9,8 @@ on:
 jobs:
   analyze-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
 
     steps:
       - uses: actions/checkout@v5
@@ -25,7 +27,7 @@ jobs:
         run: flutter analyze
 
       - name: Unit & widget tests
-        run: flutter test --machine > test-results.json
+        run: flutter test --machine 2>/dev/null | grep '^{' > test-results.json
 
       - name: Upload test report
         uses: actions/upload-artifact@v7
@@ -33,9 +35,20 @@ jobs:
           name: unit-test-results
           path: test-results.json
 
+      - name: Unit Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: Flutter Unit Tests
+          path: test-results.json
+          reporter: flutter-json
+          use-actions-summary: false
+
   integration-test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      checks: write
 
     steps:
       - uses: actions/checkout@v7
@@ -83,7 +96,8 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save
           disable-animations: true
           script: |
-            flutter test integration_test/ --machine > integration-results.json
+            flutter test integration_test/ --machine --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} 2>/dev/null | grep '^{' > integration-results.json
+            python3 scripts/extract_screenshots.py
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v7
@@ -98,3 +112,14 @@ jobs:
         with:
           name: integration-test-results
           path: integration-results.json
+
+      - name: Integration Test Report
+        uses: dorny/test-reporter@v3
+        if: success() || failure()
+        with:
+          name: Flutter Integration Tests
+          path: integration-results.json
+          reporter: flutter-json
+          use-actions-summary: false
+
+

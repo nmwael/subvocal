@@ -2,13 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/utils/srt_parser.dart';
+import '../../data/datasources/google_translate_api.dart';
+import '../../data/datasources/libre_translate_api.dart';
 import '../../data/datasources/local_file_source.dart';
 import '../../data/datasources/opensubtitles_api.dart';
+import '../../data/datasources/translation_service.dart';
 import '../../data/repositories/subtitle_repository_impl.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/usecases/download_subtitle.dart';
+import '../../domain/usecases/login_subtitle.dart';
 import '../../domain/usecases/search_subtitles.dart';
+import '../../domain/usecases/translate_subtitle.dart';
 
 final _httpClientProvider = Provider<http.Client>((ref) => http.Client());
 
@@ -17,8 +22,17 @@ final _srtParserProvider = Provider<SrtParser>((ref) => SrtParser());
 final _localFileSourceProvider = Provider<LocalFileSource>((ref) => LocalFileSource());
 
 final _openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
-  const apiKey = String.fromEnvironment('OPENSUBTITLES_API_KEY', defaultValue: '');
+  const apiKey = String.fromEnvironment('OPENSUBTITLES_API_KEY', defaultValue: 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM');
   return OpenSubtitlesApi(ref.watch(_httpClientProvider), apiKey);
+});
+
+final _translationServiceProvider = Provider<TranslationService>((ref) {
+  // Use LibreTranslate (free, no API key) as default, fallback to Google if key provided
+  const googleApiKey = String.fromEnvironment('GOOGLE_TRANSLATE_API_KEY', defaultValue: '');
+  if (googleApiKey.isNotEmpty) {
+    return GoogleTranslateApi(ref.watch(_httpClientProvider), googleApiKey);
+  }
+  return LibreTranslateApi(ref.watch(_httpClientProvider));
 });
 
 final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {
@@ -26,6 +40,7 @@ final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {
     api: ref.watch(_openSubtitlesApiProvider),
     localFileSource: ref.watch(_localFileSourceProvider),
     srtParser: ref.watch(_srtParserProvider),
+    translateService: ref.watch(_translationServiceProvider),
   );
 });
 
@@ -35,6 +50,14 @@ final searchSubtitlesProvider = Provider<SearchSubtitles>((ref) {
 
 final downloadSubtitleProvider = Provider<DownloadSubtitle>((ref) {
   return DownloadSubtitle(ref.watch(subtitleRepositoryProvider));
+});
+
+final loginSubtitleProvider = Provider<LoginSubtitle>((ref) {
+  return LoginSubtitle(ref.watch(subtitleRepositoryProvider));
+});
+
+final translateSubtitleProvider = Provider<TranslateSubtitle>((ref) {
+  return TranslateSubtitle(ref.watch(subtitleRepositoryProvider));
 });
 
 final searchQueryProvider = StateProvider<String>((ref) => '');

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'screenshot_helper.dart';
 import 'package:subvocal/core/utils/srt_parser.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
@@ -39,7 +40,7 @@ void main() {
 
       expect(find.text('Test'), findsOneWidget);
       expect(find.byType(PlaybackControls), findsOneWidget);
-      await binding.takeScreenshot('player_initial');
+      await takeScreenshot(binding, 'player_initial');
     });
 
     testWidgets('player screen shows play/pause controls', (tester) async {
@@ -54,7 +55,7 @@ void main() {
 
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
       expect(find.byIcon(Icons.stop), findsOneWidget);
-      await binding.takeScreenshot('player_controls');
+      await takeScreenshot(binding, 'player_controls');
     });
 
     testWidgets('player screen shows subtitle display area', (tester) async {
@@ -68,7 +69,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(SubtitleDisplay), findsOneWidget);
-      await binding.takeScreenshot('player_progress');
+      await takeScreenshot(binding, 'player_progress');
     });
 
     testWidgets('player screen app bar has stop button', (tester) async {
@@ -83,7 +84,7 @@ void main() {
 
       final stopButton = find.byTooltip('Stop');
       expect(stopButton, findsOneWidget);
-      await binding.takeScreenshot('player_appbar');
+      await takeScreenshot(binding, 'player_appbar');
     });
   });
 }

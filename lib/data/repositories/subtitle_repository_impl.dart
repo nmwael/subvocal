@@ -2,20 +2,24 @@ import '../../core/errors/failures.dart';
 import '../../core/utils/srt_parser.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/entities/subtitle.dart';
+import '../../domain/entities/subtitle_entry.dart';
 import '../../domain/repositories/subtitle_repository.dart';
 import '../datasources/local_file_source.dart';
 import '../datasources/opensubtitles_api.dart';
+import '../datasources/translation_service.dart';
 import '../models/search_result_model.dart';
 
 class SubtitleRepositoryImpl implements SubtitleRepository {
   final OpenSubtitlesApi api;
   final LocalFileSource localFileSource;
   final SrtParser srtParser;
+  final TranslationService translateService;
 
   SubtitleRepositoryImpl({
     required this.api,
     required this.localFileSource,
     required this.srtParser,
+    required this.translateService,
   });
 
   @override
@@ -63,5 +67,41 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
 
     final fileName = filePath.split('/').last.replaceAll('.srt', '');
     return (Subtitle(title: fileName, entries: entries), null);
+  }
+
+  @override
+  Future<(String?, Failure?)> login(String username, String password) async {
+    final token = await api.login(username, password);
+    if (token == null) {
+      return (null, const NetworkFailure('Login failed. Check your credentials.'));
+    }
+    return (token, null);
+  }
+
+  @override
+  void logout() {
+    api.logout();
+  }
+
+  @override
+  Future<(Subtitle?, Failure?)> translate(Subtitle subtitle, String targetLanguage) async {
+    final translatedEntries = <SubtitleEntry>[];
+    for (final entry in subtitle.entries) {
+      final (translatedText, failure) = await translateService.translate(entry.text, targetLanguage);
+      if (failure != null) return (null, failure);
+      if (translatedText == null) return (null, const NetworkFailure('Empty translation result'));
+      translatedEntries.add(SubtitleEntry(
+        index: entry.index,
+        start: entry.start,
+        end: entry.end,
+        text: translatedText,
+      ));
+    }
+    return (Subtitle(
+      id: subtitle.id,
+      title: subtitle.title,
+      language: targetLanguage,
+      entries: translatedEntries,
+    ), null);
   }
 }

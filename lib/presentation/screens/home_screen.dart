@@ -6,6 +6,7 @@ import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
 import 'player_screen.dart';
 import 'search_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -20,14 +21,25 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('subvocal'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+          ),
+        ],
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: 48),
                   Icon(
@@ -83,10 +95,8 @@ class HomeScreen extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
-          if (recentSubtitles.isNotEmpty)
-            SliverToBoxAdapter(
-              child: Padding(
+            if (recentSubtitles.isNotEmpty) ...[
+              Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
                   'Recent',
@@ -95,11 +105,11 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-            ),
-          if (recentSubtitles.isNotEmpty)
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: recentSubtitles.length,
+                itemBuilder: (context, index) {
                   final item = recentSubtitles[index];
                   return ListTile(
                     leading: const Icon(Icons.history),
@@ -109,10 +119,10 @@ class HomeScreen extends ConsumerWidget {
                     onTap: () => _openRecent(context, ref, item),
                   );
                 },
-                childCount: recentSubtitles.length,
               ),
-            ),
-        ],
+            ],
+          ],
+        ),
       ),
     );
   }

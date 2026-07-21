@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/errors/failures.dart';
 import '../../domain/entities/search_result.dart';
 import '../providers/search_provider.dart';
 import '../widgets/subtitle_list_tile.dart';
@@ -104,7 +105,7 @@ class SearchScreen extends ConsumerWidget {
                   children: [
                     const Icon(Icons.error_outline, size: 48, color: Colors.red),
                     const SizedBox(height: 16),
-                    Text('Error: $error'),
+                    Text('Error: ${(error as Failure).message}'),
                   ],
                 ),
               ),
