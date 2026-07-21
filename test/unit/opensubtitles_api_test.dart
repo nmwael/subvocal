@@ -331,7 +331,7 @@ void main() {
       await api.login('user', 'pass');
       await api.download(123);
 
-      final authHeader = client.lastDownloadHeaders?['authorization'];
+      final authHeader = client.lastDownloadHeaders?['Authorization'];
       expect(authHeader, 'Bearer jwt-token-123');
     });
 

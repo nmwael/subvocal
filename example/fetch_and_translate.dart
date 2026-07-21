@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:subvocal/core/utils/srt_parser.dart';
 import 'package:subvocal/data/datasources/my_memory_translate_api.dart';
 import 'package:subvocal/data/datasources/opensubtitles_api.dart';
-import 'package:subvocal/data/datasources/translation_service.dart';
 
 void main(List<String> args) async {
   print('=== DEBUG: Starting fetch_and_translate v2 ===');
@@ -61,7 +60,7 @@ void main(List<String> args) async {
 
     // Step 2: Download subtitle
     print('📥 Downloading subtitle (file_id: $fileId)...');
-    final (downloadLink, downloadFailure) = await opensubtitlesApi.download(fileId.download(fileId);
+    var (downloadLink, downloadFailure) = await opensubtitlesApi.download(fileId);
     if (downloadFailure != null || downloadLink == null) {
       print('❌ Download failed: $downloadFailure');
       // Try to login first (might be required for download)
