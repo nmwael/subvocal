@@ -122,6 +122,4 @@ jobs:
           reporter: flutter-json
           use-actions-summary: false
 
-      - name: Add screenshot summary
-        if: always()
-        run: python3 scripts/generate_screenshot_summary.py >> $GITHUB_STEP_SUMMARY
+
