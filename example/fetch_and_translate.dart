@@ -129,7 +129,7 @@ void main(List<String> args) async {
     }
 
     // Step 6: Save translated SRT
-    final outputFile = 'matrix_es.srt';
+    const outputFile = 'matrix_es.srt';
     final buffer = StringBuffer();
     for (int i = 0; i < entries.length; i++) {
       final entry = entries[i];

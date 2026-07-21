@@ -44,7 +44,7 @@ It is a great framework for apps.
       print('Error: $failure');
       translatedEntries.add(entry.text);
     } else {
-      print('  "${entry.text}" -> "${translatedText}"');
+      print('  "${entry.text}" -> "$translatedText"');
       translatedEntries.add(translatedText ?? entry.text);
     }
   }

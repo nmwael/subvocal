@@ -75,7 +75,7 @@ void main() {
 
   group('TranslateSubtitle', () {
     test('translates subtitle entries preserving timings', () async {
-      final original = Subtitle(
+      const original = Subtitle(
         id: 1,
         title: 'Test',
         language: 'en',
@@ -94,15 +94,15 @@ void main() {
       expect(translated.language, 'es');
       expect(translated.entries.length, 2);
       expect(translated.entries[0].text, 'Traducido: Hello');
-      expect(translated.entries[0].start, Duration(seconds: 1));
-      expect(translated.entries[0].end, Duration(seconds: 4));
+      expect(translated.entries[0].start, const Duration(seconds: 1));
+      expect(translated.entries[0].end, const Duration(seconds: 4));
       expect(translated.entries[1].text, 'Traducido: World');
-      expect(translated.entries[1].start, Duration(seconds: 5));
-      expect(translated.entries[1].end, Duration(seconds: 8));
+      expect(translated.entries[1].start, const Duration(seconds: 5));
+      expect(translated.entries[1].end, const Duration(seconds: 8));
     });
 
     test('returns failure when translation fails', () async {
-      final original = Subtitle(
+      const original = Subtitle(
         title: 'Test',
         entries: [SubtitleEntry(index: 1, start: Duration(seconds: 1), end: Duration(seconds: 4), text: 'error')],
       );
