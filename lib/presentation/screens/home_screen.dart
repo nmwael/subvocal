@@ -6,6 +6,7 @@ import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
 import 'player_screen.dart';
 import 'search_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,16 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('subvocal'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

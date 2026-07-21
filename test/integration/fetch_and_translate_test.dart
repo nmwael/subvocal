@@ -100,6 +100,18 @@ void main() {
 
         expect(successCount, greaterThan(0));
         expect(translatedEntries.length, entries.length);
+
+        // Step 5b: Translate to Danish (da) as well
+        print('\n🌐 Translating to Danish (da)...');
+        int danishSuccessCount = 0;
+        for (final entry in entries.take(3)) {
+          final (translatedText, failure) = await translateApi.translate(entry.text, 'da', sourceLanguage: 'en');
+          if (failure == null && translatedText != null) {
+            danishSuccessCount++;
+            print('  "${entry.text}" -> "da: $translatedText"');
+          }
+        }
+        expect(danishSuccessCount, greaterThan(0));
         
         // Verify timings preserved
         for (int i = 0; i < entries.length; i++) {
