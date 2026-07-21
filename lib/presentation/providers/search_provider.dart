@@ -22,7 +22,7 @@ final _srtParserProvider = Provider<SrtParser>((ref) => SrtParser());
 final _localFileSourceProvider = Provider<LocalFileSource>((ref) => LocalFileSource());
 
 final _openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
-  const apiKey = String.fromEnvironment('OPENSUBTITLES_API_KEY', defaultValue: '');
+  const apiKey = String.fromEnvironment('OPENSUBTITLES_API_KEY', defaultValue: 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM');
   return OpenSubtitlesApi(ref.watch(_httpClientProvider), apiKey);
 });
 

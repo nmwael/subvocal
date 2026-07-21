@@ -18,7 +18,7 @@ void main(List<String> args) async {
     }
   }
   if (apiKey.isEmpty) {
-    apiKey = Platform.environment['OPENSUBTITLES_API_KEY'] ?? '';
+    apiKey = Platform.environment['OPENSUBTITLES_API_KEY'] ?? 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM';
   }
   
   if (apiKey.isEmpty) {
