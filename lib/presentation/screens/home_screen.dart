@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +13,6 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recentSubtitles = ref.watch(recentSubtitlesProvider);
-    final importedSubtitle = ref.watch(importedSubtitleProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -55,43 +53,17 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 48),
                   FilledButton.icon(
-                    onPressed: () => _importFile(context, ref),
-                    icon: const Icon(Icons.file_open),
-                    label: const Text('Import .SRT file'),
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 56),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  FilledButton.tonalIcon(
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const SearchScreen()),
                       );
                     },
                     icon: const Icon(Icons.search),
-                    label: const Text('Search OpenSubtitles'),
+                    label: const Text('Search subtitles'),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(double.infinity, 56),
                     ),
                   ),
-                  if (importedSubtitle != null) ...[
-                    const SizedBox(height: 24),
-                    Card(
-                      child: ListTile(
-                        leading: const Icon(Icons.subtitles),
-                        title: Text(importedSubtitle.title),
-                        trailing: const Icon(Icons.play_arrow),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => PlayerScreen(subtitle: importedSubtitle),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -125,41 +97,6 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _importFile(BuildContext context, WidgetRef ref) async {
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['srt'],
-    );
-
-    if (result == null || result.files.isEmpty) return;
-
-    final filePath = result.files.first.path;
-    if (filePath == null) return;
-
-    final subtitleRepo = ref.read(subtitleRepositoryProvider);
-    final (subtitle, failure) = await subtitleRepo.importFromFile(filePath);
-
-    if (failure != null) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(failure.message)),
-        );
-      }
-      return;
-    }
-
-    if (subtitle != null && context.mounted) {
-      await ref.read(recentSubtitlesProvider.notifier).add(subtitle, path: filePath);
-      if (!context.mounted) return;
-      ref.read(importedSubtitleProvider.notifier).state = subtitle;
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => PlayerScreen(subtitle: subtitle),
-        ),
-      );
-    }
   }
 
   void _openRecent(BuildContext context, WidgetRef ref, RecentSubtitleInfo info) {
