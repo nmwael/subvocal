@@ -89,14 +89,14 @@ jobs:
       - name: Run integration tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          target: default
+          api-level: 30
+          target: google_apis
           arch: x86_64
           profile: pixel_2
           force-avd-creation: false
-          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot-load -no-snapshot-save -no-wifi -memory 2048
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save -no-wifi
           disable-animations: true
-          emulator-boot-timeout: 120
+          emulator-boot-timeout: 180
           script: |
             adb logcat -c
             flutter test integration_test/ --machine --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} 2>/dev/null | grep '^{' > integration-results.json
