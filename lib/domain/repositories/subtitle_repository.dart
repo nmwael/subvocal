@@ -9,4 +9,5 @@ abstract class SubtitleRepository {
   Future<(Subtitle?, Failure?)> translate(Subtitle subtitle, String targetLanguage);
   Future<(String?, Failure?)> login(String username, String password);
   void logout();
+  Future<bool> validateToken();
 }

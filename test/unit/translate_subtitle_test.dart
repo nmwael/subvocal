@@ -64,6 +64,9 @@ class _MockRepository implements SubtitleRepository {
 
   @override
   void logout() {}
+
+  @override
+  Future<bool> validateToken() async => false;
 }
 
 void main() {

@@ -34,6 +34,42 @@
       padding: 0 24px;
     }
 
+    /* Language Switcher */
+    .lang-switcher {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 100;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .lang-btn {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn:hover {
+      color: var(--text);
+      background: var(--border);
+    }
+
+    .lang-btn.active {
+      color: #fff;
+      background: var(--accent);
+    }
+
     /* Hero */
     .hero {
       min-height: 100vh;
@@ -225,21 +261,30 @@
     @media (max-width: 480px) {
       .hero-cta { flex-direction: column; width: 100%; }
       .btn { justify-content: center; }
+      .lang-switcher { top: 8px; right: 8px; }
+      .lang-btn { padding: 5px 7px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
+  <nav class="lang-switcher">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+    <button class="lang-btn" data-lang="da">DA</button>
+    <button class="lang-btn" data-lang="gl">GL</button>
+  </nav>
+
   <section class="hero">
-    <div class="hero-badge">Open Source</div>
-    <h1>Subtitles, <span>spoken aloud</span></h1>
-    <p>Subvocal reads subtitles in sync with your video. For those who cannot read, and for those learning a new language.</p>
+    <div class="hero-badge" data-i18n="badge">Open Source</div>
+    <h1 data-i18n="hero-title">Subtitles, <span data-i18n="hero-title-accent">spoken aloud</span></h1>
+    <p data-i18n="hero-desc">Subvocal reads subtitles in sync with your video. For those who cannot read, and for those learning a new language.</p>
     <div class="hero-cta">
       <a href="https://github.com/nmwael/subvocal" class="btn btn-primary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
-        View on GitHub
+        <span data-i18n="btn-github">View on GitHub</span>
       </a>
-      <a href="https://github.com/nmwael/subvocal/releases" class="btn btn-secondary">Download</a>
+      <a href="https://github.com/nmwael/subvocal/releases" class="btn btn-secondary" data-i18n="btn-download">Download</a>
     </div>
   </section>
 
@@ -247,11 +292,11 @@
 
   <section>
     <div class="container">
-      <div class="section-label">What it does</div>
-      <h2>Accessibility through speech</h2>
-      <p>Millions of people watch films and series every day, but not everyone can read the subtitles on screen. Subvocal bridges that gap — it picks up subtitles and reads them aloud in real time, synchronized with the video.</p>
-      <p style="margin-top: 16px;">Subvocal also translates subtitles on the fly, making them available in your language — even for lesser-served languages like Danish. No need to find subtitles in your language; Subvocal handles it for you.</p>
-      <p style="margin-top: 16px;">It also helps language learners hear pronunciation while reading along, turning any video into a listening exercise.</p>
+      <div class="section-label" data-i18n="what-label">What it does</div>
+      <h2 data-i18n="what-title">Accessibility through speech</h2>
+      <p data-i18n="what-p1">Millions of people watch films and series every day, but not everyone can read the subtitles on screen. Subvocal bridges that gap — it picks up subtitles and reads them aloud in real time, synchronized with the video.</p>
+      <p style="margin-top: 16px;" data-i18n="what-p2">Subvocal also translates subtitles on the fly, making them available in your language — even for lesser-served languages like Danish. No need to find subtitles in your language; Subvocal handles it for you.</p>
+      <p style="margin-top: 16px;" data-i18n="what-p3">It also helps language learners hear pronunciation while reading along, turning any video into a listening exercise.</p>
     </div>
   </section>
 
@@ -259,28 +304,28 @@
 
   <section>
     <div class="container">
-      <div class="section-label">How it works</div>
-      <h2>Three steps</h2>
+      <div class="section-label" data-i18n="how-label">How it works</div>
+      <h2 data-i18n="how-title">Three steps</h2>
       <div class="steps">
         <div class="step">
           <div class="step-number">1</div>
           <div class="step-content">
-            <h3>Search in the app</h3>
-            <p>Find subtitles for your movie or series. Subvocal matches the timing to your video.</p>
+            <h3 data-i18n="step1-title">Search in the app</h3>
+            <p data-i18n="step1-desc">Find subtitles for your movie or series. Subvocal matches the timing to your video.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-number">2</div>
           <div class="step-content">
-            <h3>Play your video</h3>
-            <p>Start Netflix, Prime, or any streaming service. Subvocal works alongside your player.</p>
+            <h3 data-i18n="step2-title">Play your video</h3>
+            <p data-i18n="step2-desc">Start Netflix, Prime, or any streaming service. Subvocal works alongside your player.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-number">3</div>
           <div class="step-content">
-            <h3>Listen along</h3>
-            <p>Subtitles are translated and read aloud in perfect sync. Pause, rewind, or adjust the speed to match your pace.</p>
+            <h3 data-i18n="step3-title">Listen along</h3>
+            <p data-i18n="step3-desc">Subtitles are translated and read aloud in perfect sync. Pause, rewind, or adjust the speed to match your pace.</p>
           </div>
         </div>
       </div>
@@ -292,7 +337,7 @@
   <section>
     <div class="container">
       <div class="note" style="padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface);">
-        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;"><strong style="color: var(--text);">Powered by OpenSubtitles &amp; built-in translation.</strong> Subvocal taps into one of the world's largest subtitle databases and translates subtitles from English to your language in real time — all inside the app. This means a huge catalog of subtitles is available, even for smaller languages like Danish.</p>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;"><strong style="color: var(--text);" data-i18n="note-title">Powered by OpenSubtitles &amp; built-in translation.</strong> <span data-i18n="note-desc">Subvocal taps into one of the world's largest subtitle databases and translates subtitles from English to your language in real time — all inside the app. This means a huge catalog of subtitles is available, even for smaller languages like Danish.</span></p>
       </div>
     </div>
   </section>
@@ -302,11 +347,152 @@
   <footer>
     <div class="links">
       <a href="https://github.com/nmwael/subvocal">GitHub</a>
-      <a href="https://github.com/nmwael/subvocal/issues">Issues</a>
-      <a href="https://github.com/nmwael/subvocal/blob/main/LICENSE">MIT License</a>
+      <a href="https://github.com/nmwael/subvocal/issues" data-i18n="footer-issues">Issues</a>
+      <a href="https://github.com/nmwael/subvocal/blob/main/LICENSE" data-i18n="footer-license">MIT License</a>
     </div>
-    <p>Built with Flutter. Open source.</p>
+    <p data-i18n="footer-built">Built with Flutter. Open source.</p>
   </footer>
+
+  <script>
+    const translations = {
+      en: {
+        badge: "Open Source",
+        "hero-title": 'Subtitles, <span data-i18n="hero-title-accent">spoken aloud</span>',
+        "hero-title-accent": "spoken aloud",
+        "hero-desc": "Subvocal reads subtitles in sync with your video. For those who cannot read, and for those learning a new language.",
+        "btn-github": "View on GitHub",
+        "btn-download": "Download",
+        "what-label": "What it does",
+        "what-title": "Accessibility through speech",
+        "what-p1": "Millions of people watch films and series every day, but not everyone can read the subtitles on screen. Subvocal bridges that gap \u2014 it picks up subtitles and reads them aloud in real time, synchronized with the video.",
+        "what-p2": "Subvocal also translates subtitles on the fly, making them available in your language \u2014 even for lesser-served languages like Danish. No need to find subtitles in your language; Subvocal handles it for you.",
+        "what-p3": "It also helps language learners hear pronunciation while reading along, turning any video into a listening exercise.",
+        "how-label": "How it works",
+        "how-title": "Three steps",
+        "step1-title": "Search in the app",
+        "step1-desc": "Find subtitles for your movie or series. Subvocal matches the timing to your video.",
+        "step2-title": "Play your video",
+        "step2-desc": "Start Netflix, Prime, or any streaming service. Subvocal works alongside your player.",
+        "step3-title": "Listen along",
+        "step3-desc": "Subtitles are translated and read aloud in perfect sync. Pause, rewind, or adjust the speed to match your pace.",
+        "note-title": "Powered by OpenSubtitles & built-in translation.",
+        "note-desc": "Subvocal taps into one of the world's largest subtitle databases and translates subtitles from English to your language in real time \u2014 all inside the app. This means a huge catalog of subtitles is available, even for smaller languages like Danish.",
+        "footer-issues": "Issues",
+        "footer-license": "MIT License",
+        "footer-built": "Built with Flutter. Open source."
+      },
+      es: {
+        badge: "C\u00f3digo Abierto",
+        "hero-title": 'Subt\u00edtulos, <span data-i18n="hero-title-accent">le\u00eddos en voz alta</span>',
+        "hero-title-accent": "le\u00eddos en voz alta",
+        "hero-desc": "Subvocal lee los subt\u00edtulos sincronizados con tu video. Para quienes no pueden leer, y para quienes est\u00e1n aprendiendo un nuevo idioma.",
+        "btn-github": "Ver en GitHub",
+        "btn-download": "Descargar",
+        "what-label": "Qu\u00e9 hace",
+        "what-title": "Accesibilidad a trav\u00e9s del habla",
+        "what-p1": "Millones de personas ven pel\u00edculas y series cada d\u00eda, pero no todos pueden leer los subt\u00edtulos en pantalla. Subvocal cubre esa brecha: recoge los subt\u00edtulos y los lee en voz alta en tiempo real, sincronizados con el video.",
+        "what-p2": "Subvocal tambi\u00e9n traduce subt\u00edtulos al vuelo, poni\u00e9ndolos a disposici\u00f3n en tu idioma, incluso para idiomas menos atendidos como el dan\u00e9s. No es necesario buscar subt\u00edtulos en tu idioma; Subvocal lo hace por ti.",
+        "what-p3": "Tambi\u00e9n ayuda a los estudiantes de idiomas a escuchar la pronunciaci\u00f3n mientras leen, convirtiendo cualquier video en un ejercicio de comprensi\u00f3n auditiva.",
+        "how-label": "C\u00f3mo funciona",
+        "how-title": "Tres pasos",
+        "step1-title": "Busca en la app",
+        "step1-desc": "Encuentra subt\u00edtulos para tu pel\u00edcula o serie. Subvocal ajusta los tiempos a tu video.",
+        "step2-title": "Reproduce tu video",
+        "step2-desc": "Abre Netflix, Prime o cualquier servicio de streaming. Subvocal funciona junto a tu reproductor.",
+        "step3-title": "Escucha mientras lees",
+        "step3-desc": "Los subt\u00edtulos se traducen y leen en voz alta perfectamente sincronizados. Pausa, retrocede o ajusta la velocidad a tu ritmo.",
+        "note-title": "Impulsado por OpenSubtitles y traducci\u00f3n integrada.",
+        "note-desc": "Subvocal utiliza una de las bases de datos de subt\u00edtulos m\u00e1s grandes del mundo y traduce subt\u00edtulos del ingl\u00e9s a tu idioma en tiempo real, todo dentro de la app. Esto significa un enorme cat\u00e1logo de subt\u00edtulos disponible, incluso para idiomas menos comunes como el dan\u00e9s.",
+        "footer-issues": "Problemas",
+        "footer-license": "Licencia MIT",
+        "footer-built": "Hecho con Flutter. C\u00f3digo abierto."
+      },
+      da: {
+        badge: "\u00c5ben kildekode",
+        "hero-title": 'Undertekster, <span data-i18n="hero-title-accent">l\u00f8st h\u00f8jt</span>',
+        "hero-title-accent": "l\u00f8st h\u00f8jt",
+        "hero-desc": "Subvocal l\u00e6ser undertekster synkront med din video. For dem der ikke kan l\u00e6se, og for dem der l\u00e6rer et nyt sprog.",
+        "btn-github": "Se p\u00e5 GitHub",
+        "btn-download": "Download",
+        "what-label": "Hvad det g\u00f8r",
+        "what-title": "Tilg\u00e6ngelighed gennem tale",
+        "what-p1": "Millioner af mennesker ser film og serier hver dag, men ikke alle kan l\u00e6se underteksterne p\u00e5 sk\u00e6rmen. Subvocal lukker det hul \u2014 den henter underteksterne og l\u00e6ser dem h\u00f8jt i realtid, synkroniseret med videoen.",
+        "what-p2": "Subvocal overs\u00e6tter ogs\u00e5 undertekster i farten og g\u00f8r dem tilg\u00e6ngelige p\u00e5 dit sprog \u2014 selv for mindre udbredte sprog som dansk. Du beh\u00f8ver ikke at finde undertekster p\u00e5 dit sprog; Subvocal klarer det for dig.",
+        "what-p3": "Den hj\u00e6lper ogs\u00e5 sprogl\u00e6rere med at h\u00f8re udtalelsen mens de l\u00e6ser med og forvandler enhver video til en lytte\u00f8velse.",
+        "how-label": "S\u00e5dan fungerer det",
+        "how-title": "Tre trin",
+        "step1-title": "S\u00f8g i appen",
+        "step1-desc": "Find undertekster til din film eller serie. Subvocal tilpasser timingen til din video.",
+        "step2-title": "Afspil din video",
+        "step2-desc": "Start Netflix, Prime eller en streamingtjeneste. Subvocal fungerer sammen med din afspiller.",
+        "step3-title": "Lyt med",
+        "step3-desc": "Underteksterne overs\u00e6ttes og l\u00e6ses h\u00f8jt i perfekt synkronisering. Pause, spol tilbage eller juster hastigheden efter dit tempo.",
+        "note-title": "Drevet af OpenSubtitles og indbygget overs\u00e6ttelse.",
+        "note-desc": "Subvocal bruger en af verdens st\u00f8rste undertekstdatabaser og overs\u00e6tter undertekster fra engelsk til dit sprog i realtid \u2014 alt inde i appen. Det betyder et stort katalog af undertekster, selv for mindre sprog som dansk.",
+        "footer-issues": "Problemer",
+        "footer-license": "MIT-licens",
+        "footer-built": "Bygget med Flutter. \u00c5ben kildekode."
+      },
+      gl: {
+        badge: "C\u00f3digo Aberto",
+        "hero-title": 'Subt\u00edtulos, <span data-i18n="hero-title-accent">lidos en voz alta</span>',
+        "hero-title-accent": "lidos en voz alta",
+        "hero-desc": "Subvocal le os subt\u00edtulos sincronizados co teu v\u00eddeo. Para quen non pode ler, e para quen est\u00e1 aprendendo un novo idioma.",
+        "btn-github": "Ver en GitHub",
+        "btn-download": "Descargar",
+        "what-label": "Que fai",
+        "what-title": "Accesibilidade a trav\u00e9s da fala",
+        "what-p1": "Mill\u00f3ns de persoas ven filmes e series cada d\u00eda, pero non todos poden ler os subt\u00edtulos en pantalla. Subvocal cubre esa brecha: recolle os subt\u00edtulos e os le en voz alta en tempo real, sincronizados co v\u00eddeo.",
+        "what-p2": "Subvocal tam\u00e9n traduce subt\u00edtulos ao voo, po\u00f1\u00e9ndoos a disposici\u00f3n no teu idioma, incluso para idiomas menos atendidos como o dinamarqu\u00e9s. Non \u00e9 necesario buscar subt\u00edtulos no teu idioma; Subvocal faio por ti.",
+        "what-p3": "Tam\u00e9n axuda aos estudantes de idiomas a escoitar a pronuncia mentres len, convertendo calquera v\u00eddeo nun exercicio de comprensi\u00f3n auditiva.",
+        "how-label": "Como funciona",
+        "how-title": "Tres pasos",
+        "step1-title": "Busca na app",
+        "step1-desc": "Atopa subt\u00edtulos para o teu filme ou serie. Subvocal axusta os tempos ao teu v\u00eddeo.",
+        "step2-title": "Reproduce o teu v\u00eddeo",
+        "step2-desc": "Abre Netflix, Prime ou calquera servizo de streaming. Subvocal funciona xunto ao teu reproductor.",
+        "step3-title": "Escoita mentres les",
+        "step3-desc": "Os subt\u00edtulos traducense e lense en voz alta perfectamente sincronizados. Pausa, retrocede ou axusta a velocidade ao teu ritmo.",
+        "note-title": "Impulsado por OpenSubtitles e traduci\u00f3n integrada.",
+        "note-desc": "Subvocal utiliza unha das bases de datos de subt\u00edtulos m\u00e1s grandes do mundo e traduce subt\u00edtulos do ingl\u00e9s ao teu idioma en tempo real, todo dentro da app. Isto significa un enorme cat\u00e1logo de subt\u00edtulos dispo\u00f1ible, mesmo para idiomas menos com\u00fajns como o dinamarqu\u00e9s.",
+        "footer-issues": "Problemas",
+        "footer-license": "Licenza MIT",
+        "footer-built": "Feito con Flutter. C\u00f3digo aberto."
+      }
+    };
+
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      const t = translations[lang];
+      if (!t) return;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+          if (el.tagName === 'SPAN' && el.parentElement.tagName === 'H1') {
+            el.outerHTML = t[key];
+          } else {
+            el.textContent = t[key];
+          }
+        }
+      });
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      localStorage.setItem('subvocal-lang', lang);
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    const saved = localStorage.getItem('subvocal-lang');
+    if (saved && translations[saved]) {
+      setLang(saved);
+    }
+  </script>
 
 </body>
 </html>
