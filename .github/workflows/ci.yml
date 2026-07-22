@@ -94,7 +94,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-load -no-snapshot-save -no-wifi
           disable-animations: true
           script: |
             flutter test integration_test/ --machine --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} 2>/dev/null | grep '^{' > integration-results.json
