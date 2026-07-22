@@ -154,7 +154,7 @@ When a user requests any task that involves creating, editing, or modifying code
 1. **STOP** — do not edit or create any files.
 2. **CLASSIFY** — is this an operational task (running commands, reading files, starting services) or a code change? Operational tasks are exempt.
 3. **IF code change** — route through the architect agent. The architect must explore, produce a plan, create a GitHub issue, and present it to the user for approval.
-4. **WAIT** for explicit human approval (e.g., "approved", "looks good", "go ahead") before implementing.
+4. **WAIT** for explicit human approval (e.g., "approved", "lgtm", "looks good", "go ahead") before implementing.
 5. **Only then** implement using the developer agent or directly.
 
 If the user asks you to "just do it" or bypasses the gate, refuse politely and explain that step 2 is required.
