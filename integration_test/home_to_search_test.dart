@@ -17,8 +17,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load
@@ -35,8 +35,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load
@@ -54,8 +54,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load
