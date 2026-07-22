@@ -51,6 +51,24 @@ class OpenSubtitlesApi {
     _token = null;
   }
 
+  void setToken(String token) {
+    _token = token;
+  }
+
+  Future<bool> validateToken() async {
+    if (_token == null) return false;
+    try {
+      final headers = <String, String>{..._baseHeaders, 'Authorization': 'Bearer $_token'};
+      final response = await _client.get(
+        Uri.parse('$_baseUrl/infos/user'),
+        headers: headers,
+      );
+      return response.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<(List<Map<String, dynamic>>?, Failure?)> search(String query, {String? language}) async {
     try {
       final params = <String, String>{'query': query};
@@ -81,9 +99,7 @@ class OpenSubtitlesApi {
   Future<(String?, Failure?)> download(int fileId) async {
     try {
       final headers = <String, String>{..._baseHeaders};
-      if (_token != null) {
-        headers['Authorization'] = 'Bearer $_token';
-      }
+      if (_token != null) headers['Authorization'] = 'Bearer $_token';
       final response = await _client.post(
         Uri.parse('$_baseUrl/download'),
         headers: headers,

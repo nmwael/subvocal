@@ -3,12 +3,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/search_result.dart';
+import '../providers/auth_provider.dart';
 import '../providers/search_provider.dart';
 import '../widgets/subtitle_list_tile.dart';
 import 'player_screen.dart';
+import 'settings_screen.dart';
 
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
+
+  void _showLoginPrompt(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Login Required'),
+        content: const Text(
+          'You need to log in to download subtitles.\n\n'
+          'Free accounts get 5 downloads per day.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
+            child: const Text('Login'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,6 +105,12 @@ class SearchScreen extends ConsumerWidget {
                     return SubtitleListTile(
                       result: result,
                       onTap: () async {
+                        final auth = ref.read(authProvider).valueOrNull;
+                        if (auth?.status != AuthStatus.authenticated) {
+                          if (context.mounted) _showLoginPrompt(context);
+                          return;
+                        }
+
                         final download = ref.read(downloadSubtitleProvider);
                         final (subtitle, failure) = await download.call(result.fileId);
                         if (failure != null) {

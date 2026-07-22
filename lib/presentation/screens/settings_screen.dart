@@ -1,15 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers/auth_provider.dart';
 import '../providers/settings_provider.dart';
+import '../providers/test_voice_provider.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+  String? _loginError;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    setState(() => _loginError = null);
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text;
+    if (username.isEmpty || password.isEmpty) {
+      setState(() => _loginError = 'Please enter both username and password');
+      return;
+    }
+    final success = await ref.read(authProvider.notifier).login(username, password);
+    if (!success && mounted) {
+      setState(() => _loginError = 'Login failed. Check your credentials.');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final notifier = ref.read(settingsProvider.notifier);
+    final auth = ref.watch(authProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -20,6 +54,86 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // --- OpenSubtitles Account ---
+          Text(
+            'OpenSubtitles Account',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: auth.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (_, _) => const Text('Error checking auth status'),
+                data: (authState) {
+                  if (authState.status == AuthStatus.authenticated) {
+                    return Row(
+                      children: [
+                        const Icon(Icons.check_circle, color: Colors.green),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Logged in as ${authState.username ?? "user"}',
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => ref.read(authProvider.notifier).logout(),
+                          child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person),
+                        ),
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: const OutlineInputBorder(),
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                          ),
+                        ),
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _login(),
+                      ),
+                      if (_loginError != null) ...[
+                        const SizedBox(height: 8),
+                        Text(_loginError!, style: const TextStyle(color: Colors.red)),
+                      ],
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: _login,
+                        child: const Text('Login'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // --- Speech Configuration ---
           Text(
             'Speech Configuration',
             style: theme.textTheme.titleMedium?.copyWith(
@@ -70,6 +184,38 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
+
+          // --- Test Voice ---
+          Text(
+            'Test Voice',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Hear a sample at your current speed (${settings.speechRate.toStringAsFixed(2)}x) and pitch (${settings.pitch.toStringAsFixed(1)}x).',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 12),
+                  _TestVoiceButton(
+                    rate: settings.speechRate,
+                    pitch: settings.pitch,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // --- Translation & Language ---
           Text(
             'Translation & Language',
             style: theme.textTheme.titleMedium?.copyWith(
@@ -111,5 +257,29 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+class _TestVoiceButton extends ConsumerWidget {
+  final double rate;
+  final double pitch;
+
+  const _TestVoiceButton({required this.rate, required this.pitch});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isPlaying = ref.watch(testVoicePlayingProvider);
+
+    return isPlaying
+        ? OutlinedButton.icon(
+            onPressed: () => ref.read(testVoiceControllerProvider).stop(),
+            icon: const Icon(Icons.stop),
+            label: const Text('Stop Sample'),
+          )
+        : ElevatedButton.icon(
+            onPressed: () => ref.read(testVoiceControllerProvider).playSample(rate, pitch),
+            icon: const Icon(Icons.play_arrow),
+            label: const Text('Play Sample'),
+          );
   }
 }

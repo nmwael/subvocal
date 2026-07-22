@@ -21,7 +21,7 @@ final _srtParserProvider = Provider<SrtParser>((ref) => SrtParser());
 
 final _localFileSourceProvider = Provider<LocalFileSource>((ref) => LocalFileSource());
 
-final _openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
+final openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
   const apiKey = String.fromEnvironment('OPENSUBTITLES_API_KEY', defaultValue: 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM');
   return OpenSubtitlesApi(ref.watch(_httpClientProvider), apiKey);
 });
@@ -37,7 +37,7 @@ final _translationServiceProvider = Provider<TranslationService>((ref) {
 
 final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {
   return SubtitleRepositoryImpl(
-    api: ref.watch(_openSubtitlesApiProvider),
+    api: ref.watch(openSubtitlesApiProvider),
     localFileSource: ref.watch(_localFileSourceProvider),
     srtParser: ref.watch(_srtParserProvider),
     translateService: ref.watch(_translationServiceProvider),

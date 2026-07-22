@@ -84,6 +84,9 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   }
 
   @override
+  Future<bool> validateToken() => api.validateToken();
+
+  @override
   Future<(Subtitle?, Failure?)> translate(Subtitle subtitle, String targetLanguage) async {
     final translatedEntries = <SubtitleEntry>[];
     for (final entry in subtitle.entries) {
