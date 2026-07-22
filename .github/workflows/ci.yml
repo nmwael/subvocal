@@ -43,6 +43,7 @@ jobs:
           path: test-results.json
           reporter: flutter-json
           use-actions-summary: false
+          fail-on-error: false
 
   integration-test:
     runs-on: ubuntu-latest

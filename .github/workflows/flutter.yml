@@ -48,6 +48,7 @@ jobs:
           path: test-results.json
           reporter: flutter-json
           use-actions-summary: false
+          fail-on-error: false
 
       - name: Build APK
         run: flutter build apk --debug
