@@ -23,10 +23,9 @@ void main() {
     expect(find.text('Pick subtitles and read them aloud'), findsOneWidget);
   });
 
-  testWidgets('shows import and search buttons', (tester) async {
+  testWidgets('shows search button', (tester) async {
     await tester.pumpWidget(_createTestApp());
 
-    expect(find.text('Import .SRT file'), findsOneWidget);
-    expect(find.text('Search OpenSubtitles'), findsOneWidget);
+    expect(find.text('Search subtitles'), findsOneWidget);
   });
 }
