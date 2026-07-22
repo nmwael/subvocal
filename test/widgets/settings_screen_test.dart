@@ -12,6 +12,7 @@ void main() {
         overrides: [
           authProvider.overrideWith(() => _MockAuthNotifier()),
           testVoicePlayingProvider.overrideWith((ref) => false),
+          translatedTestPlayingProvider.overrideWith((ref) => false),
         ],
         child: const MaterialApp(
           home: SettingsScreen(),
@@ -33,6 +34,7 @@ void main() {
         overrides: [
           authProvider.overrideWith(() => _MockAuthNotifier()),
           testVoicePlayingProvider.overrideWith((ref) => false),
+          translatedTestPlayingProvider.overrideWith((ref) => false),
         ],
         child: const MaterialApp(
           home: SettingsScreen(),
@@ -45,10 +47,11 @@ void main() {
 
     // Scroll to bottom
     final listView = find.byType(ListView);
-    await tester.drag(listView, const Offset(0, -800));
-    await tester.pumpAndSettle();
+    await tester.drag(listView, const Offset(0, -1200));
+    await tester.pump();
 
     expect(find.text('Test Voice'), findsOneWidget);
+    expect(find.text('Test Translated Voice'), findsOneWidget);
     expect(find.text('Translation & Language'), findsOneWidget);
     expect(find.text('Default Target Language'), findsOneWidget);
   });

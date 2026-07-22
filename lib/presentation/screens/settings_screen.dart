@@ -215,6 +215,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(height: 24),
 
+          // --- Test Translated Voice ---
+          Text(
+            'Test Translated Voice',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Translate the first 5 lines to ${settings.selectedLanguage.toUpperCase()} and hear them spoken.',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 12),
+                  _TranslatedTestPreview(language: settings.selectedLanguage),
+                  const SizedBox(height: 12),
+                  _TranslatedTestButton(
+                    rate: settings.speechRate,
+                    pitch: settings.pitch,
+                    language: settings.selectedLanguage,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
           // --- Translation & Language ---
           Text(
             'Translation & Language',
@@ -280,6 +313,79 @@ class _TestVoiceButton extends ConsumerWidget {
             onPressed: () => ref.read(testVoiceControllerProvider).playSample(rate, pitch),
             icon: const Icon(Icons.play_arrow),
             label: const Text('Play Sample'),
+          );
+  }
+}
+
+class _TranslatedTestPreview extends ConsumerWidget {
+  final String language;
+
+  const _TranslatedTestPreview({required this.language});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final preview = ref.watch(translatedTestPreviewProvider(language));
+    final theme = Theme.of(context);
+
+    return preview.when(
+      loading: () => const LinearProgressIndicator(),
+      error: (e, _) => Text(
+        'Translation unavailable: $e',
+        style: theme.textTheme.bodySmall?.copyWith(color: Colors.orange),
+      ),
+      data: (lines) {
+        if (lines.isEmpty) {
+          return Text(
+            'No translations available.',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          );
+        }
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            lines.join('\n'),
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _TranslatedTestButton extends ConsumerWidget {
+  final double rate;
+  final double pitch;
+  final String language;
+
+  const _TranslatedTestButton({
+    required this.rate,
+    required this.pitch,
+    required this.language,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isPlaying = ref.watch(translatedTestPlayingProvider);
+
+    return isPlaying
+        ? OutlinedButton.icon(
+            onPressed: () => ref.read(testVoiceControllerProvider).stop(),
+            icon: const Icon(Icons.stop),
+            label: const Text('Stop Translated Sample'),
+          )
+        : ElevatedButton.icon(
+            onPressed: () => ref.read(testVoiceControllerProvider).playTranslatedSample(rate, pitch, language),
+            icon: const Icon(Icons.play_arrow),
+            label: const Text('Play Translated Sample'),
           );
   }
 }
