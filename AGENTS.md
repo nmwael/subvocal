@@ -19,9 +19,7 @@ This project uses a Human-in-the-Loop (HITL) approval workflow. Specialist subag
 
    **Option B — Direct notify** (human approves in chat):
    ```bash
-   ISSUE_NUM=$(gh issue list --label enhancement --state open --json number --jq '.[0].number')
-   ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
-   ./scripts/notify.sh "Plan approved" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — developer starting" "$ISSUE_URL"
+   ./scripts/workflow-notify.sh approved "developer starting"
    ```
 3. **Developer** implements code changes following the approved plan (works autonomously, presents completed work for review)
 4. **Tester** writes and runs tests to validate changes (works autonomously, presents completed test results for review, closes the GitHub issue when done)
@@ -53,9 +51,7 @@ Read-only analyst. Explores the codebase, understands existing patterns, and pro
 
 > **Notification gate**: When the plan is ready (issue created/updated), run:
 > ```bash
-> ISSUE_NUM=$(gh issue list --label enhancement --state open --json number --jq '.[0].number')
-> ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
-> ./scripts/notify.sh "Plan ready" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — plan ready for review" "$ISSUE_URL"
+> ./scripts/workflow-notify.sh plan-ready "plan ready for review"
 > ```
 >
 > After notifying, **run `watch-approval.sh`** to block until the human approves:
@@ -69,9 +65,7 @@ Implements code changes. Edits source files and runs build/compile commands auto
 
 > **Notification gate**: When implementation is done and review is requested, run:
 > ```bash
-> ISSUE_NUM=$(gh issue list --label enhancement --state open --json number --jq '.[0].number')
-> ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
-> ./scripts/notify.sh "Implementation done" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — ready for review" "$ISSUE_URL"
+> ./scripts/workflow-notify.sh impl-done "ready for review"
 > ```
 
 ### `@tester`
@@ -79,9 +73,7 @@ Writes and runs tests. Edits test files and executes test commands autonomously.
 
 > **Notification gate**: When tests are done and results are presented, run:
 > ```bash
-> ISSUE_NUM=$(gh issue list --label enhancement --state open --json number --jq '.[0].number')
-> ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
-> ./scripts/notify.sh "Tests done" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — test results ready" "$ISSUE_URL"
+> ./scripts/workflow-notify.sh tests-done "test results ready"
 > ```
 
 ### `@security-auditor`
@@ -89,9 +81,7 @@ Security reviewer. Inspects code for OWASP Top 10, injection risks, authenticati
 
 > **Notification gate**: When security audit is complete, run:
 > ```bash
-> ISSUE_NUM=$(gh issue list --label enhancement --state open --json number --jq '.[0].number')
-> ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
-> ./scripts/notify.sh "Security audit done" "Issue #$ISSUE_NUM: $(gh issue view "$ISSUE_NUM" --json title --jq '.title') — audit complete" "$ISSUE_URL"
+> ./scripts/workflow-notify.sh audit-done "audit complete"
 > ```
 
 ### `@ux-ui`
@@ -145,7 +135,28 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 - After completing a task, provide a clear summary of what was done
 - If a plan would benefit from another agent's review, delegate via the Task tool
 - Never bypass the HITL approval gate by using a subagent to indirectly perform a denied action
-- Never develop directly on the `main` branch. All work must be done in a dedicated development or feature branch
+- Never develop directly on `main` or `development`. All work must be done in a dedicated feature branch
+
+## Branching Strategy
+
+```mermaid
+graph LR
+  A[feature/xxx] -->|PR| B[development]
+  B -->|PR| C[main]
+  B -.->|CI runs| D[dev build]
+  C -.->|CI runs| E[release build]
+```
+
+| Branch | Purpose | Who merges | CI |
+|---|---|---|---|
+| `main` | Production releases only | Human (manual PR from `development`) | Release build + pages deploy |
+| `development` | Integration branch — all PRs target here | Human (after CI passes) | Full CI (analyze + test + integration) |
+| `feature/*` | Individual work branches | PR to `development` | CI runs on PR |
+
+- **PRs always target `development`**, never `main` directly
+- **`main` is production** — only merged from `development` when ready to release
+- **Development builds must always work** — CI enforces this on every push/PR to `development`
+- Use `./scripts/sync-main.sh` (defaults to `development`) to keep feature branches up to date
 
 ### PRE-FLIGHT CHECK (MANDATORY BEFORE ANY CODE CHANGE)
 
@@ -174,11 +185,12 @@ The project requires signed commits via a hardware token. The devcontainer forwa
 
 ### Committing with a signed commit
 ```bash
-# Stage files
+# Use the helper script (recommended)
+./scripts/commit-push.sh --all -m "type: message"
+
+# Or manually
 git add -A
-# Commit with signature
 git commit -S -m "type: message"
-# Push
 git push
 ```
 
@@ -240,3 +252,58 @@ Cross-platform Flutter app for picking subtitles from OpenSubtitles and reading 
 - **Dart analysis**: Use `dart analyze` for static analysis. Run `dart fix --dry-run` before `dart fix --apply`.
 - **Flutter tests**: Use `flutter test` for unit/widget tests. For integration tests, use `flutter test integration_test/`.
 - **Code formatting**: Use `dart format` (not Prettier for Dart files).
+
+## Helper Scripts
+
+All scripts are in `scripts/` and accept `--help` for usage. Use these instead of inline bash — they save tokens and reduce errors.
+
+### Workflow
+| Script | Purpose |
+|---|---|
+| `notify.sh` | Send a notification (called by other scripts) |
+| `watch-approval.sh` | Poll an issue for human approval |
+| `workflow-notify.sh` | Look up latest issue + send workflow notification |
+| `create-issue.sh` | Create a GitHub issue with WHY/WHAT/HOW template |
+| `pr-create.sh` | Create a pull request with WHY/WHAT/HOW template (targets `development` by default) |
+
+### Code Quality
+| Script | Purpose |
+|---|---|
+| `analyze.sh` | Run `dart analyze` with optional `--fix` and `--format` |
+| `run-tests.sh` | Run tests by category (`--unit`, `--widget`, `--integration`, `--file`, `--all`) |
+| `run-checks.sh` | Run all pre-commit checks (analyze + tests) in one shot |
+| `check-references.sh` | Search for stale text references across codebase |
+
+### Git & CI
+| Script | Purpose |
+|---|---|
+| `commit-push.sh` | Stage, signed commit (`-S`), push — with `--dry-run` support |
+| `check-branch.sh` | Show branch status, ahead/behind, uncommitted changes |
+| `sync-main.sh` | Rebase or merge current branch onto `development` |
+| `ci-status.sh` | Show latest CI runs, download artifacts with `--artifacts` |
+| `download-ci-artifacts.sh` | Download test artifacts from a specific or latest CI run |
+
+### Quick Reference
+
+```bash
+# Create issue + notify
+./scripts/create-issue.sh --title "Add X" --why "Need it" --what "Added X" --how "Via Y" --notify
+
+# Run pre-commit checks
+./scripts/run-checks.sh --format
+
+# Push a signed commit
+./scripts/commit-push.sh --all -m "description" --type fix
+
+# Check for stale references
+./scripts/check-references.sh "old button text" --paths lib,test
+
+# See CI status + download artifacts
+./scripts/ci-status.sh --artifacts
+
+# Sync branch with main
+./scripts/sync-main.sh --rebase
+
+# Create PR (targets development by default)
+./scripts/pr-create.sh --title "feat: Add X" --why "..." --what "..." --how "..."
+```
