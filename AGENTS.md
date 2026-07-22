@@ -117,9 +117,8 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 
 - Never stage, commit, or push changes unless the user explicitly requests it
 - Do not run `git add`, `git commit`, or `git push` commands autonomously
-- If the user asks about the state of work, show a diff or status summary instead
-- If the user asks to commit, always use `git commit -S` (signed commits) when signing is configured
-- Before attempting a signed commit, verify the hardware token is accessible by running `gpg --card-status`. If the token is unavailable (e.g., "Forbidden"), inform the user to insert their hardware token before proceeding — do not attempt the commit without confirmation
+- **Always use helper scripts for git operations** — never run raw `git add`, `git commit`, or `git push`. Use `./scripts/commit-push.sh` (handles staging, signed commit, and push). Use `./scripts/check-branch.sh` for status. Scripts handle GPG checks, conventional commit prefixes, and error handling that raw commands miss
+- If the user asks about the state of work, use `./scripts/check-branch.sh` or show a diff instead
 - If a signed commit fails despite a prepared token, it is likely the human needs to press the hardware button — inform the user rather than retrying or skipping the signature
 - Commit messages must be prefixed with a conventional commit type: `doc:` (documentation), `chore:` (tooling/config), `feat:` (feature), `fix:` (bug fix), `refactor:` (code restructuring), `test:` (test changes), or other types as appropriate
 
