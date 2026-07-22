@@ -19,8 +19,7 @@ void main() {
 
       expect(find.text('subvocal'), findsWidgets);
       expect(find.text('Pick subtitles and read them aloud'), findsOneWidget);
-      expect(find.text('Import .SRT file'), findsOneWidget);
-      expect(find.text('Search OpenSubtitles'), findsOneWidget);
+      expect(find.text('Search subtitles'), findsOneWidget);
 
       await takeScreenshot(binding, 'home_screen');
     });
@@ -29,8 +28,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load
@@ -45,15 +44,15 @@ void main() {
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
 
-      expect(find.text('Import .SRT file'), findsOneWidget);
+      expect(find.text('Search subtitles'), findsOneWidget);
     });
 
     testWidgets('search field accepts input', (tester) async {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load
@@ -71,8 +70,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load

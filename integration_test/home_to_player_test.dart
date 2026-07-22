@@ -17,8 +17,7 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Import .SRT file'), findsOneWidget);
-      expect(find.text('Search OpenSubtitles'), findsOneWidget);
+      expect(find.text('Search subtitles'), findsOneWidget);
 
       await takeScreenshot(binding, 'home_buttons');
     });
@@ -27,8 +26,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       expect(find.text('Enter a movie or show name to search'), findsOneWidget);
@@ -39,8 +38,8 @@ void main() {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text('Search OpenSubtitles'));
-      await tester.tap(find.text('Search OpenSubtitles'));
+      await tester.ensureVisible(find.text('Search subtitles'));
+      await tester.tap(find.text('Search subtitles'));
       await tester.pumpAndSettle();
 
       // Wait for the search screen to fully load
@@ -52,7 +51,7 @@ void main() {
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
 
-      expect(find.text('Import .SRT file'), findsOneWidget);
+      expect(find.text('Search subtitles'), findsOneWidget);
       await takeScreenshot(binding, 'home_after_search');
     });
   });
