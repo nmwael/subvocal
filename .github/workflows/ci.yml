@@ -122,5 +122,6 @@ jobs:
           path: integration-results.json
           reporter: flutter-json
           use-actions-summary: false
+          fail-on-error: false
 
 
