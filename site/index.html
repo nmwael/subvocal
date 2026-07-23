@@ -70,6 +70,22 @@
       background: var(--accent);
     }
 
+    /* GitHub link */
+    .github-link {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 100;
+      color: var(--text-muted);
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+
+    .github-link:hover {
+      opacity: 1;
+      color: var(--text);
+    }
+
     /* Hero */
     .hero {
       min-height: 100vh;
@@ -118,7 +134,32 @@
     .hero-cta {
       display: flex;
       gap: 12px;
+      align-items: center;
       animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .read-aloud-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .read-aloud-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .read-aloud-btn.speaking {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .btn {
@@ -261,7 +302,9 @@
     @media (max-width: 480px) {
       .hero-cta { flex-direction: column; width: 100%; }
       .btn { justify-content: center; }
+      .read-aloud-btn { justify-content: center; width: 100%; }
       .lang-switcher { top: 8px; right: 8px; }
+      .github-link { top: 8px; left: 8px; }
       .lang-btn { padding: 5px 7px; font-size: 12px; }
     }
   </style>
@@ -269,22 +312,30 @@
 <body>
 
   <nav class="lang-switcher">
-    <button class="lang-btn active" data-lang="en">EN</button>
-    <button class="lang-btn" data-lang="es">ES</button>
-    <button class="lang-btn" data-lang="da">DA</button>
-    <button class="lang-btn" data-lang="gl">GL</button>
+    <button class="lang-btn active" data-lang="en">🇬🇧 EN</button>
+    <button class="lang-btn" data-lang="es">🇪🇸 ES</button>
+    <button class="lang-btn" data-lang="da">🇩🇰 DA</button>
+    <button class="lang-btn" data-lang="gl">🇬🇦 GL</button>
   </nav>
+
+  <a href="https://github.com/nmwael/subvocal" class="github-link" aria-label="GitHub">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+  </a>
 
   <section class="hero">
     <div class="hero-badge" data-i18n="badge">Open Source</div>
     <h1 data-i18n="hero-title">Subtitles, <span data-i18n="hero-title-accent">spoken aloud</span></h1>
     <p data-i18n="hero-desc">Subvocal reads subtitles in sync with your video. For those who cannot read, and for those learning a new language.</p>
     <div class="hero-cta">
-      <a href="https://github.com/nmwael/subvocal" class="btn btn-primary">
+      <a href="https://github.com/nmwael/subvocal/releases" class="btn btn-primary" data-i18n="btn-download">Download</a>
+      <a href="https://github.com/nmwael/subvocal" class="btn btn-secondary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
         <span data-i18n="btn-github">View on GitHub</span>
       </a>
-      <a href="https://github.com/nmwael/subvocal/releases" class="btn btn-secondary" data-i18n="btn-download">Download</a>
+      <button class="read-aloud-btn" id="readAloudBtn" aria-label="Read page aloud">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        <span data-i18n="btn-read">Read page aloud</span>
+      </button>
     </div>
   </section>
 
@@ -362,6 +413,7 @@
         "hero-desc": "Subvocal reads subtitles in sync with your video. For those who cannot read, and for those learning a new language.",
         "btn-github": "View on GitHub",
         "btn-download": "Download",
+        "btn-read": "Read page aloud",
         "what-label": "What it does",
         "what-title": "Accessibility through speech",
         "what-p1": "Millions of people watch films and series every day, but not everyone can read the subtitles on screen. Subvocal bridges that gap \u2014 it picks up subtitles and reads them aloud in real time, synchronized with the video.",
@@ -388,6 +440,7 @@
         "hero-desc": "Subvocal lee los subt\u00edtulos sincronizados con tu video. Para quienes no pueden leer, y para quienes est\u00e1n aprendiendo un nuevo idioma.",
         "btn-github": "Ver en GitHub",
         "btn-download": "Descargar",
+        "btn-read": "Leer p\u00e1gina en voz alta",
         "what-label": "Qu\u00e9 hace",
         "what-title": "Accesibilidad a trav\u00e9s del habla",
         "what-p1": "Millones de personas ven pel\u00edculas y series cada d\u00eda, pero no todos pueden leer los subt\u00edtulos en pantalla. Subvocal cubre esa brecha: recoge los subt\u00edtulos y los lee en voz alta en tiempo real, sincronizados con el video.",
@@ -409,11 +462,12 @@
       },
       da: {
         badge: "\u00c5ben kildekode",
-        "hero-title": 'Undertekster, <span data-i18n="hero-title-accent">l\u00f8st h\u00f8jt</span>',
-        "hero-title-accent": "l\u00f8st h\u00f8jt",
+        "hero-title": 'Undertekster, <span data-i18n="hero-title-accent">l\u00e6st h\u00f8jt</span>',
+        "hero-title-accent": "l\u00e6st h\u00f8jt",
         "hero-desc": "Subvocal l\u00e6ser undertekster synkront med din video. For dem der ikke kan l\u00e6se, og for dem der l\u00e6rer et nyt sprog.",
         "btn-github": "Se p\u00e5 GitHub",
         "btn-download": "Download",
+        "btn-read": "L\u00e6s siden h\u00f8jt",
         "what-label": "Hvad det g\u00f8r",
         "what-title": "Tilg\u00e6ngelighed gennem tale",
         "what-p1": "Millioner af mennesker ser film og serier hver dag, men ikke alle kan l\u00e6se underteksterne p\u00e5 sk\u00e6rmen. Subvocal lukker det hul \u2014 den henter underteksterne og l\u00e6ser dem h\u00f8jt i realtid, synkroniseret med videoen.",
@@ -440,6 +494,7 @@
         "hero-desc": "Subvocal le os subt\u00edtulos sincronizados co teu v\u00eddeo. Para quen non pode ler, e para quen est\u00e1 aprendendo un novo idioma.",
         "btn-github": "Ver en GitHub",
         "btn-download": "Descargar",
+        "btn-read": "Ler p\u00e1xina en voz alta",
         "what-label": "Que fai",
         "what-title": "Accesibilidade a trav\u00e9s da fala",
         "what-p1": "Mill\u00f3ns de persoas ven filmes e series cada d\u00eda, pero non todos poden ler os subt\u00edtulos en pantalla. Subvocal cubre esa brecha: recolle os subt\u00edtulos e os le en voz alta en tempo real, sincronizados co v\u00eddeo.",
@@ -492,6 +547,32 @@
     if (saved && translations[saved]) {
       setLang(saved);
     }
+
+    // Read aloud functionality
+    const readAloudBtn = document.getElementById('readAloudBtn');
+    let currentUtterance = null;
+    const langMap = { en: 'en-US', es: 'es-ES', da: 'da-DK', gl: 'gl-ES' };
+
+    function getPageText() {
+      const sections = document.querySelectorAll('.hero h1, .hero p, section h2, section p, .note p');
+      return Array.from(sections).map(el => el.textContent.trim()).filter(Boolean).join('. ');
+    }
+
+    readAloudBtn.addEventListener('click', () => {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        readAloudBtn.classList.remove('speaking');
+        return;
+      }
+      const text = getPageText();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langMap[document.documentElement.lang] || 'en-US';
+      utterance.rate = 0.9;
+      currentUtterance = utterance;
+      utterance.onend = () => readAloudBtn.classList.remove('speaking');
+      readAloudBtn.classList.add('speaking');
+      speechSynthesis.speak(utterance);
+    });
   </script>
 
 </body>
