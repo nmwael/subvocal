@@ -135,6 +135,7 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 - If a plan would benefit from another agent's review, delegate via the Task tool
 - Never bypass the HITL approval gate by using a subagent to indirectly perform a denied action
 - Never develop directly on `main` or `development`. All work must be done in a dedicated feature branch
+- **All features must have tests before merging** — unit tests for domain/data logic, widget tests for UI components, integration tests for critical user flows
 
 ## Branching Strategy
 

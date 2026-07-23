@@ -8,6 +8,8 @@ class _MockFlutterTts extends FlutterTts {
   String? lastSpokenText;
   double? lastSpeechRate;
   double? lastPitch;
+  String? lastLanguage;
+  Map<String, String>? lastVoice;
 
   @override
   Future<dynamic> speak(String text, {bool focus = false}) async {
@@ -28,6 +30,24 @@ class _MockFlutterTts extends FlutterTts {
   Future<dynamic> setPitch(double pitch) async {
     lastPitch = pitch;
   }
+
+  @override
+  Future<dynamic> setLanguage(String languageCode) async {
+    lastLanguage = languageCode;
+  }
+
+  @override
+  Future<dynamic> setVoice(Map<String, String> voice) async {
+    lastVoice = voice;
+  }
+
+  @override
+  Future<List<Map<dynamic, dynamic>>> get getVoices async => [
+        {'name': 'Alice', 'language': 'en-US'},
+        {'name': 'Bob', 'language': 'eng'},
+        {'name': 'Pedro', 'language': 'es-ES'},
+        {'name': 'Marie', 'language': 'fra'},
+      ];
 }
 
 List<SubtitleEntry> _createEntries() {
@@ -170,6 +190,34 @@ void main() {
 
       test('setOffset stores offset value', () async {
         await repository.setOffset(const Duration(seconds: 2));
+      });
+    });
+
+    group('setLanguage', () {
+      test('delegates to FlutterTts setLanguage', () async {
+        await repository.setLanguage('en-US');
+
+        expect(mockTts.lastLanguage, 'en-US');
+      });
+
+      test('handles different language codes', () async {
+        await repository.setLanguage('da');
+
+        expect(mockTts.lastLanguage, 'da');
+      });
+    });
+
+    group('setVoice', () {
+      test('delegates to FlutterTts setVoice with name and locale', () async {
+        await repository.setVoice({'name': 'Alice', 'locale': 'en'});
+
+        expect(mockTts.lastVoice, {'name': 'Alice', 'locale': 'en'});
+      });
+
+      test('handles voice with only name', () async {
+        await repository.setVoice({'name': 'Bob'});
+
+        expect(mockTts.lastVoice, {'name': 'Bob'});
       });
     });
 
