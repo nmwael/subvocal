@@ -112,10 +112,17 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
           Subtitle(id: null, title: '', entries: entries),
           language,
         );
-        if (failure == null && translated != null) {
+        if (failure != null) {
+          state = state.copyWith(error: 'Translation failed: ${failure.message}');
+          return;
+        }
+        if (translated != null) {
           playEntries = translated.entries;
         }
-      } catch (_) {}
+      } catch (e) {
+        state = state.copyWith(error: 'Translation error: $e');
+        return;
+      }
     }
 
     final failure = await _playSubtitleSequence.call(playEntries);
