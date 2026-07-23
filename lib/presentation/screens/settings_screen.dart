@@ -39,11 +39,11 @@ String _normalizeLangCode(String code) {
 final availableVoicesProvider = FutureProvider.autoDispose<List<Map<String, String>>>((ref) async {
   final tts = ref.watch(flutterTtsProvider);
   final language = ref.watch(settingsProvider).selectedLanguage;
-  final allVoices = await tts.getVoices;
-  final filtered = allVoices
-      .whereType<Map>()
-      .map((v) => v.map((key, value) => MapEntry(key.toString(), value.toString())))
-      .where((v) {
+  final raw = await tts.getVoices;
+  if (raw is! List) return <Map<String, String>>[];
+  final allVoices = raw.whereType<Map>().map((v) =>
+      v.map((key, value) => MapEntry(key.toString(), value.toString()))).toList();
+  final filtered = allVoices.where((v) {
     final voiceLang = _normalizeLangCode(v['language'] ?? '');
     return voiceLang == language.toLowerCase();
   }).toList();

@@ -42,7 +42,7 @@ class _MockFlutterTts extends FlutterTts {
   }
 
   @override
-  Future<List<Map<dynamic, dynamic>>> get getVoices async => [
+  Future<dynamic> get getVoices async => [
         {'name': 'Alice', 'language': 'en-US'},
         {'name': 'Bob', 'language': 'eng'},
         {'name': 'Pedro', 'language': 'es-ES'},
