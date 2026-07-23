@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../data/repositories/tts_repository_impl.dart';
+import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
+import '../../domain/repositories/subtitle_repository.dart';
 import '../../domain/usecases/play_subtitle_sequence.dart';
+import 'search_provider.dart';
 
 final flutterTtsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
@@ -74,9 +77,11 @@ class PlayerState {
 class PlayerNotifier extends StateNotifier<PlayerState> {
   final PlaySubtitleSequence _playSubtitleSequence;
   final TtsRepositoryImpl _ttsRepository;
+  final SubtitleRepository? _subtitleRepository;
   StreamSubscription<int>? _indexSubscription;
 
-  PlayerNotifier(this._playSubtitleSequence, this._ttsRepository)
+  PlayerNotifier(this._playSubtitleSequence, this._ttsRepository,
+      [this._subtitleRepository])
       : super(const PlayerState()) {
     _indexSubscription = _ttsRepository.onIndexChanged.listen((index) {
       state = state.copyWith(
@@ -99,7 +104,21 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     if (voice != null) {
       await _ttsRepository.setVoice({'name': voice, 'locale': language ?? ''});
     }
-    final failure = await _playSubtitleSequence.call(entries);
+
+    var playEntries = entries;
+    if (language != null && language.isNotEmpty && _subtitleRepository != null) {
+      try {
+        final (translated, failure) = await _subtitleRepository.translate(
+          Subtitle(id: null, title: '', entries: entries),
+          language,
+        );
+        if (failure == null && translated != null) {
+          playEntries = translated.entries;
+        }
+      } catch (_) {}
+    }
+
+    final failure = await _playSubtitleSequence.call(playEntries);
     if (failure != null) {
       state = state.copyWith(error: failure.message);
       return;
@@ -166,5 +185,6 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 final playerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
   final sequence = ref.watch(playSubtitleSequenceProvider);
   final ttsRepo = ref.watch(ttsRepositoryProvider);
-  return PlayerNotifier(sequence, ttsRepo);
+  final subtitleRepo = ref.watch(subtitleRepositoryProvider);
+  return PlayerNotifier(sequence, ttsRepo, subtitleRepo);
 });
