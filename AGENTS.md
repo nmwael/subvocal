@@ -216,6 +216,8 @@ When architecture diagrams are required in documentation (e.g., DEVELOPMENT.md),
 
 ## Pull Requests
 
+**All PRs must target `development`, never `main`.** The `main` branch is production-only. When creating a PR, always use `--base development` or the `pr-create.sh` script which defaults to `development`.
+
 When approved work is ready to merge, @architect generates a pull request with a descriptive title and a "WHY WHAT HOW" template body:
 
 ### WHY
