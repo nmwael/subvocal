@@ -3,6 +3,7 @@ import '../../domain/entities/subtitle_entry.dart';
 class SrtParser {
   static final _timestampPattern =
       RegExp(r'^(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})$');
+  static final _htmlTagPattern = RegExp(r'<[^>]*>');
 
   List<SubtitleEntry> parse(String content) {
     final entries = <SubtitleEntry>[];
@@ -31,7 +32,7 @@ class SrtParser {
         int.parse(match.group(8)!),
       );
 
-      final text = lines.sublist(2).join('\n').trim();
+      final text = _sanitize(lines.sublist(2).join('\n').trim());
       if (text.isEmpty) continue;
 
       entries.add(SubtitleEntry(
@@ -43,6 +44,33 @@ class SrtParser {
     }
 
     return entries;
+  }
+
+  static final _htmlEntities = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&apos;': "'",
+    '&nbsp;': ' ',
+  };
+
+  static String _sanitize(String text) {
+    var result = text.replaceAll(_htmlTagPattern, '');
+    for (final entry in _htmlEntities.entries) {
+      result = result.replaceAll(entry.key, entry.value);
+    }
+    result = result.replaceAllMapped(
+      RegExp(r'&#(\d+);'),
+      (m) => String.fromCharCode(int.parse(m.group(1)!)),
+    );
+    result = result.replaceAllMapped(
+      RegExp(r'&#x([0-9a-fA-F]+);'),
+      (m) => String.fromCharCode(int.parse(m.group(1)!, radix: 16)),
+    );
+    result = result.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+    return result.trim();
   }
 
   Duration _parseTimestamp(int hours, int minutes, int seconds, int milliseconds) {
