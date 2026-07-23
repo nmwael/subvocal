@@ -135,6 +135,7 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 - If a plan would benefit from another agent's review, delegate via the Task tool
 - Never bypass the HITL approval gate by using a subagent to indirectly perform a denied action
 - Never develop directly on `main` or `development`. All work must be done in a dedicated feature branch
+- **All features must have tests before merging** — unit tests for domain/data logic, widget tests for UI components, integration tests for critical user flows
 
 ## Branching Strategy
 
@@ -215,6 +216,8 @@ This project runs in a devcontainer with the following setup:
 When architecture diagrams are required in documentation (e.g., DEVELOPMENT.md), use PlantUML fenced code blocks with ````plantuml` syntax. This ensures diagrams are renderable by PlantUML-compatible tools and remain readable as plain text.
 
 ## Pull Requests
+
+**All PRs must target `development`, never `main`.** The `main` branch is production-only. When creating a PR, always use `--base development` or the `pr-create.sh` script which defaults to `development`.
 
 When approved work is ready to merge, @architect generates a pull request with a descriptive title and a "WHY WHAT HOW" template body:
 
