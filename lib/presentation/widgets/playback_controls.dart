@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../providers/player_provider.dart';
 
-class PlaybackControls extends StatelessWidget {
+class PlaybackControls extends StatefulWidget {
   final PlayerState playerState;
   final VoidCallback onPlay;
   final VoidCallback onPause;
@@ -12,6 +13,7 @@ class PlaybackControls extends StatelessWidget {
   final VoidCallback onPrevious;
   final ValueChanged<double> onSpeedChanged;
   final ValueChanged<double> onSyncOffsetChanged;
+  final ValueChanged<Duration> onSeek;
 
   const PlaybackControls({
     super.key,
@@ -24,11 +26,69 @@ class PlaybackControls extends StatelessWidget {
     required this.onPrevious,
     required this.onSpeedChanged,
     required this.onSyncOffsetChanged,
+    required this.onSeek,
   });
 
   @override
+  State<PlaybackControls> createState() => _PlaybackControlsState();
+}
+
+class _PlaybackControlsState extends State<PlaybackControls> {
+  final _timeController = TextEditingController();
+  bool _isEditingTime = false;
+
+  @override
+  void dispose() {
+    _timeController.dispose();
+    super.dispose();
+  }
+
+  String _formatDuration(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    final s = d.inSeconds.remainder(60);
+    if (h > 0) return '$h:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  Duration? _parseTimestamp(String input) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty) return null;
+
+    final parts = trimmed.split(':');
+    if (parts.length == 3) {
+      final h = int.tryParse(parts[0]);
+      final m = int.tryParse(parts[1]);
+      final s = int.tryParse(parts[2]);
+      if (h == null || m == null || s == null) return null;
+      if (m > 59 || s > 59) return null;
+      return Duration(hours: h, minutes: m, seconds: s);
+    }
+    if (parts.length == 2) {
+      final m = int.tryParse(parts[0]);
+      final s = int.tryParse(parts[1]);
+      if (m == null || s == null) return null;
+      if (s > 59) return null;
+      return Duration(minutes: m, seconds: s);
+    }
+    final totalSeconds = int.tryParse(trimmed);
+    if (totalSeconds != null) return Duration(seconds: totalSeconds);
+
+    return null;
+  }
+
+  void _submitTimestamp() {
+    final duration = _parseTimestamp(_timeController.text);
+    if (duration != null) {
+      widget.onSeek(duration);
+    }
+    setState(() => _isEditingTime = false);
+    FocusScope.of(context).unfocus();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final hasEntries = playerState.entries.isNotEmpty;
+    final hasEntries = widget.playerState.entries.isNotEmpty;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -46,61 +106,118 @@ class PlaybackControls extends StatelessWidget {
               children: [
                 _ControlButton(
                   icon: Icons.skip_previous,
-                  onPressed: hasEntries ? onPrevious : null,
+                  onPressed: hasEntries ? widget.onPrevious : null,
                   tooltip: 'Previous',
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
-                  icon: playerState.isPlaying
+                  icon: widget.playerState.isPlaying
                       ? Icons.pause
                       : Icons.play_arrow,
                   size: 48,
                   onPressed: hasEntries
                       ? () {
-                          if (playerState.isPlaying) {
-                            onPause();
-                          } else if (playerState.isPaused) {
-                            onResume();
+                          if (widget.playerState.isPlaying) {
+                            widget.onPause();
+                          } else if (widget.playerState.isPaused) {
+                            widget.onResume();
                           } else {
-                            onPlay();
+                            widget.onPlay();
                           }
                         }
                       : null,
-                  tooltip: playerState.isPlaying ? 'Pause' : 'Play',
+                  tooltip: widget.playerState.isPlaying ? 'Pause' : 'Play',
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
                   icon: Icons.skip_next,
-                  onPressed: hasEntries ? onNext : null,
+                  onPressed: hasEntries ? widget.onNext : null,
                   tooltip: 'Next',
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
                   icon: Icons.stop,
-                  onPressed: hasEntries ? onStop : null,
+                  onPressed: hasEntries ? widget.onStop : null,
                   tooltip: 'Stop',
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _isEditingTime
+                      ? TextField(
+                          controller: _timeController,
+                          keyboardType: const TextInputType.numberWithOptions(),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: 'e.g. 5:30 or 1:02:15',
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 8,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          autofocus: true,
+                          onEditingComplete: _submitTimestamp,
+                          onSubmitted: (_) => _submitTimestamp(),
+                        )
+                      : GestureDetector(
+                          onTap: hasEntries
+                              ? () {
+                                  _timeController.text =
+                                      _formatDuration(widget.playerState.currentPosition);
+                                  setState(() => _isEditingTime = true);
+                                }
+                              : null,
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 8,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              suffixIcon: const Icon(Icons.edit, size: 16),
+                            ),
+                            child: Text(
+                              _formatDuration(widget.playerState.currentPosition),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             Row(
               children: [
                 const Text('Sync'),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Slider(
-                    value: playerState.syncOffset,
+                    value: widget.playerState.syncOffset,
                     min: -5.0,
                     max: 5.0,
                     divisions: 20,
-                    label: '${playerState.syncOffset.toStringAsFixed(1)}s',
-                    onChanged: hasEntries ? onSyncOffsetChanged : null,
+                    label: '${widget.playerState.syncOffset.toStringAsFixed(1)}s',
+                    onChanged: hasEntries ? widget.onSyncOffsetChanged : null,
                   ),
                 ),
                 SizedBox(
                   width: 40,
                   child: Text(
-                    '${playerState.syncOffset.toStringAsFixed(1)}s',
+                    '${widget.playerState.syncOffset.toStringAsFixed(1)}s',
                     textAlign: TextAlign.right,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -114,18 +231,18 @@ class PlaybackControls extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Slider(
-                    value: playerState.speed,
+                    value: widget.playerState.speed,
                     min: 0.1,
                     max: 1.0,
                     divisions: 9,
-                    label: '${(playerState.speed * 100).round()}%',
-                    onChanged: hasEntries ? onSpeedChanged : null,
+                    label: '${(widget.playerState.speed * 100).round()}%',
+                    onChanged: hasEntries ? widget.onSpeedChanged : null,
                   ),
                 ),
                 SizedBox(
                   width: 40,
                   child: Text(
-                    '${(playerState.speed * 100).round()}%',
+                    '${(widget.playerState.speed * 100).round()}%',
                     textAlign: TextAlign.right,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
