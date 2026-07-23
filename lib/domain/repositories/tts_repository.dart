@@ -11,6 +11,9 @@ abstract class TtsRepository {
   Future<void> stop();
   Future<void> setSpeed(double rate);
   Future<void> setOffset(Duration offset);
+  Future<void> setLanguage(String languageCode);
+  Future<List<Map<String, String>>> getVoices();
+  Future<void> setVoice(Map<String, String> voice);
 
   bool get isPlaying;
   int get currentIndex;

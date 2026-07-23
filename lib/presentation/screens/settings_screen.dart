@@ -2,8 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/auth_provider.dart';
+import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
+
+final availableVoicesProvider = FutureProvider.autoDispose<List<Map<String, String>>>((ref) async {
+  final tts = ref.watch(flutterTtsProvider);
+  final language = ref.watch(settingsProvider).selectedLanguage;
+  final allVoices = await tts.getVoices;
+  final filtered = allVoices
+      .whereType<Map>()
+      .map((v) => v.map((key, value) => MapEntry(key.toString(), value.toString())))
+      .where((v) {
+    final voiceLang = (v['language'] ?? '').split('-').first.toLowerCase();
+    return voiceLang == language.toLowerCase();
+  }).toList();
+  return filtered;
+});
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -179,6 +194,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     label: '${settings.pitch.toStringAsFixed(1)}x',
                     onChanged: (value) => notifier.setPitch(value),
                   ),
+                  const SizedBox(height: 16),
+                  _VoiceSelector(
+                    selectedVoice: settings.selectedVoice,
+                    language: settings.selectedLanguage,
+                    onVoiceSelected: (voice) => notifier.setSelectedVoice(voice),
+                  ),
                 ],
               ),
             ),
@@ -302,6 +323,7 @@ class _TestVoiceButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPlaying = ref.watch(testVoicePlayingProvider);
+    final voice = ref.watch(settingsProvider).selectedVoice;
 
     return isPlaying
         ? OutlinedButton.icon(
@@ -310,7 +332,7 @@ class _TestVoiceButton extends ConsumerWidget {
             label: const Text('Stop Sample'),
           )
         : ElevatedButton.icon(
-            onPressed: () => ref.read(testVoiceControllerProvider).playSample(rate, pitch),
+            onPressed: () => ref.read(testVoiceControllerProvider).playSample(rate, pitch, voice: voice),
             icon: const Icon(Icons.play_arrow),
             label: const Text('Play Sample'),
           );
@@ -375,6 +397,7 @@ class _TranslatedTestButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPlaying = ref.watch(translatedTestPlayingProvider);
+    final voice = ref.watch(settingsProvider).selectedVoice;
 
     return isPlaying
         ? OutlinedButton.icon(
@@ -383,9 +406,67 @@ class _TranslatedTestButton extends ConsumerWidget {
             label: const Text('Stop Translated Sample'),
           )
         : ElevatedButton.icon(
-            onPressed: () => ref.read(testVoiceControllerProvider).playTranslatedSample(rate, pitch, language),
+            onPressed: () => ref.read(testVoiceControllerProvider).playTranslatedSample(rate, pitch, language, voice: voice),
             icon: const Icon(Icons.play_arrow),
             label: const Text('Play Translated Sample'),
           );
+  }
+}
+
+class _VoiceSelector extends ConsumerWidget {
+  final String? selectedVoice;
+  final String language;
+  final ValueChanged<String?> onVoiceSelected;
+
+  const _VoiceSelector({
+    required this.selectedVoice,
+    required this.language,
+    required this.onVoiceSelected,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final voicesAsync = ref.watch(availableVoicesProvider);
+
+    return voicesAsync.when(
+      loading: () => const LinearProgressIndicator(),
+      error: (e, _) => Text(
+        'Could not load voices: $e',
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.orange),
+      ),
+      data: (voices) {
+        if (voices.isEmpty) {
+          return Text(
+            'No voices available for ${language.toUpperCase()}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                ),
+          );
+        }
+        final validValue = voices.any((v) => v['name'] == selectedVoice)
+            ? selectedVoice
+            : null;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Voice'),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              initialValue: validValue,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+              items: voices
+                  .map((v) => DropdownMenuItem(
+                        value: v['name'],
+                        child: Text(v['name'] ?? 'Unknown'),
+                      ))
+                  .toList(),
+              onChanged: onVoiceSelected,
+            ),
+          ],
+        );
+      },
+    );
   }
 }

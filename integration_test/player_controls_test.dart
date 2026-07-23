@@ -10,6 +10,8 @@ import 'package:subvocal/presentation/screens/player_screen.dart';
 import 'package:subvocal/presentation/widgets/playback_controls.dart';
 import 'package:subvocal/presentation/widgets/subtitle_display.dart';
 
+const _settleTimeout = Duration(seconds: 10);
+
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -36,7 +38,11 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        _settleTimeout,
+      );
 
       expect(find.text('Test'), findsOneWidget);
       expect(find.byType(PlaybackControls), findsOneWidget);
@@ -51,7 +57,11 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        _settleTimeout,
+      );
 
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
       expect(find.byIcon(Icons.stop), findsOneWidget);
@@ -66,7 +76,11 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        _settleTimeout,
+      );
 
       expect(find.byType(SubtitleDisplay), findsOneWidget);
       await takeScreenshot(binding, 'player_progress');
@@ -80,7 +94,11 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        _settleTimeout,
+      );
 
       final stopButton = find.byTooltip('Stop');
       expect(stopButton, findsOneWidget);

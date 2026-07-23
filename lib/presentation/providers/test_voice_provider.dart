@@ -5,9 +5,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../../core/utils/srt_parser.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
+import 'player_provider.dart';
 import 'search_provider.dart';
-
-final _flutterTtsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
 final testVoiceEntriesProvider = FutureProvider<List<SubtitleEntry>>((ref) async {
   final content = await rootBundle.loadString(
@@ -39,7 +38,7 @@ class TestVoiceController {
 
   TestVoiceController(this._tts, this._ref);
 
-  Future<void> playSample(double rate, double pitch) async {
+  Future<void> playSample(double rate, double pitch, {String? voice}) async {
     final entries = _ref.read(testVoiceEntriesProvider).valueOrNull;
     if (entries == null || entries.isEmpty) return;
 
@@ -47,6 +46,9 @@ class TestVoiceController {
 
     await _tts.setSpeechRate(rate);
     await _tts.setPitch(pitch);
+    if (voice != null) {
+      await _tts.setVoice({'name': voice});
+    }
 
     for (final entry in entries) {
       if (!_ref.read(testVoicePlayingProvider)) break;
@@ -57,7 +59,7 @@ class TestVoiceController {
     _ref.read(testVoicePlayingProvider.notifier).state = false;
   }
 
-  Future<void> playTranslatedSample(double rate, double pitch, String language) async {
+  Future<void> playTranslatedSample(double rate, double pitch, String language, {String? voice}) async {
     final entries = _ref.read(testVoiceEntriesProvider).valueOrNull;
     if (entries == null || entries.isEmpty) return;
 
@@ -65,6 +67,10 @@ class TestVoiceController {
 
     await _tts.setSpeechRate(rate);
     await _tts.setPitch(pitch);
+    await _tts.setLanguage(language);
+    if (voice != null) {
+      await _tts.setVoice({'name': voice});
+    }
 
     final subtitle = Subtitle(title: 'Test', entries: entries);
     final translate = _ref.read(translateSubtitleProvider);
@@ -92,5 +98,5 @@ class TestVoiceController {
 }
 
 final testVoiceControllerProvider = Provider<TestVoiceController>((ref) {
-  return TestVoiceController(ref.watch(_flutterTtsProvider), ref);
+  return TestVoiceController(ref.watch(flutterTtsProvider), ref);
 });

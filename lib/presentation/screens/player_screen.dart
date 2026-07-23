@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/subtitle.dart';
 import '../providers/player_provider.dart';
+import '../providers/settings_provider.dart';
 import '../widgets/playback_controls.dart';
 import '../widgets/subtitle_display.dart';
 
@@ -24,7 +25,12 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(playerProvider.notifier).load(widget.subtitle.entries);
+      final settings = ref.read(settingsProvider);
+      ref.read(playerProvider.notifier).load(
+            widget.subtitle.entries,
+            language: settings.selectedLanguage,
+            voice: settings.selectedVoice,
+          );
     });
   }
 
