@@ -195,6 +195,25 @@ class TtsRepositoryImpl implements TtsRepository {
   }
 
   @override
+  Future<void> setLanguage(String languageCode) async {
+    await _tts.setLanguage(languageCode);
+  }
+
+  @override
+  Future<List<Map<String, String>>> getVoices() async {
+    final voices = await _tts.getVoices;
+    return voices
+        .whereType<Map>()
+        .map((v) => v.map((key, value) => MapEntry(key.toString(), value.toString())))
+        .toList();
+  }
+
+  @override
+  Future<void> setVoice(Map<String, String> voice) async {
+    await _tts.setVoice(voice);
+  }
+
+  @override
   bool get isPlaying => _isPlaying;
 
   @override

@@ -7,10 +7,10 @@ import '../../data/repositories/tts_repository_impl.dart';
 import '../../domain/entities/subtitle_entry.dart';
 import '../../domain/usecases/play_subtitle_sequence.dart';
 
-final _flutterTtsProvider = Provider<FlutterTts>((ref) => FlutterTts());
+final flutterTtsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
 final ttsRepositoryProvider = Provider<TtsRepositoryImpl>((ref) {
-  return TtsRepositoryImpl(ref.watch(_flutterTtsProvider));
+  return TtsRepositoryImpl(ref.watch(flutterTtsProvider));
 });
 
 final playSubtitleSequenceProvider = Provider<PlaySubtitleSequence>((ref) {
@@ -92,7 +92,13 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     super.dispose();
   }
 
-  Future<void> load(List<SubtitleEntry> entries) async {
+  Future<void> load(List<SubtitleEntry> entries, {String? language, String? voice}) async {
+    if (language != null) {
+      await _ttsRepository.setLanguage(language);
+    }
+    if (voice != null) {
+      await _ttsRepository.setVoice({'name': voice});
+    }
     final failure = await _playSubtitleSequence.call(entries);
     if (failure != null) {
       state = state.copyWith(error: failure.message);
