@@ -125,7 +125,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     }
     state = PlayerState(
       isPlaying: true,
-      entries: entries,
+      entries: playEntries,
       speed: state.speed,
     );
   }
