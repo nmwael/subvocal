@@ -201,11 +201,10 @@ class TtsRepositoryImpl implements TtsRepository {
 
   @override
   Future<List<Map<String, String>>> getVoices() async {
-    final voices = await _tts.getVoices;
-    return voices
-        .whereType<Map>()
-        .map((v) => v.map((key, value) => MapEntry(key.toString(), value.toString())))
-        .toList();
+    final raw = await _tts.getVoices;
+    if (raw is! List) return [];
+    return raw.whereType<Map>().map((v) =>
+        v.map((key, value) => MapEntry(key.toString(), value.toString()))).toList();
   }
 
   @override

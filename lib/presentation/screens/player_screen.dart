@@ -99,6 +99,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             onPrevious: playerNotifier.previous,
             onSpeedChanged: playerNotifier.setSpeed,
             onSyncOffsetChanged: playerNotifier.setSyncOffset,
+            onSeek: playerNotifier.seek,
           ),
         ],
       ),

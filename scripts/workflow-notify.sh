@@ -83,3 +83,12 @@ if [[ -n "$MESSAGE" ]]; then
 fi
 
 "$SCRIPT_DIR/notify.sh" "$TITLE" "$BODY" "$ISSUE_URL"
+
+# Log token usage at task completion boundaries
+case "$STATUS" in
+  impl-done|tests-done|audit-done|ux-done)
+    if [[ -x "$SCRIPT_DIR/log-usage.sh" ]]; then
+      "$SCRIPT_DIR/log-usage.sh" --issue "$ISSUE_NUM" 2>/dev/null || true
+    fi
+    ;;
+esac
