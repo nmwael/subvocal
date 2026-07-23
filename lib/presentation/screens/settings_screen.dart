@@ -6,6 +6,36 @@ import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
 
+const _iso6392To6391 = {
+  'afr': 'af', 'alb': 'sq', 'amh': 'am', 'ara': 'ar', 'arm': 'hy',
+  'aze': 'az', 'baq': 'eu', 'bel': 'be', 'ben': 'bn', 'bos': 'bs',
+  'bul': 'bg', 'bur': 'my', 'cat': 'ca', 'che': 'ce', 'zho': 'zh',
+  'hrv': 'hr', 'cze': 'cs', 'dan': 'da', 'div': 'dv', 'dut': 'nl',
+  'dzo': 'dz', 'eng': 'en', 'est': 'et', 'fao': 'fo', 'fij': 'fj',
+  'fin': 'fi', 'fre': 'fr', 'glg': 'gl', 'geo': 'ka', 'ger': 'de',
+  'ell': 'el', 'grn': 'gn', 'guj': 'gu', 'hat': 'ht', 'hau': 'ha',
+  'heb': 'he', 'hin': 'hi', 'hun': 'hu', 'ice': 'is', 'ind': 'id',
+  'gle': 'ga', 'ita': 'it', 'jpn': 'ja', 'jav': 'jv', 'kan': 'kn',
+  'kaz': 'kk', 'khm': 'km', 'kor': 'ko', 'kur': 'ku', 'kir': 'ky',
+  'lao': 'lo', 'lat': 'la', 'lav': 'lv', 'lit': 'lt', 'mkd': 'mk',
+  'may': 'ms', 'mal': 'ml', 'mlt': 'mt', 'mar': 'mr', 'mon': 'mn',
+  'nep': 'ne', 'nor': 'no', 'oci': 'oc', 'ori': 'or', 'per': 'fa',
+  'pol': 'pl', 'por': 'pt', 'pan': 'pa', 'rum': 'ro', 'rus': 'ru',
+  'smo': 'sm', 'srp': 'sr', 'sna': 'sn', 'snd': 'sd', 'sin': 'si',
+  'slk': 'sk', 'slv': 'sl', 'som': 'so', 'spa': 'es', 'swa': 'sw',
+  'swe': 'sv', 'tgl': 'tl', 'tam': 'ta', 'tat': 'tt', 'tel': 'te',
+  'tha': 'th', 'tur': 'tr', 'ukr': 'uk', 'urd': 'ur', 'uzb': 'uz',
+  'vie': 'vi', 'wel': 'cy', 'fry': 'fy', 'wol': 'wo', 'yid': 'yi',
+};
+
+String _normalizeLangCode(String code) {
+  final lower = code.toLowerCase();
+  if (lower.length <= 3) return lower;
+  final bcp47 = lower.split('-').first;
+  if (bcp47.length == 2) return bcp47;
+  return _iso6392To6391[bcp47] ?? bcp47;
+}
+
 final availableVoicesProvider = FutureProvider.autoDispose<List<Map<String, String>>>((ref) async {
   final tts = ref.watch(flutterTtsProvider);
   final language = ref.watch(settingsProvider).selectedLanguage;
@@ -14,7 +44,7 @@ final availableVoicesProvider = FutureProvider.autoDispose<List<Map<String, Stri
       .whereType<Map>()
       .map((v) => v.map((key, value) => MapEntry(key.toString(), value.toString())))
       .where((v) {
-    final voiceLang = (v['language'] ?? '').split('-').first.toLowerCase();
+    final voiceLang = _normalizeLangCode(v['language'] ?? '');
     return voiceLang == language.toLowerCase();
   }).toList();
   return filtered;

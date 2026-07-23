@@ -97,7 +97,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       await _ttsRepository.setLanguage(language);
     }
     if (voice != null) {
-      await _ttsRepository.setVoice({'name': voice});
+      await _ttsRepository.setVoice({'name': voice, 'locale': language ?? ''});
     }
     final failure = await _playSubtitleSequence.call(entries);
     if (failure != null) {

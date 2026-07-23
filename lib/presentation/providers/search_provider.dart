@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 
 import '../../core/utils/srt_parser.dart';
 import '../../data/datasources/google_translate_api.dart';
-import '../../data/datasources/libre_translate_api.dart';
 import '../../data/datasources/local_file_source.dart';
+import '../../data/datasources/my_memory_translate_api.dart';
 import '../../data/datasources/opensubtitles_api.dart';
 import '../../data/datasources/translation_service.dart';
 import '../../data/repositories/subtitle_repository_impl.dart';
@@ -27,12 +27,11 @@ final openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
 });
 
 final _translationServiceProvider = Provider<TranslationService>((ref) {
-  // Use LibreTranslate (free, no API key) as default, fallback to Google if key provided
   const googleApiKey = String.fromEnvironment('GOOGLE_TRANSLATE_API_KEY', defaultValue: '');
   if (googleApiKey.isNotEmpty) {
     return GoogleTranslateApi(ref.watch(_httpClientProvider), googleApiKey);
   }
-  return LibreTranslateApi(ref.watch(_httpClientProvider));
+  return MyMemoryTranslateApi(ref.watch(_httpClientProvider));
 });
 
 final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {

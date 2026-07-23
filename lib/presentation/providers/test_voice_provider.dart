@@ -7,6 +7,7 @@ import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
 import 'player_provider.dart';
 import 'search_provider.dart';
+import 'settings_provider.dart';
 
 final testVoiceEntriesProvider = FutureProvider<List<SubtitleEntry>>((ref) async {
   final content = await rootBundle.loadString(
@@ -47,7 +48,8 @@ class TestVoiceController {
     await _tts.setSpeechRate(rate);
     await _tts.setPitch(pitch);
     if (voice != null) {
-      await _tts.setVoice({'name': voice});
+      final language = _ref.read(settingsProvider).selectedLanguage;
+      await _tts.setVoice({'name': voice, 'locale': language});
     }
 
     for (final entry in entries) {
@@ -69,7 +71,7 @@ class TestVoiceController {
     await _tts.setPitch(pitch);
     await _tts.setLanguage(language);
     if (voice != null) {
-      await _tts.setVoice({'name': voice});
+      await _tts.setVoice({'name': voice, 'locale': language});
     }
 
     final subtitle = Subtitle(title: 'Test', entries: entries);

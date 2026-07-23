@@ -6,21 +6,24 @@ import 'package:subvocal/presentation/providers/test_voice_provider.dart';
 import 'package:subvocal/presentation/screens/settings_screen.dart';
 
 void main() {
-  testWidgets('SettingsScreen renders top sections', (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => _MockAuthNotifier()),
-          testVoicePlayingProvider.overrideWith((ref) => false),
-          translatedTestPlayingProvider.overrideWith((ref) => false),
-        ],
-        child: const MaterialApp(
-          home: SettingsScreen(),
-        ),
+  Widget buildTestWidget({
+    List<Override> overrides = const [],
+  }) {
+    return ProviderScope(
+      overrides: [
+        authProvider.overrideWith(() => _MockAuthNotifier()),
+        testVoicePlayingProvider.overrideWith((ref) => false),
+        translatedTestPlayingProvider.overrideWith((ref) => false),
+        ...overrides,
+      ],
+      child: const MaterialApp(
+        home: SettingsScreen(),
       ),
     );
+  }
 
-    await tester.pump();
+  testWidgets('SettingsScreen renders top sections', (tester) async {
+    await tester.pumpWidget(buildTestWidget());
     await tester.pump();
 
     expect(find.text('Readout Settings'), findsOneWidget);
@@ -28,32 +31,64 @@ void main() {
     expect(find.text('Speech Configuration'), findsOneWidget);
   });
 
-  testWidgets('SettingsScreen renders bottom sections after scroll', (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => _MockAuthNotifier()),
-          testVoicePlayingProvider.overrideWith((ref) => false),
-          translatedTestPlayingProvider.overrideWith((ref) => false),
-        ],
-        child: const MaterialApp(
-          home: SettingsScreen(),
-        ),
-      ),
-    );
+  testWidgets('Voice selector renders with available voices', (tester) async {
+    await tester.pumpWidget(buildTestWidget(
+      overrides: [
+        availableVoicesProvider.overrideWith((ref) async => [
+              {'name': 'Alice', 'language': 'en-US'},
+              {'name': 'Bob', 'language': 'en-GB'},
+            ]),
+      ],
+    ));
+    await tester.pump();
 
+    expect(find.text('Voice'), findsOneWidget);
+    expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
+  });
+
+  testWidgets('Voice selector shows empty state when no voices', (tester) async {
+    await tester.pumpWidget(buildTestWidget(
+      overrides: [
+        availableVoicesProvider.overrideWith((ref) async => <Map<String, String>>[]),
+      ],
+    ));
+    await tester.pump();
+
+    expect(find.textContaining('No voices available'), findsOneWidget);
+    expect(find.byType(DropdownButtonFormField<String>), findsNothing);
+  });
+
+  testWidgets('Translated preview shows text when available', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 3000));
+    await tester.pumpWidget(buildTestWidget(
+      overrides: [
+        translatedTestPreviewProvider('en').overrideWith((ref) async => [
+              'Hola, mundo!',
+              'Segunda línea',
+            ]),
+      ],
+    ));
     await tester.pump();
     await tester.pump();
 
-    // Scroll to bottom
-    final listView = find.byType(ListView);
-    await tester.drag(listView, const Offset(0, -1200));
+    expect(find.textContaining('Hola, mundo!'), findsOneWidget);
+
+    await tester.binding.setSurfaceSize(const Size(800, 600));
+  });
+
+  testWidgets('Translated preview shows empty state when no translations', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(800, 3000));
+    await tester.pumpWidget(buildTestWidget(
+      overrides: [
+        translatedTestPreviewProvider('en').overrideWith((ref) async => <String>[]),
+      ],
+    ));
+    await tester.pump();
     await tester.pump();
 
-    expect(find.text('Test Voice'), findsOneWidget);
-    expect(find.text('Test Translated Voice'), findsOneWidget);
-    expect(find.text('Translation & Language'), findsOneWidget);
-    expect(find.text('Default Target Language'), findsOneWidget);
+    expect(find.text('No translations available.'), findsOneWidget);
+
+    await tester.binding.setSurfaceSize(const Size(800, 600));
   });
 }
 

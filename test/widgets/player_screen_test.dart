@@ -21,6 +21,12 @@ class _MockFlutterTts extends FlutterTts {
 
   @override
   Future<dynamic> setPitch(double pitch) async {}
+
+  @override
+  Future<dynamic> setLanguage(String languageCode) async {}
+
+  @override
+  Future<dynamic> setVoice(Map<String, String> voice) async {}
 }
 
 Widget _createTestApp(Subtitle subtitle) {
@@ -70,6 +76,8 @@ void main() {
     await tester.pumpWidget(_createTestApp(testSubtitle));
     await tester.pump();
     await tester.pump();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byIcon(Icons.pause), findsOneWidget);
     expect(find.byIcon(Icons.stop), findsWidgets);
@@ -81,6 +89,9 @@ void main() {
 
   testWidgets('shows subtitle text when playing', (tester) async {
     await tester.pumpWidget(_createTestApp(testSubtitle));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
     await tester.pump();
 
     expect(find.text('Hello, world!'), findsWidgets);
