@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:subvocal/presentation/providers/auth_provider.dart';
-import 'package:subvocal/presentation/providers/settings_provider.dart';
 import 'package:subvocal/presentation/providers/test_voice_provider.dart';
 import 'package:subvocal/presentation/screens/settings_screen.dart';
 
