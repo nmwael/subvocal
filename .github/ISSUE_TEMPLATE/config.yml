@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📱 Mobile App Support
+    url: https://github.com/nmwael/subvocal/issues
+    about: For bug reports, use the mobile bug report template below.

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
+import '../../core/utils/app_logger.dart';
 import '../../domain/entities/saved_subtitle.dart';
 import '../../domain/entities/subtitle.dart';
 
@@ -22,7 +23,8 @@ class SavedSubtitlesLocalSource {
           .cast<Map<String, dynamic>>()
           .map(SavedSubtitle.fromJson)
           .toList();
-    } catch (_) {
+    } catch (e) {
+      appLogger.error('Failed to load saved subtitles', source: 'SavedSubtitlesLocalSource', error: e);
       return [];
     }
   }
@@ -53,6 +55,8 @@ class SavedSubtitlesLocalSource {
       final path = await _filePath;
       final file = File(path);
       await file.writeAsString(jsonEncode(items.map((e) => e.toJson()).toList()));
-    } catch (_) {}
+    } catch (e) {
+      appLogger.error('Failed to write saved subtitles', source: 'SavedSubtitlesLocalSource', error: e);
+    }
   }
 }
