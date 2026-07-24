@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import '../../core/utils/api_error_parser.dart';
+import '../../core/utils/app_logger.dart';
 import '../../domain/errors/failures.dart';
 
 class OpenSubtitlesApi {
@@ -37,7 +38,8 @@ class OpenSubtitlesApi {
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       _token = body['token'] as String?;
       return _token;
-    } catch (_) {
+    } catch (e) {
+      appLogger.error('Login failed', source: 'OpenSubtitlesApi', error: e);
       return null;
     }
   }
@@ -59,7 +61,8 @@ class OpenSubtitlesApi {
         headers: headers,
       );
       return response.statusCode == 200;
-    } catch (_) {
+    } catch (e) {
+      appLogger.error('Token validation failed', source: 'OpenSubtitlesApi', error: e);
       return false;
     }
   }

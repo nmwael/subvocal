@@ -1,3 +1,4 @@
+import '../../core/utils/app_logger.dart';
 import '../../domain/errors/failures.dart';
 import '../../domain/services/srt_parser.dart';
 import '../../domain/entities/search_result.dart';
@@ -128,6 +129,7 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
       for (var j = 0; j < results.length; j++) {
         final result = results[j];
         if (result == null) {
+          appLogger.error('Translation failed after $maxRetries retries', source: 'SubtitleRepository');
           return (null, const NetworkFailure('Translation failed after retries'));
         }
         translatedEntries[i + j] = result;

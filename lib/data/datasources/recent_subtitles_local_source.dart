@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
+import '../../core/utils/app_logger.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 
 class RecentSubtitlesLocalSource {
@@ -21,7 +22,8 @@ class RecentSubtitlesLocalSource {
           .cast<Map<String, dynamic>>()
           .map(RecentSubtitleInfo.fromJson)
           .toList();
-    } catch (_) {
+    } catch (e) {
+      appLogger.error('Failed to load recent subtitles', source: 'RecentSubtitlesLocalSource', error: e);
       return [];
     }
   }
@@ -31,6 +33,8 @@ class RecentSubtitlesLocalSource {
       final path = await _filePath;
       final file = File(path);
       await file.writeAsString(jsonEncode(items.map((e) => e.toJson()).toList()));
-    } catch (_) {}
+    } catch (e) {
+      appLogger.error('Failed to write recent subtitles', source: 'RecentSubtitlesLocalSource', error: e);
+    }
   }
 }

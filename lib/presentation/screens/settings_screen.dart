@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/utils/bug_report_helper.dart';
 import '../providers/auth_provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
@@ -354,6 +355,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // --- Support ---
+          Text(
+            'Support',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.bug_report),
+              title: const Text('Report a Bug'),
+              subtitle: const Text('Open a pre-filled bug report on GitHub'),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: () => BugReportHelper().openBugReport(),
             ),
           ),
         ],
