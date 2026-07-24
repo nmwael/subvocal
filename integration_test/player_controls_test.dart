@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'screenshot_helper.dart';
-import 'package:subvocal/core/utils/srt_parser.dart';
+import 'package:subvocal/domain/services/srt_parser.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
 import 'package:subvocal/presentation/widgets/playback_controls.dart';

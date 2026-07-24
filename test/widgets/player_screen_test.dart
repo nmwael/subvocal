@@ -5,7 +5,6 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:subvocal/data/repositories/tts_repository_impl.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
 import 'package:subvocal/domain/entities/subtitle_entry.dart';
-import 'package:subvocal/domain/usecases/play_subtitle_sequence.dart';
 import 'package:subvocal/presentation/providers/player_provider.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
 
@@ -35,8 +34,7 @@ Widget _createTestApp(Subtitle subtitle) {
       playerProvider.overrideWith((ref) {
         final tts = _MockFlutterTts();
         final repo = TtsRepositoryImpl(tts);
-        final sequence = PlaySubtitleSequence(repo);
-        return PlayerNotifier(sequence, repo);
+        return PlayerNotifier(repo);
       }),
     ],
     child: MaterialApp(

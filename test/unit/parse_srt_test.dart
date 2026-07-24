@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:subvocal/core/errors/failures.dart';
-import 'package:subvocal/core/utils/srt_parser.dart';
+import 'package:subvocal/domain/errors/failures.dart';
+import 'package:subvocal/domain/services/srt_parser.dart';
 import 'package:subvocal/domain/usecases/parse_srt.dart';
 
 void main() {

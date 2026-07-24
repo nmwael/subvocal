@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:subvocal/core/errors/failures.dart';
-import 'package:subvocal/core/utils/srt_parser.dart';
+import 'package:subvocal/domain/errors/failures.dart';
+import 'package:subvocal/domain/services/srt_parser.dart';
 import 'package:subvocal/data/datasources/local_file_source.dart';
 import 'package:subvocal/data/datasources/opensubtitles_api.dart';
 import 'package:subvocal/data/datasources/translation_service.dart';

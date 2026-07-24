@@ -1,4 +1,4 @@
-import '../../core/errors/failures.dart';
+import '../errors/failures.dart';
 import '../entities/subtitle.dart';
 import '../entities/translation_progress.dart';
 import '../repositories/subtitle_repository.dart';

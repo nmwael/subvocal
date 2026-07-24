@@ -288,10 +288,10 @@ All scripts are in `scripts/` and accept `--help` for usage. Use these instead o
 ### FinOps (AI Cost Tracking)
 | Script | Purpose |
 |---|---|
-| `log-usage.sh` | Log token usage from OpenCode DB to `.finops/log.csv` (auto-called by `workflow-notify.sh` at task boundaries) |
+| `log-usage.sh` | Log token usage from OpenCode DB to `.aifinops/log.csv` (auto-called by `workflow-notify.sh` at task boundaries) |
 | `usage-report.sh` | Generate usage reports (`--by-agent`, `--by-model`, `--by-issue`, `--summary`, `--json`) |
 
-**How it works**: OpenCode tracks per-message `cost` and `tokens` (input/output/reasoning/cache) in its SQLite database (`~/.local/share/opencode/opencode.db`). The `session` table has pre-aggregated totals. `log-usage.sh` reads this data and appends a CSV row to `.finops/log.csv`.
+**How it works**: OpenCode tracks per-message `cost` and `tokens` (input/output/reasoning/cache) in its SQLite database (`~/.local/share/opencode/opencode.db`). The `session` table has pre-aggregated totals. `log-usage.sh` reads this data and appends a CSV row to `.aifinops/log.csv`.
 
 **Auto-logging**: `workflow-notify.sh` automatically calls `log-usage.sh` after `impl-done`, `tests-done`, `audit-done`, and `ux-done` notifications. No manual action needed.
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_tts/flutter_tts.dart';
 
-import '../../core/errors/failures.dart';
+import '../../domain/errors/failures.dart';
 import '../../domain/entities/subtitle_entry.dart';
 import '../../domain/repositories/tts_repository.dart';
 

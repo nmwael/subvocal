@@ -1,4 +1,4 @@
-import '../../core/errors/failures.dart';
+import '../errors/failures.dart';
 import '../entities/subtitle_entry.dart';
 
 abstract class TtsRepository {

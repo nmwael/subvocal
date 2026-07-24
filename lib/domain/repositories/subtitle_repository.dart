@@ -1,4 +1,4 @@
-import '../../core/errors/failures.dart';
+import '../errors/failures.dart';
 import '../entities/search_result.dart';
 import '../entities/subtitle.dart';
 import '../entities/translation_progress.dart';
@@ -13,6 +13,7 @@ abstract class SubtitleRepository {
     void Function(TranslationProgress progress)? onProgress,
   });
   Future<(String?, Failure?)> login(String username, String password);
+  void setToken(String token);
   void logout();
   Future<bool> validateToken();
 }

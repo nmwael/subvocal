@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:subvocal/core/utils/srt_parser.dart';
+import 'package:subvocal/domain/services/srt_parser.dart';
 
 void main() {
   late SrtParser parser;

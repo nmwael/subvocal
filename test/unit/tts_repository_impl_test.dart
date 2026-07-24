@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:subvocal/data/repositories/tts_repository_impl.dart';
 import 'package:subvocal/domain/entities/subtitle_entry.dart';
-import 'package:subvocal/domain/usecases/play_subtitle_sequence.dart';
 
 class _MockFlutterTts extends FlutterTts {
   String? lastSpokenText;
@@ -78,12 +77,10 @@ void main() {
 
   late _MockFlutterTts mockTts;
   late TtsRepositoryImpl repository;
-  late PlaySubtitleSequence useCase;
 
   setUp(() {
     mockTts = _MockFlutterTts();
     repository = TtsRepositoryImpl(mockTts);
-    useCase = PlaySubtitleSequence(repository);
   });
 
   group('TtsRepositoryImpl', () {
@@ -256,68 +253,68 @@ void main() {
     });
   });
 
-  group('PlaySubtitleSequence', () {
+  group('TtsRepository delegation', () {
     test('speaks entries via repository', () async {
       final entries = _createEntries();
-      final failure = await useCase.call(entries);
+      final failure = await repository.speak(entries);
 
       expect(failure, isNull);
     });
 
     test('delegates play to repository', () async {
-      await useCase.call(_createEntries());
-      await useCase.pause();
+      await repository.speak(_createEntries());
+      await repository.pause();
 
-      await useCase.play();
+      await repository.play();
 
       expect(repository.isPlaying, true);
     });
 
     test('delegates pause to repository', () async {
-      await useCase.call(_createEntries());
+      await repository.speak(_createEntries());
 
-      await useCase.pause();
+      await repository.pause();
 
       expect(repository.isPlaying, false);
     });
 
     test('delegates stop to repository', () async {
-      await useCase.call(_createEntries());
+      await repository.speak(_createEntries());
 
-      await useCase.stop();
+      await repository.stop();
 
       expect(repository.isPlaying, false);
     });
 
     test('delegates seek to repository', () async {
-      await useCase.call(_createEntries());
+      await repository.speak(_createEntries());
 
-      await useCase.seek(const Duration(seconds: 6));
+      await repository.seek(const Duration(seconds: 6));
 
       expect(repository.currentIndex, 1);
     });
 
     test('delegates setSpeed to repository', () async {
-      await useCase.setSpeed(0.7);
+      await repository.setSpeed(0.7);
     });
 
     test('delegates setOffset to repository', () async {
-      await useCase.setOffset(const Duration(seconds: 1));
+      await repository.setOffset(const Duration(seconds: 1));
     });
 
     test('exposes state from repository', () async {
-      await useCase.call(_createEntries());
+      await repository.speak(_createEntries());
 
-      expect(useCase.isPlaying, true);
-      expect(useCase.currentIndex, 0);
-      expect(useCase.currentPosition, const Duration(seconds: 1));
+      expect(repository.isPlaying, true);
+      expect(repository.currentIndex, 0);
+      expect(repository.currentPosition, const Duration(seconds: 1));
     });
 
     test('exposes onIndexChanged stream', () async {
       final emitted = <int>[];
-      final sub = useCase.onIndexChanged.listen(emitted.add);
+      final sub = repository.onIndexChanged.listen(emitted.add);
 
-      await useCase.call(_createEntries());
+      await repository.speak(_createEntries());
 
       expect(emitted.length, 1);
       expect(emitted[0], 0);
