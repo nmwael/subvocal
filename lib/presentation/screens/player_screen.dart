@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/translation_progress.dart';
 import '../providers/player_provider.dart';
+import '../providers/saved_subtitles_provider.dart';
 import '../providers/settings_provider.dart';
 import '../widgets/playback_controls.dart';
 import '../widgets/subtitle_display.dart';
@@ -55,6 +56,23 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       appBar: AppBar(
         title: Text(widget.subtitle.title),
         actions: [
+          if (playerState.translatedSubtitle != null)
+            IconButton(
+              icon: const Icon(Icons.save),
+              tooltip: 'Save translation',
+              onPressed: () async {
+                final saved = ref.read(savedSubtitlesProvider.notifier);
+                await saved.save(
+                  playerState.translatedSubtitle!,
+                  playerState.translatedSubtitle!.language ?? '',
+                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Translation saved')),
+                  );
+                }
+              },
+            ),
           if (playerState.isPlaying || playerState.isPaused)
             IconButton(
               icon: const Icon(Icons.stop),
