@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../../data/repositories/tts_repository_impl.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
+import '../../domain/entities/translation_progress.dart';
 import '../../domain/repositories/tts_repository.dart';
 import '../../domain/repositories/subtitle_repository.dart';
 import 'search_provider.dart';
@@ -19,6 +20,8 @@ final ttsRepositoryProvider = Provider<TtsRepository>((ref) {
 class PlayerState {
   final bool isPlaying;
   final bool isPaused;
+  final bool isTranslating;
+  final TranslationProgress? translationProgress;
   final int currentIndex;
   final Duration currentPosition;
   final double speed;
@@ -29,6 +32,8 @@ class PlayerState {
   const PlayerState({
     this.isPlaying = false,
     this.isPaused = false,
+    this.isTranslating = false,
+    this.translationProgress,
     this.currentIndex = 0,
     this.currentPosition = Duration.zero,
     this.speed = 0.5,
@@ -50,6 +55,8 @@ class PlayerState {
   PlayerState copyWith({
     bool? isPlaying,
     bool? isPaused,
+    bool? isTranslating,
+    TranslationProgress? translationProgress,
     int? currentIndex,
     Duration? currentPosition,
     double? speed,
@@ -60,6 +67,8 @@ class PlayerState {
     return PlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
       isPaused: isPaused ?? this.isPaused,
+      isTranslating: isTranslating ?? this.isTranslating,
+      translationProgress: translationProgress ?? this.translationProgress,
       currentIndex: currentIndex ?? this.currentIndex,
       currentPosition: currentPosition ?? this.currentPosition,
       speed: speed ?? this.speed,
@@ -101,11 +110,19 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
     var playEntries = entries;
     if (language != null && language.isNotEmpty && _subtitleRepository != null) {
+      state = state.copyWith(
+        isTranslating: true,
+        translationProgress: const TranslationProgress(completed: 0, total: 0),
+      );
       try {
         final (translated, failure) = await _subtitleRepository.translate(
           Subtitle(id: null, title: '', entries: entries),
           language,
+          onProgress: (progress) {
+            state = state.copyWith(translationProgress: progress);
+          },
         );
+        state = state.copyWith(isTranslating: false);
         if (failure != null) {
           state = state.copyWith(error: 'Translation failed: ${failure.message}');
           return;
@@ -114,7 +131,10 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
           playEntries = translated.entries;
         }
       } catch (e) {
-        state = state.copyWith(error: 'Translation error: $e');
+        state = state.copyWith(
+          isTranslating: false,
+          error: 'Translation error: $e',
+        );
         return;
       }
     }
