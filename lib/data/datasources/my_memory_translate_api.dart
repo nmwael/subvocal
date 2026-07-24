@@ -21,16 +21,19 @@ class MyMemoryTranslateApi implements TranslationService {
   Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
     try {
       final source = sourceLanguage ?? 'en';
-      final queryParams = <String, String>{
+      final body = <String, String>{
         'q': text,
         'langpair': '$source|$targetLanguage',
       };
       if (_email != null && _email.isNotEmpty) {
-        queryParams['de'] = _email;
+        body['de'] = _email;
       }
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
 
-      final response = await _client.get(uri);
+      final response = await _client.post(
+        Uri.parse(_baseUrl),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: body,
+      );
 
       if (response.statusCode == 429) {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
@@ -58,16 +61,19 @@ class MyMemoryTranslateApi implements TranslationService {
     try {
       final source = sourceLanguage ?? 'en';
       final joined = texts.join('\n');
-      final queryParams = <String, String>{
+      final body = <String, String>{
         'q': joined,
         'langpair': '$source|$targetLanguage',
       };
       if (_email != null && _email.isNotEmpty) {
-        queryParams['de'] = _email;
+        body['de'] = _email;
       }
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
 
-      final response = await _client.get(uri);
+      final response = await _client.post(
+        Uri.parse(_baseUrl),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: body,
+      );
 
       if (response.statusCode == 429) {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
