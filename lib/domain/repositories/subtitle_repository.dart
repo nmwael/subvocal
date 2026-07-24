@@ -1,4 +1,4 @@
-import '../../core/errors/failures.dart';
+import '../errors/failures.dart';
 import '../entities/search_result.dart';
 import '../entities/subtitle.dart';
 
@@ -8,6 +8,7 @@ abstract class SubtitleRepository {
   Future<(Subtitle?, Failure?)> importFromFile(String filePath);
   Future<(Subtitle?, Failure?)> translate(Subtitle subtitle, String targetLanguage);
   Future<(String?, Failure?)> login(String username, String password);
+  void setToken(String token);
   void logout();
   Future<bool> validateToken();
 }

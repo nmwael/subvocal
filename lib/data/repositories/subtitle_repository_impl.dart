@@ -1,5 +1,5 @@
-import '../../core/errors/failures.dart';
-import '../../core/utils/srt_parser.dart';
+import '../../domain/errors/failures.dart';
+import '../../domain/services/srt_parser.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
@@ -77,6 +77,9 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     }
     return (token, null);
   }
+
+  @override
+  void setToken(String token) => api.setToken(token);
 
   @override
   void logout() {

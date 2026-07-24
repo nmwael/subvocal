@@ -1,4 +1,4 @@
-import '../../core/errors/failures.dart';
+import '../errors/failures.dart';
 import '../repositories/subtitle_repository.dart';
 
 class LoginSubtitle {

@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-import '../../core/errors/failures.dart';
+import '../../core/utils/api_error_parser.dart';
+import '../../domain/errors/failures.dart';
 
 class OpenSubtitlesApi {
   static const _baseUrl = 'https://api.opensubtitles.com/api/v1';
@@ -22,14 +23,8 @@ class OpenSubtitlesApi {
 
   bool get isLoggedIn => _token != null;
 
-  String _extractErrorMessage(String body, int statusCode) {
-    try {
-      final json = jsonDecode(body) as Map<String, dynamic>;
-      final msg = (json['error'] as String?) ?? (json['message'] as String?);
-      if (msg != null && msg.isNotEmpty) return msg;
-    } catch (_) {}
-    return 'HTTP $statusCode';
-  }
+  String _extractErrorMessage(String body, int statusCode) =>
+      extractApiErrorMessage(body, statusCode);
 
   Future<String?> login(String username, String password) async {
     try {

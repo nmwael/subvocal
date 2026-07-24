@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 DB_PATH="${OPENCODE_DB:-$HOME/.local/share/opencode/opencode.db}"
-LOG_DIR="$PROJECT_DIR/.finops"
+LOG_DIR="$PROJECT_DIR/.aifinops"
 LOG_FILE="$LOG_DIR/log.csv"
 HEADER="timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoning,cache_read,cache_write,cost_usd"
 
@@ -15,7 +15,7 @@ Usage: $(basename "$0") [OPTIONS]
 Log AI token usage from the OpenCode database for the latest session.
 
 Reads the local opencode.db SQLite database, finds the most recently
-updated session (or a specific one), and appends a CSV row to .finops/log.csv.
+updated session (or a specific one), and appends a CSV row to .aifinops/log.csv.
 
 Options:
   --session-id ID   Log a specific session (default: latest updated)

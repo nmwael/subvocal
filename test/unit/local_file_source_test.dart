@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:subvocal/core/errors/failures.dart';
+import 'package:subvocal/domain/errors/failures.dart';
 import 'package:subvocal/data/datasources/local_file_source.dart';
 
 void main() {

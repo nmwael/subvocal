@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:subvocal/core/utils/srt_parser.dart';
+import 'package:subvocal/domain/services/srt_parser.dart';
 import 'package:subvocal/data/datasources/my_memory_translate_api.dart';
 
 void main() async {

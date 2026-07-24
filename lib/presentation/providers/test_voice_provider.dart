@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-import '../../core/utils/srt_parser.dart';
+import '../../domain/services/srt_parser.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
 import 'player_provider.dart';

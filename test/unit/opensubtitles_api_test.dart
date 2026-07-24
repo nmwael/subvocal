@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:subvocal/core/errors/failures.dart';
+import 'package:subvocal/domain/errors/failures.dart';
 import 'package:subvocal/data/datasources/opensubtitles_api.dart';
 
 class _MockHttpClient extends http.BaseClient {

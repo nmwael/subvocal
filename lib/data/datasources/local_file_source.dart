@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import '../../core/errors/failures.dart';
+import '../../domain/errors/failures.dart';
 
 class LocalFileSource {
   Future<(String?, Failure?)> readFile(String path) async {
