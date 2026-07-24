@@ -117,7 +117,7 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 
 - Never stage, commit, or push changes unless the user explicitly requests it
 - Do not run `git add`, `git commit`, or `git push` commands autonomously
-- **Always use helper scripts for git operations** — never run raw `git add`, `git commit`, or `git push`. Use `./scripts/commit-push.sh` (handles staging, signed commit, and push). Use `./scripts/check-branch.sh` for status. Scripts handle GPG checks, conventional commit prefixes, and error handling that raw commands miss
+- **Always use helper scripts for git operations** — never run raw `git add`, `git commit`, or `git push`. Use `./scripts/commit-push.sh` (handles staging, signed commit, and push). Use `./scripts/check-branch.sh` for status. Scripts handle GPG checks, conventional commit prefixes, and error handling that raw commands miss. If a script fails mid-way (e.g., GPG timeout), fix the issue and re-run the full script — do not fall back to raw `git commit` or `git push` to "finish up"
 - If the user asks about the state of work, use `./scripts/check-branch.sh` or show a diff instead
 - If a signed commit fails despite a prepared token, it is likely the human needs to press the hardware button — inform the user rather than retrying or skipping the signature
 - Commit messages must be prefixed with a conventional commit type: `doc:` (documentation), `chore:` (tooling/config), `feat:` (feature), `fix:` (bug fix), `refactor:` (code restructuring), `test:` (test changes), or other types as appropriate
