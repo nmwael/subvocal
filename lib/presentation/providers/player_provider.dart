@@ -22,6 +22,7 @@ class PlayerState {
   final bool isPaused;
   final bool isTranslating;
   final TranslationProgress? translationProgress;
+  final Subtitle? translatedSubtitle;
   final int currentIndex;
   final Duration currentPosition;
   final double speed;
@@ -34,6 +35,7 @@ class PlayerState {
     this.isPaused = false,
     this.isTranslating = false,
     this.translationProgress,
+    this.translatedSubtitle,
     this.currentIndex = 0,
     this.currentPosition = Duration.zero,
     this.speed = 0.5,
@@ -57,6 +59,7 @@ class PlayerState {
     bool? isPaused,
     bool? isTranslating,
     TranslationProgress? translationProgress,
+    Subtitle? translatedSubtitle,
     int? currentIndex,
     Duration? currentPosition,
     double? speed,
@@ -69,6 +72,7 @@ class PlayerState {
       isPaused: isPaused ?? this.isPaused,
       isTranslating: isTranslating ?? this.isTranslating,
       translationProgress: translationProgress ?? this.translationProgress,
+      translatedSubtitle: translatedSubtitle ?? this.translatedSubtitle,
       currentIndex: currentIndex ?? this.currentIndex,
       currentPosition: currentPosition ?? this.currentPosition,
       speed: speed ?? this.speed,
@@ -129,6 +133,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
         }
         if (translated != null) {
           playEntries = translated.entries;
+          state = state.copyWith(translatedSubtitle: translated);
         }
       } catch (e) {
         state = state.copyWith(

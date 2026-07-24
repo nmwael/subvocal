@@ -5,6 +5,7 @@ import '../../domain/entities/recent_subtitle_info.dart';
 import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
 import 'player_screen.dart';
+import 'saved_translations_screen.dart';
 import 'search_screen.dart';
 import 'settings_screen.dart';
 
@@ -62,6 +63,19 @@ class HomeScreen extends ConsumerWidget {
                     icon: const Icon(Icons.search),
                     label: const Text('Search subtitles'),
                     style: FilledButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const SavedTranslationsScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.bookmark),
+                    label: const Text('Saved translations'),
+                    style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 56),
                     ),
                   ),
