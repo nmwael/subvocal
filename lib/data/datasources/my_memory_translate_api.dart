@@ -5,6 +5,10 @@ import 'package:http/http.dart' as http;
 import '../../core/errors/failures.dart';
 import 'translation_service.dart';
 
+// This class uses private named parameters in its constructor,
+// which Dart does not allow with 'this.' initializing formals.
+// ignore_for_file: prefer_initializing_formals
+
 class MyMemoryTranslateApi implements TranslationService {
   static const _baseUrl = 'https://api.mymemory.translated.net/get';
   final http.Client _client;
