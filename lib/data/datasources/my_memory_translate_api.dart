@@ -21,16 +21,19 @@ class MyMemoryTranslateApi implements TranslationService {
   Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
     try {
       final source = sourceLanguage ?? 'en';
-      final queryParams = <String, String>{
+      final body = <String, String>{
         'q': text,
         'langpair': '$source|$targetLanguage',
       };
       if (_email != null && _email.isNotEmpty) {
-        queryParams['de'] = _email;
+        body['de'] = _email;
       }
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
 
-      final response = await _client.get(uri);
+      final response = await _client.post(
+        Uri.parse(_baseUrl),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: body,
+      );
 
       if (response.statusCode == 429) {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
@@ -47,6 +50,51 @@ class MyMemoryTranslateApi implements TranslationService {
         return (null, const NetworkFailure('Empty translation result'));
       }
       return (translatedText, null);
+    } on Exception catch (e) {
+      return (null, NetworkFailure('Translation error: $e'));
+    }
+  }
+
+  @override
+  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+    if (texts.isEmpty) return (<String>[], null);
+    try {
+      final source = sourceLanguage ?? 'en';
+      final joined = texts.join('\n');
+      final body = <String, String>{
+        'q': joined,
+        'langpair': '$source|$targetLanguage',
+      };
+      if (_email != null && _email.isNotEmpty) {
+        body['de'] = _email;
+      }
+
+      final response = await _client.post(
+        Uri.parse(_baseUrl),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: body,
+      );
+
+      if (response.statusCode == 429) {
+        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+      }
+      if (response.statusCode != 200) {
+        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+      }
+
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      final responseData = result['responseData'] as Map<String, dynamic>?;
+      final translatedText = responseData?['translatedText'] as String?;
+
+      if (translatedText == null || translatedText.isEmpty) {
+        return (null, const NetworkFailure('Empty translation result'));
+      }
+
+      final translatedLines = translatedText.split('\n');
+      if (translatedLines.length != texts.length) {
+        return (null, const NetworkFailure('Batch translation returned wrong number of lines'));
+      }
+      return (translatedLines, null);
     } on Exception catch (e) {
       return (null, NetworkFailure('Translation error: $e'));
     }
