@@ -72,6 +72,19 @@
   "model": "opencode/big-pickle",
   "small_model": "opencode/big-pickle",
   "provider": {
+    "omniroute": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OmniRoute Proxy Engine",
+      "options": {
+        "baseURL": "http://localhost:20128/v1",
+        "apiKey": "{env:omniroute_api_key}"
+      },
+      "models": {
+        "auto/best-free": {
+          "name": "OmniRoute Best Free Tier"
+        }
+      }
+    },
     "opencode": {
       "options": {
         "timeout": 120000,

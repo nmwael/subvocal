@@ -8,6 +8,7 @@ import '../../data/datasources/my_memory_translate_api.dart';
 import '../../data/datasources/opensubtitles_api.dart';
 import '../../data/datasources/translation_service.dart';
 import '../../data/repositories/subtitle_repository_impl.dart';
+import 'settings_provider.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/usecases/download_subtitle.dart';
@@ -31,7 +32,8 @@ final _translationServiceProvider = Provider<TranslationService>((ref) {
   if (googleApiKey.isNotEmpty) {
     return GoogleTranslateApi(ref.watch(_httpClientProvider), googleApiKey);
   }
-  return MyMemoryTranslateApi(ref.watch(_httpClientProvider));
+  final email = ref.watch(settingsProvider.select((s) => s.myMemoryEmail));
+  return MyMemoryTranslateApi(ref.watch(_httpClientProvider), email: email);
 });
 
 final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {
