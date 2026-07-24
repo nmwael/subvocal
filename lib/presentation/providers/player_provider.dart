@@ -6,23 +6,22 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../../data/repositories/tts_repository_impl.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
+import '../../domain/entities/translation_progress.dart';
+import '../../domain/repositories/tts_repository.dart';
 import '../../domain/repositories/subtitle_repository.dart';
-import '../../domain/usecases/play_subtitle_sequence.dart';
 import 'search_provider.dart';
 
 final flutterTtsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
-final ttsRepositoryProvider = Provider<TtsRepositoryImpl>((ref) {
+final ttsRepositoryProvider = Provider<TtsRepository>((ref) {
   return TtsRepositoryImpl(ref.watch(flutterTtsProvider));
-});
-
-final playSubtitleSequenceProvider = Provider<PlaySubtitleSequence>((ref) {
-  return PlaySubtitleSequence(ref.watch(ttsRepositoryProvider));
 });
 
 class PlayerState {
   final bool isPlaying;
   final bool isPaused;
+  final bool isTranslating;
+  final TranslationProgress? translationProgress;
   final int currentIndex;
   final Duration currentPosition;
   final double speed;
@@ -33,6 +32,8 @@ class PlayerState {
   const PlayerState({
     this.isPlaying = false,
     this.isPaused = false,
+    this.isTranslating = false,
+    this.translationProgress,
     this.currentIndex = 0,
     this.currentPosition = Duration.zero,
     this.speed = 0.5,
@@ -54,6 +55,8 @@ class PlayerState {
   PlayerState copyWith({
     bool? isPlaying,
     bool? isPaused,
+    bool? isTranslating,
+    TranslationProgress? translationProgress,
     int? currentIndex,
     Duration? currentPosition,
     double? speed,
@@ -64,24 +67,24 @@ class PlayerState {
     return PlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
       isPaused: isPaused ?? this.isPaused,
+      isTranslating: isTranslating ?? this.isTranslating,
+      translationProgress: translationProgress ?? this.translationProgress,
       currentIndex: currentIndex ?? this.currentIndex,
       currentPosition: currentPosition ?? this.currentPosition,
       speed: speed ?? this.speed,
       syncOffset: syncOffset ?? this.syncOffset,
       entries: entries ?? this.entries,
-      error: error,
+      error: error ?? this.error,
     );
   }
 }
 
 class PlayerNotifier extends StateNotifier<PlayerState> {
-  final PlaySubtitleSequence _playSubtitleSequence;
-  final TtsRepositoryImpl _ttsRepository;
+  final TtsRepository _ttsRepository;
   final SubtitleRepository? _subtitleRepository;
   StreamSubscription<int>? _indexSubscription;
 
-  PlayerNotifier(this._playSubtitleSequence, this._ttsRepository,
-      [this._subtitleRepository])
+  PlayerNotifier(this._ttsRepository, [this._subtitleRepository])
       : super(const PlayerState()) {
     _indexSubscription = _ttsRepository.onIndexChanged.listen((index) {
       state = state.copyWith(
@@ -107,11 +110,19 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
     var playEntries = entries;
     if (language != null && language.isNotEmpty && _subtitleRepository != null) {
+      state = state.copyWith(
+        isTranslating: true,
+        translationProgress: const TranslationProgress(completed: 0, total: 0),
+      );
       try {
         final (translated, failure) = await _subtitleRepository.translate(
           Subtitle(id: null, title: '', entries: entries),
           language,
+          onProgress: (progress) {
+            state = state.copyWith(translationProgress: progress);
+          },
         );
+        state = state.copyWith(isTranslating: false);
         if (failure != null) {
           state = state.copyWith(error: 'Translation failed: ${failure.message}');
           return;
@@ -120,12 +131,15 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
           playEntries = translated.entries;
         }
       } catch (e) {
-        state = state.copyWith(error: 'Translation error: $e');
+        state = state.copyWith(
+          isTranslating: false,
+          error: 'Translation error: $e',
+        );
         return;
       }
     }
 
-    final failure = await _playSubtitleSequence.call(playEntries);
+    final failure = await _ttsRepository.speak(playEntries);
     if (failure != null) {
       state = state.copyWith(error: failure.message);
       return;
@@ -138,22 +152,22 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   }
 
   void play() {
-    _playSubtitleSequence.play();
+    _ttsRepository.play();
     state = state.copyWith(isPlaying: true, isPaused: false);
   }
 
   void pause() {
-    _playSubtitleSequence.pause();
+    _ttsRepository.pause();
     state = state.copyWith(isPlaying: false, isPaused: true);
   }
 
   void resume() {
-    _playSubtitleSequence.resume();
+    _ttsRepository.resume();
     state = state.copyWith(isPlaying: true, isPaused: false);
   }
 
   void stop() {
-    _playSubtitleSequence.stop();
+    _ttsRepository.stop();
     state = const PlayerState();
   }
 
@@ -172,12 +186,12 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   }
 
   void seek(Duration position) {
-    _playSubtitleSequence.seek(position);
+    _ttsRepository.seek(position);
     state = state.copyWith(currentPosition: position);
   }
 
   void setSpeed(double speed) {
-    _playSubtitleSequence.setSpeed(speed);
+    _ttsRepository.setSpeed(speed);
     state = state.copyWith(speed: speed);
   }
 
@@ -190,8 +204,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 }
 
 final playerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
-  final sequence = ref.watch(playSubtitleSequenceProvider);
   final ttsRepo = ref.watch(ttsRepositoryProvider);
   final subtitleRepo = ref.watch(subtitleRepositoryProvider);
-  return PlayerNotifier(sequence, ttsRepo, subtitleRepo);
+  return PlayerNotifier(ttsRepo, subtitleRepo);
 });

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/subtitle.dart';
+import '../../domain/entities/translation_progress.dart';
 import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
 import '../widgets/playback_controls.dart';
@@ -74,6 +75,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
               ),
             ),
+          if (playerState.isTranslating)
+            _TranslationProgressIndicator(progress: playerState.translationProgress),
           Expanded(
             child: SubtitleDisplay(currentEntry: currentEntry),
           ),
@@ -100,6 +103,37 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             onSpeedChanged: playerNotifier.setSpeed,
             onSyncOffsetChanged: playerNotifier.setSyncOffset,
             onSeek: playerNotifier.seek,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TranslationProgressIndicator extends StatelessWidget {
+  final TranslationProgress? progress;
+
+  const _TranslationProgressIndicator({this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    final completed = progress?.completed ?? 0;
+    final total = progress?.total ?? 0;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LinearProgressIndicator(
+            value: progress?.fraction ?? 0.0,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Translating $completed/$total entries...',
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),

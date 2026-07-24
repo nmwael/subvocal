@@ -1,5 +1,5 @@
-import '../../core/errors/failures.dart';
-import '../../core/utils/srt_parser.dart';
+import '../errors/failures.dart';
+import '../services/srt_parser.dart';
 import '../entities/subtitle_entry.dart';
 
 class ParseSrt {
