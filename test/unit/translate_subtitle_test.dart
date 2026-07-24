@@ -4,6 +4,7 @@ import 'package:subvocal/data/datasources/translation_service.dart';
 import 'package:subvocal/domain/entities/search_result.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
 import 'package:subvocal/domain/entities/subtitle_entry.dart';
+import 'package:subvocal/domain/entities/translation_progress.dart';
 import 'package:subvocal/domain/repositories/subtitle_repository.dart';
 import 'package:subvocal/domain/usecases/translate_subtitle.dart';
 
@@ -36,7 +37,11 @@ class _MockRepository implements SubtitleRepository {
   }
 
   @override
-  Future<(Subtitle?, Failure?)> translate(Subtitle subtitle, String targetLanguage) async {
+  Future<(Subtitle?, Failure?)> translate(
+    Subtitle subtitle,
+    String targetLanguage, {
+    void Function(TranslationProgress progress)? onProgress,
+  }) async {
     final translatedEntries = <SubtitleEntry>[];
     for (final entry in subtitle.entries) {
       final (translatedText, failure) = await _api.translate(entry.text, targetLanguage);

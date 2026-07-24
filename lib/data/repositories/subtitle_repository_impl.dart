@@ -3,6 +3,7 @@ import '../../core/utils/srt_parser.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
+import '../../domain/entities/translation_progress.dart';
 import '../../domain/repositories/subtitle_repository.dart';
 import '../datasources/local_file_source.dart';
 import '../datasources/opensubtitles_api.dart';
@@ -87,7 +88,12 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   Future<bool> validateToken() => api.validateToken();
 
   @override
-  Future<(Subtitle?, Failure?)> translate(Subtitle subtitle, String targetLanguage) async {
+  Future<(Subtitle?, Failure?)> translate(
+    Subtitle subtitle,
+    String targetLanguage, {
+    void Function(TranslationProgress progress)? onProgress,
+  }) async {
+    final total = subtitle.entries.length;
     final translatedEntries = <SubtitleEntry>[];
     for (final entry in subtitle.entries) {
       final (translatedText, failure) = await translateService.translate(entry.text, targetLanguage);
@@ -98,6 +104,10 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
         start: entry.start,
         end: entry.end,
         text: translatedText,
+      ));
+      onProgress?.call(TranslationProgress(
+        completed: translatedEntries.length,
+        total: total,
       ));
     }
     return (Subtitle(

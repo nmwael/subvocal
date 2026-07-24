@@ -1,5 +1,6 @@
 import '../../core/errors/failures.dart';
 import '../entities/subtitle.dart';
+import '../entities/translation_progress.dart';
 import '../repositories/subtitle_repository.dart';
 
 class TranslateSubtitle {
@@ -7,7 +8,11 @@ class TranslateSubtitle {
 
   TranslateSubtitle(this._repository);
 
-  Future<(Subtitle?, Failure?)> call(Subtitle subtitle, String targetLanguage) {
-    return _repository.translate(subtitle, targetLanguage);
+  Future<(Subtitle?, Failure?)> call(
+    Subtitle subtitle,
+    String targetLanguage, {
+    void Function(TranslationProgress progress)? onProgress,
+  }) {
+    return _repository.translate(subtitle, targetLanguage, onProgress: onProgress);
   }
 }

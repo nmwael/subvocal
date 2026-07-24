@@ -1,0 +1,8 @@
+timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoning,cache_read,cache_write,cost_usd
+2026-07-23T12:00:41Z,ses_072114ab8ffez2vixkfI8NBS42,74,build,big-pickle,729733,57586,29576,22318016,0,0.000000
+2026-07-23T12:20:11Z,ses_072114ab8ffez2vixkfI8NBS42,86,build,big-pickle,767693,62482,38936,26958912,0,0.000000
+2026-07-23T12:28:30Z,ses_072114ab8ffez2vixkfI8NBS42,87,build,big-pickle,777638,65631,39470,28537728,0,0.000000
+2026-07-23T12:32:50Z,ses_072114ab8ffez2vixkfI8NBS42,88,build,big-pickle,861313,69836,40093,29489600,0,0.000000
+2026-07-24T07:07:51Z,ses_06d1d2485ffeIoCKfIzvjbstjZ,103,build,big-pickle,38801,5321,1566,990464,0,0.000000
+2026-07-24T07:33:24Z,ses_06d1d2485ffeIoCKfIzvjbstjZ,103,build,big-pickle,57602,8462,2884,2412864,0,0.000000
+2026-07-24T08:14:33Z,ses_06d1d2485ffeIoCKfIzvjbstjZ,106,build,big-pickle,286355,24207,5904,9385280,0,0.000000

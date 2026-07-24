@@ -58,6 +58,9 @@
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .lang-btn:hover {
@@ -68,6 +71,14 @@
     .lang-btn.active {
       color: #fff;
       background: var(--accent);
+    }
+
+    .lang-btn img {
+      width: 16px;
+      height: 12px;
+      border-radius: 2px;
+      object-fit: cover;
+      display: inline-block;
     }
 
     /* GitHub link */
@@ -312,10 +323,10 @@
 <body>
 
   <nav class="lang-switcher">
-    <button class="lang-btn active" data-lang="en">🇬🇧 EN</button>
-    <button class="lang-btn" data-lang="es">🇪🇸 ES</button>
-    <button class="lang-btn" data-lang="da">🇩🇰 DA</button>
-    <button class="lang-btn" data-lang="gl">🇬🇦 GL</button>
+    <button class="lang-btn active" data-lang="en"><img src="flags/gb.svg" alt="EN"> EN</button>
+    <button class="lang-btn" data-lang="es"><img src="flags/es.svg" alt="ES"> ES</button>
+    <button class="lang-btn" data-lang="da"><img src="flags/dk.svg" alt="DA"> DA</button>
+    <button class="lang-btn" data-lang="gl"><img src="flags/gl.svg" alt="GL"> GL</button>
   </nav>
 
   <a href="https://github.com/nmwael/subvocal" class="github-link" aria-label="GitHub">
