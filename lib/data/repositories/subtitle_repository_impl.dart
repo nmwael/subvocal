@@ -96,14 +96,14 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     String targetLanguage, {
     void Function(TranslationProgress progress)? onProgress,
   }) async {
-    const batchSize = 10;
+    const concurrency = 3;
     const maxRetries = 3;
     final total = subtitle.entries.length;
     final translatedEntries = List<SubtitleEntry>.filled(total, subtitle.entries.first);
     var completed = 0;
 
-    for (var i = 0; i < total; i += batchSize) {
-      final batch = subtitle.entries.skip(i).take(batchSize).toList();
+    for (var i = 0; i < total; i += concurrency) {
+      final batch = subtitle.entries.skip(i).take(concurrency).toList();
       final futures = batch.map((entry) async {
         for (var retry = 0; retry < maxRetries; retry++) {
           final (text, failure) = await translateService.translate(entry.text, targetLanguage);
@@ -115,7 +115,7 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
               text: text,
             );
           }
-          if (failure?.message.contains('Rate limit') == true && retry < maxRetries - 1) {
+          if (retry < maxRetries - 1) {
             await Future.delayed(Duration(seconds: retry + 1));
             continue;
           }
@@ -134,6 +134,9 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
       }
       completed += batch.length;
       onProgress?.call(TranslationProgress(completed: completed, total: total));
+      if (i + concurrency < total) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
     }
 
     return (Subtitle(
