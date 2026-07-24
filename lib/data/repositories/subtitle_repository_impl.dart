@@ -96,23 +96,48 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     String targetLanguage, {
     void Function(TranslationProgress progress)? onProgress,
   }) async {
+    const batchSize = 10;
+    const maxRetries = 3;
     final total = subtitle.entries.length;
-    final translatedEntries = <SubtitleEntry>[];
-    for (final entry in subtitle.entries) {
-      final (translatedText, failure) = await translateService.translate(entry.text, targetLanguage);
-      if (failure != null) return (null, failure);
-      if (translatedText == null) return (null, const NetworkFailure('Empty translation result'));
-      translatedEntries.add(SubtitleEntry(
-        index: entry.index,
-        start: entry.start,
-        end: entry.end,
-        text: translatedText,
-      ));
-      onProgress?.call(TranslationProgress(
-        completed: translatedEntries.length,
-        total: total,
-      ));
+    final translatedEntries = List<SubtitleEntry>.filled(total, subtitle.entries.first);
+    var completed = 0;
+
+    for (var i = 0; i < total; i += batchSize) {
+      final batch = subtitle.entries.skip(i).take(batchSize).toList();
+      final texts = batch.map((e) => e.text).toList();
+
+      List<String>? translatedTexts;
+      Failure? lastFailure;
+      for (var retry = 0; retry < maxRetries; retry++) {
+        final (result, failure) = await translateService.translateBatch(texts, targetLanguage);
+        if (failure == null && result != null) {
+          translatedTexts = result;
+          break;
+        }
+        lastFailure = failure;
+        if (failure?.message.contains('Rate limit') == true && retry < maxRetries - 1) {
+          await Future.delayed(Duration(seconds: retry + 1));
+          continue;
+        }
+        break;
+      }
+
+      if (translatedTexts == null) {
+        return (null, lastFailure ?? const NetworkFailure('Translation failed'));
+      }
+
+      for (var j = 0; j < batch.length; j++) {
+        translatedEntries[i + j] = SubtitleEntry(
+          index: batch[j].index,
+          start: batch[j].start,
+          end: batch[j].end,
+          text: translatedTexts[j],
+        );
+      }
+      completed += batch.length;
+      onProgress?.call(TranslationProgress(completed: completed, total: total));
     }
+
     return (Subtitle(
       id: subtitle.id,
       title: subtitle.title,

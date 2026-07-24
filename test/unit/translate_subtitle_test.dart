@@ -16,6 +16,18 @@ class _MockTranslationService implements TranslationService {
     }
     return ('Traducido: $text', null);
   }
+
+  @override
+  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+    final results = <String>[];
+    for (final text in texts) {
+      if (text.contains('error')) {
+        return (null, const NetworkFailure('Translation failed'));
+      }
+      results.add('Traducido: $text');
+    }
+    return (results, null);
+  }
 }
 
 class _MockRepository implements SubtitleRepository {

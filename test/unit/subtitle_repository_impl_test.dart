@@ -41,6 +41,11 @@ class _MockTranslationService implements TranslationService {
   Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
     return ('Translated: $text', null);
   }
+
+  @override
+  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+    return (texts.map((t) => 'Translated: $t').toList(), null);
+  }
 }
 
 void main() {
