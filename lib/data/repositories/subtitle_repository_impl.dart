@@ -104,35 +104,33 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
 
     for (var i = 0; i < total; i += batchSize) {
       final batch = subtitle.entries.skip(i).take(batchSize).toList();
-      final texts = batch.map((e) => e.text).toList();
-
-      List<String>? translatedTexts;
-      Failure? lastFailure;
-      for (var retry = 0; retry < maxRetries; retry++) {
-        final (result, failure) = await translateService.translateBatch(texts, targetLanguage);
-        if (failure == null && result != null) {
-          translatedTexts = result;
-          break;
+      final futures = batch.map((entry) async {
+        for (var retry = 0; retry < maxRetries; retry++) {
+          final (text, failure) = await translateService.translate(entry.text, targetLanguage);
+          if (failure == null && text != null) {
+            return SubtitleEntry(
+              index: entry.index,
+              start: entry.start,
+              end: entry.end,
+              text: text,
+            );
+          }
+          if (failure?.message.contains('Rate limit') == true && retry < maxRetries - 1) {
+            await Future.delayed(Duration(seconds: retry + 1));
+            continue;
+          }
+          return null;
         }
-        lastFailure = failure;
-        if (failure?.message.contains('Rate limit') == true && retry < maxRetries - 1) {
-          await Future.delayed(Duration(seconds: retry + 1));
-          continue;
+        return null;
+      });
+
+      final results = await Future.wait(futures);
+      for (var j = 0; j < results.length; j++) {
+        final result = results[j];
+        if (result == null) {
+          return (null, const NetworkFailure('Translation failed after retries'));
         }
-        break;
-      }
-
-      if (translatedTexts == null) {
-        return (null, lastFailure ?? const NetworkFailure('Translation failed'));
-      }
-
-      for (var j = 0; j < batch.length; j++) {
-        translatedEntries[i + j] = SubtitleEntry(
-          index: batch[j].index,
-          start: batch[j].start,
-          end: batch[j].end,
-          text: translatedTexts[j],
-        );
+        translatedEntries[i + j] = result;
       }
       completed += batch.length;
       onProgress?.call(TranslationProgress(completed: completed, total: total));
