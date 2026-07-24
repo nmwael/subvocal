@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-import '../../core/utils/srt_parser.dart';
+import '../../domain/services/srt_parser.dart';
 import '../../data/datasources/google_translate_api.dart';
 import '../../data/datasources/local_file_source.dart';
 import '../../data/datasources/my_memory_translate_api.dart';
@@ -18,7 +18,7 @@ import '../../domain/usecases/translate_subtitle.dart';
 
 final _httpClientProvider = Provider<http.Client>((ref) => http.Client());
 
-final _srtParserProvider = Provider<SrtParser>((ref) => SrtParser());
+final srtParserProvider = Provider<SrtParser>((ref) => SrtParser());
 
 final _localFileSourceProvider = Provider<LocalFileSource>((ref) => LocalFileSource());
 
@@ -40,7 +40,7 @@ final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {
   return SubtitleRepositoryImpl(
     api: ref.watch(openSubtitlesApiProvider),
     localFileSource: ref.watch(_localFileSourceProvider),
-    srtParser: ref.watch(_srtParserProvider),
+    srtParser: ref.watch(srtParserProvider),
     translateService: ref.watch(_translationServiceProvider),
   );
 });

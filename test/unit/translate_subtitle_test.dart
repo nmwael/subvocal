@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:subvocal/core/errors/failures.dart';
+import 'package:subvocal/domain/errors/failures.dart';
 import 'package:subvocal/data/datasources/translation_service.dart';
 import 'package:subvocal/domain/entities/search_result.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
@@ -61,6 +61,9 @@ class _MockRepository implements SubtitleRepository {
   Future<(String?, Failure?)> login(String username, String password) async {
     return (null, null);
   }
+
+  @override
+  void setToken(String token) {}
 
   @override
   void logout() {}

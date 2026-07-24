@@ -3,13 +3,13 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-LOG_FILE="$PROJECT_DIR/.finops/log.csv"
+LOG_FILE="$PROJECT_DIR/.aifinops/log.csv"
 
 usage() {
   cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Generate a usage report from .finops/log.csv.
+Generate a usage report from .aifinops/log.csv.
 
 Options:
   --by-agent        Group totals by agent role

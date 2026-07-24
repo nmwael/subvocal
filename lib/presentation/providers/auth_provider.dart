@@ -34,7 +34,7 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
     }
 
     // Restore the token on the shared API instance
-    ref.read(openSubtitlesApiProvider).setToken(token);
+    ref.read(subtitleRepositoryProvider).setToken(token);
 
     final username = await storage.getUsername();
     return AuthState.authenticated(username);
@@ -53,7 +53,7 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
       await storage.saveToken(token, username: username);
 
       // Set the token on the shared API instance
-      ref.read(openSubtitlesApiProvider).setToken(token);
+      ref.read(subtitleRepositoryProvider).setToken(token);
 
       return AuthState.authenticated(username);
     });

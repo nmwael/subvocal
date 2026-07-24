@@ -4,7 +4,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../../core/errors/failures.dart';
+import '../../core/utils/api_error_parser.dart';
+import '../../domain/errors/failures.dart';
 import 'translation_service.dart';
 
 class LibreTranslateApi implements TranslationService {
@@ -48,12 +49,6 @@ class LibreTranslateApi implements TranslationService {
     }
   }
 
-  String _extractErrorMessage(String body, int statusCode) {
-    try {
-      final json = jsonDecode(body) as Map<String, dynamic>;
-      final error = json['error'] as String?;
-      if (error != null && error.isNotEmpty) return error;
-    } catch (_) {}
-    return 'HTTP $statusCode';
-  }
+  String _extractErrorMessage(String body, int statusCode) =>
+      extractApiErrorMessage(body, statusCode, errorKey: 'error');
 }
