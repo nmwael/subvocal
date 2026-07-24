@@ -5,12 +5,14 @@ class SettingsState {
   final double pitch;
   final String selectedLanguage;
   final String? selectedVoice;
+  final String myMemoryEmail;
 
   const SettingsState({
     this.speechRate = 0.5,
     this.pitch = 1.0,
     this.selectedLanguage = 'en',
     this.selectedVoice,
+    this.myMemoryEmail = '',
   });
 
   SettingsState copyWith({
@@ -18,12 +20,14 @@ class SettingsState {
     double? pitch,
     String? selectedLanguage,
     String? selectedVoice,
+    String? myMemoryEmail,
   }) {
     return SettingsState(
       speechRate: speechRate ?? this.speechRate,
       pitch: pitch ?? this.pitch,
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       selectedVoice: selectedVoice ?? this.selectedVoice,
+      myMemoryEmail: myMemoryEmail ?? this.myMemoryEmail,
     );
   }
 }
@@ -45,6 +49,10 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   void setSelectedVoice(String? voice) {
     state = state.copyWith(selectedVoice: voice);
+  }
+
+  void setMyMemoryEmail(String email) {
+    state = state.copyWith(myMemoryEmail: email);
   }
 }
 

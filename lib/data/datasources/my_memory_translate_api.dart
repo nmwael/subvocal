@@ -5,20 +5,29 @@ import 'package:http/http.dart' as http;
 import '../../core/errors/failures.dart';
 import 'translation_service.dart';
 
+// This class uses private named parameters in its constructor,
+// which Dart does not allow with 'this.' initializing formals.
+// ignore_for_file: prefer_initializing_formals
+
 class MyMemoryTranslateApi implements TranslationService {
   static const _baseUrl = 'https://api.mymemory.translated.net/get';
   final http.Client _client;
+  final String? _email;
 
-  MyMemoryTranslateApi(this._client);
+  MyMemoryTranslateApi(this._client, {String? email}) : _email = email;
 
   @override
   Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
     try {
       final source = sourceLanguage ?? 'en';
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: {
+      final queryParams = <String, String>{
         'q': text,
         'langpair': '$source|$targetLanguage',
-      });
+      };
+      if (_email != null && _email.isNotEmpty) {
+        queryParams['de'] = _email;
+      }
+      final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
 
       final response = await _client.get(uri);
 

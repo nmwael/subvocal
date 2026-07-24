@@ -60,6 +60,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
   bool _obscurePassword = true;
   String? _loginError;
 
@@ -67,6 +68,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -90,6 +92,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final notifier = ref.read(settingsProvider.notifier);
     final auth = ref.watch(authProvider);
     final theme = Theme.of(context);
+
+    if (_emailController.text != settings.myMemoryEmail) {
+      _emailController.text = settings.myMemoryEmail;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -333,6 +339,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         notifier.setSelectedLanguage(value);
                       }
                     },
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Email (optional)',
+                      hintText: 'your@email.com',
+                      border: OutlineInputBorder(),
+                      helperText: 'Raises MyMemory daily limit from 5,000 to 50,000 characters',
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (value) => notifier.setMyMemoryEmail(value),
                   ),
                 ],
               ),
