@@ -105,7 +105,11 @@ jobs:
           emulator-boot-timeout: 180
           script: |
             adb logcat -c
-            flutter test integration_test/ --machine --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} 2>/dev/null | grep '^{' > integration-results.json || true
+            flutter test integration_test/ --machine \
+              --dart-define=OPENSUBTITLES_API_KEY=${{ secrets.OPENSUBTITLES_API_KEY }} \
+              --dart-define=AZURE_TRANSLATION_KEY=${{ secrets.AZURE_TRANSLATION_KEY }} \
+              --dart-define=AZURE_TRANSLATION_REGION=${{ secrets.AZURE_TRANSLATION_REGION }} \
+              2>/dev/null | grep '^{' > integration-results.json || true
             python3 scripts/extract_screenshots.py || true
 
       - name: Upload screenshots

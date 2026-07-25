@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum TranslationProviderType { azure, myMemory, apertium, libreTranslate, auto }
+
 class SettingsState {
   final double speechRate;
   final double pitch;
   final String selectedLanguage;
   final String? selectedVoice;
   final String myMemoryEmail;
+  final TranslationProviderType selectedTranslationProvider;
 
   const SettingsState({
     this.speechRate = 0.5,
@@ -13,6 +16,7 @@ class SettingsState {
     this.selectedLanguage = 'en',
     this.selectedVoice,
     this.myMemoryEmail = '',
+    this.selectedTranslationProvider = TranslationProviderType.auto,
   });
 
   SettingsState copyWith({
@@ -21,6 +25,7 @@ class SettingsState {
     String? selectedLanguage,
     String? selectedVoice,
     String? myMemoryEmail,
+    TranslationProviderType? selectedTranslationProvider,
   }) {
     return SettingsState(
       speechRate: speechRate ?? this.speechRate,
@@ -28,6 +33,7 @@ class SettingsState {
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       selectedVoice: selectedVoice ?? this.selectedVoice,
       myMemoryEmail: myMemoryEmail ?? this.myMemoryEmail,
+      selectedTranslationProvider: selectedTranslationProvider ?? this.selectedTranslationProvider,
     );
   }
 }
@@ -53,6 +59,10 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   void setMyMemoryEmail(String email) {
     state = state.copyWith(myMemoryEmail: email);
+  }
+
+  void setSelectedTranslationProvider(TranslationProviderType provider) {
+    state = state.copyWith(selectedTranslationProvider: provider);
   }
 }
 

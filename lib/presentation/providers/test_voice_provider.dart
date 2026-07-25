@@ -29,7 +29,8 @@ final translatedTestPreviewProvider = FutureProvider.autoDispose.family<List<Str
   final subtitle = Subtitle(title: 'Test', entries: entries);
   final translate = ref.read(translateSubtitleProvider);
   final (translated, failure) = await translate(subtitle, language);
-  if (failure != null || translated == null) return [];
+  if (failure != null) throw failure;
+  if (translated == null) return [];
   return translated.entries.map((e) => e.text).toList();
 });
 

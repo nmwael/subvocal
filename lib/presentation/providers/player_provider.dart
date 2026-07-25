@@ -104,7 +104,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     super.dispose();
   }
 
-  Future<void> load(List<SubtitleEntry> entries, {String? language, String? voice}) async {
+  Future<void> load(List<SubtitleEntry> entries, {String? language, String? voice, String? sourceLanguage}) async {
     if (language != null) {
       await _ttsRepository.setLanguage(language);
     }
@@ -122,6 +122,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
         final (translated, failure) = await _subtitleRepository.translate(
           Subtitle(id: null, title: '', entries: entries),
           language,
+          sourceLanguage: sourceLanguage,
           onProgress: (progress) {
             state = state.copyWith(translationProgress: progress);
           },

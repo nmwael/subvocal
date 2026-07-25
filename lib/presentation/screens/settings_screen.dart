@@ -353,6 +353,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) => notifier.setMyMemoryEmail(value),
                   ),
+                  const SizedBox(height: 16),
+                  const Text('Translation Provider'),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<TranslationProviderType>(
+                    initialValue: settings.selectedTranslationProvider,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    items: const [
+                      DropdownMenuItem(value: TranslationProviderType.auto, child: Text('Auto (try all)')),
+                      DropdownMenuItem(value: TranslationProviderType.azure, child: Text('Azure')),
+                      DropdownMenuItem(value: TranslationProviderType.myMemory, child: Text('MyMemory')),
+                      DropdownMenuItem(value: TranslationProviderType.apertium, child: Text('Apertium')),
+                      DropdownMenuItem(value: TranslationProviderType.libreTranslate, child: Text('LibreTranslate')),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        notifier.setSelectedTranslationProvider(value);
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -374,7 +395,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               title: const Text('Report a Bug'),
               subtitle: const Text('Open a pre-filled bug report on GitHub'),
               trailing: const Icon(Icons.open_in_new),
-              onTap: () => BugReportHelper().openBugReport(),
+              onTap: () async {
+                final opened = await BugReportHelper().openBugReport();
+                if (context.mounted && !opened) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not open bug report')),
+                  );
+                }
+              },
             ),
           ),
         ],
@@ -420,9 +448,24 @@ class _TranslatedTestPreview extends ConsumerWidget {
 
     return preview.when(
       loading: () => const LinearProgressIndicator(),
-      error: (e, _) => Text(
-        'Translation unavailable: $e',
-        style: theme.textTheme.bodySmall?.copyWith(color: Colors.orange),
+      error: (e, _) => GestureDetector(
+        onTap: () => showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Translation Error'),
+            content: SingleChildScrollView(child: Text(e.toString())),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        ),
+        child: Text(
+          'Translation failed: tap for details',
+          style: theme.textTheme.bodySmall?.copyWith(color: Colors.orange),
+        ),
       ),
       data: (lines) {
         if (lines.isEmpty) {

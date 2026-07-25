@@ -95,8 +95,14 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   Future<(Subtitle?, Failure?)> translate(
     Subtitle subtitle,
     String targetLanguage, {
+    String? sourceLanguage,
     void Function(TranslationProgress progress)? onProgress,
   }) async {
+    final effectiveSource = sourceLanguage ?? subtitle.language;
+    if (effectiveSource != null && effectiveSource == targetLanguage) {
+      return (subtitle, null);
+    }
+
     const batchSize = 10;
     const maxRetries = 3;
     final total = subtitle.entries.length;
@@ -107,7 +113,11 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
       final batch = subtitle.entries.skip(i).take(batchSize).toList();
       final futures = batch.map((entry) async {
         for (var retry = 0; retry < maxRetries; retry++) {
-          final (text, failure) = await translateService.translate(entry.text, targetLanguage);
+          final (text, failure) = await translateService.translate(
+            entry.text,
+            targetLanguage,
+            sourceLanguage: effectiveSource,
+          );
           if (failure == null && text != null) {
             return SubtitleEntry(
               index: entry.index,
@@ -117,7 +127,8 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
             );
           }
           if (failure?.message.contains('Rate limit') == true && retry < maxRetries - 1) {
-            await Future.delayed(Duration(seconds: retry + 1));
+            final delay = (1 << retry) * 5;
+            await Future.delayed(Duration(seconds: delay));
             continue;
           }
           return null;
@@ -128,11 +139,15 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
       final results = await Future.wait(futures);
       for (var j = 0; j < results.length; j++) {
         final result = results[j];
-        if (result == null) {
-          appLogger.error('Translation failed after $maxRetries retries', source: 'SubtitleRepository');
-          return (null, const NetworkFailure('Translation failed after retries'));
+        if (result != null) {
+          translatedEntries[i + j] = result;
+        } else {
+          appLogger.warning(
+            'Translation failed for entry ${batch[j].index}, using original',
+            source: 'SubtitleRepository',
+          );
+          translatedEntries[i + j] = batch[j];
         }
-        translatedEntries[i + j] = result;
       }
       completed += batch.length;
       onProgress?.call(TranslationProgress(completed: completed, total: total));

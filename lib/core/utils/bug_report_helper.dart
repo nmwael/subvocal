@@ -51,34 +51,40 @@ class BugReportHelper {
     return recent.join('\n');
   }
 
-  Future<void> openBugReport({String? description}) async {
-    final info = await collectDeviceInfo();
-    final logs = buildLogs();
+  Future<bool> openBugReport({String? description}) async {
+    try {
+      final info = await collectDeviceInfo();
+      final logs = buildLogs(maxLines: 20);
 
-    final title = '[Mobile Bug] ${description ?? "Bug report from app"}';
-    final os = '${info['os']} ${info['os_version']}';
-    final version = 'App ${info['app_version']} / ${info['device']}';
+      final title = '[Mobile Bug] ${description ?? "Bug report from app"}';
+      final os = '${info['os']} ${info['os_version']}';
+      final version = 'App ${info['app_version']} / ${info['device']}';
 
-    final params = {
-      'template': 'mobile-bug-report.yml',
-      'title': title,
-      'os': os,
-      'version': version,
-      'description': description ?? '',
-      'logs': logs,
-    };
+      final params = {
+        'template': 'mobile-bug-report.yml',
+        'title': title,
+        'os': os,
+        'version': version,
+        'description': description ?? '',
+        'logs': logs,
+      };
 
-    final query = params.entries
-        .where((e) => e.value.isNotEmpty)
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-        .join('&');
+      final query = params.entries
+          .where((e) => e.value.isNotEmpty)
+          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .join('&');
 
-    final url = Uri.parse(
-      'https://github.com/nmwael/subvocal/issues/new?$query',
-    );
+      final url = Uri.parse(
+        'https://github.com/nmwael/subvocal/issues/new?$query',
+      );
 
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 }
