@@ -1,10 +1,10 @@
 name: CI
 
 on:
-  push:
-    branches: [development, main]
   pull_request:
     branches: [development, main]
+  push:
+    branches: [main]
 
 jobs:
   analyze-and-test:
@@ -51,6 +51,7 @@ jobs:
     timeout-minutes: 30
     permissions:
       checks: write
+    if: github.event_name == 'pull_request'
 
     steps:
       - uses: actions/checkout@v7
@@ -131,5 +132,3 @@ jobs:
           reporter: flutter-json
           use-actions-summary: false
           fail-on-error: false
-
-
