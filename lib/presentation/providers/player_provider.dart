@@ -154,6 +154,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       isPlaying: true,
       entries: playEntries,
       speed: state.speed,
+      translatedSubtitle: state.translatedSubtitle,
     );
   }
 

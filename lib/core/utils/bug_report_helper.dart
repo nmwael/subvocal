@@ -57,7 +57,7 @@ class BugReportHelper {
       final logs = buildLogs(maxLines: 20);
 
       final title = '[Mobile Bug] ${description ?? "Bug report from app"}';
-      final os = '${info['os']} ${info['os_version']}';
+      final os = info['os'] ?? '';
       final version = 'App ${info['app_version']} / ${info['device']}';
 
       final params = {
@@ -78,11 +78,8 @@ class BugReportHelper {
         'https://github.com/nmwael/subvocal/issues/new?$query',
       );
 
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-        return true;
-      }
-      return false;
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+      return true;
     } catch (e) {
       return false;
     }

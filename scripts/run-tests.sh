@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [--unit] [--widget] [--integration] [--file <path>] [--coverage] [--all]
+Usage: $(basename "$0") [--unit] [--widget] [--integration] [--golden] [--file <path>] [--coverage] [--all]
 
 Run Flutter tests by category.
 
@@ -11,6 +11,7 @@ Options:
   --unit          Run only test/unit/
   --widget        Run only test/widgets/
   --integration   Run only integration_test/
+  --golden        Run only test/goldens/
   --file <path>   Run a specific test file
   --coverage      Generate coverage report
   --all           Run all tests (default)
@@ -22,6 +23,7 @@ EOF
 RUN_UNIT=false
 RUN_WIDGET=false
 RUN_INTEGRATION=false
+RUN_GOLDEN=false
 RUN_FILE=""
 RUN_ALL=false
 COVERAGE=false
@@ -32,6 +34,7 @@ while [[ $# -gt 0 ]]; do
     --unit) RUN_UNIT=true; ANY_FILTER=true; shift ;;
     --widget) RUN_WIDGET=true; ANY_FILTER=true; shift ;;
     --integration) RUN_INTEGRATION=true; ANY_FILTER=true; shift ;;
+    --golden) RUN_GOLDEN=true; ANY_FILTER=true; shift ;;
     --file) RUN_FILE="$2"; ANY_FILTER=true; shift 2 ;;
     --coverage) COVERAGE=true; shift ;;
     --all) RUN_ALL=true; shift ;;
@@ -73,6 +76,10 @@ fi
 
 if [[ "$RUN_INTEGRATION" == true ]]; then
   run flutter test integration_test/ "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}"
+fi
+
+if [[ "$RUN_ALL" == true ]] || [[ "$RUN_GOLDEN" == true ]]; then
+  run flutter test test/goldens/ "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}"
 fi
 
 if [[ -n "$RUN_FILE" ]]; then
