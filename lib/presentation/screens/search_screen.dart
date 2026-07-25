@@ -122,10 +122,11 @@ class SearchScreen extends ConsumerWidget {
                           return;
                         }
                         if (subtitle != null && context.mounted) {
-                          ref.read(importedSubtitleProvider.notifier).state = subtitle;
+                          final langSubtitle = subtitle.copyWith(language: result.language);
+                          ref.read(importedSubtitleProvider.notifier).state = langSubtitle;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => PlayerScreen(subtitle: subtitle),
+                              builder: (_) => PlayerScreen(subtitle: langSubtitle),
                             ),
                           );
                         }

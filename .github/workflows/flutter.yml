@@ -51,7 +51,7 @@ jobs:
           fail-on-error: false
 
       - name: Build APK
-        run: flutter build apk --debug
+        run: flutter build apk --debug --dart-define=AZURE_TRANSLATION_KEY=${{ secrets.AZURE_TRANSLATION_KEY }} --dart-define=AZURE_TRANSLATION_REGION=${{ secrets.AZURE_TRANSLATION_REGION }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v7

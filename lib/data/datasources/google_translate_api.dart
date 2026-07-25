@@ -16,12 +16,14 @@ class GoogleTranslateApi implements TranslationService {
   @override
   Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
     try {
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: {
+      final queryParams = <String, String>{
         'q': text,
         'target': targetLanguage,
         'key': _apiKey,
         'format': 'text',
-      });
+      };
+      if (sourceLanguage != null) queryParams['source'] = sourceLanguage;
+      final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
       final response = await _client.post(uri);
       if (response.statusCode == 429) {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
@@ -47,12 +49,13 @@ class GoogleTranslateApi implements TranslationService {
     if (texts.isEmpty) return (<String>[], null);
     try {
       final uri = Uri.parse(_baseUrl);
-      final body = {
+      final body = <String, dynamic>{
         'q': texts,
         'target': targetLanguage,
         'key': _apiKey,
         'format': 'text',
       };
+      if (sourceLanguage != null) body['source'] = sourceLanguage;
       final response = await _client.post(uri, body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
       if (response.statusCode == 429) {
         return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));

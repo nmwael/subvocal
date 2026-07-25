@@ -32,6 +32,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             widget.subtitle.entries,
             language: settings.selectedLanguage,
             voice: settings.selectedVoice,
+            sourceLanguage: widget.subtitle.language,
           );
     });
   }
@@ -84,13 +85,38 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
       body: Column(
         children: [
           if (playerState.error != null)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              color: Theme.of(context).colorScheme.errorContainer,
-              child: Text(
-                playerState.error!,
-                style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
+            GestureDetector(
+              onTap: () => showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('Translation Error'),
+                  content: SingleChildScrollView(child: Text(playerState.error!)),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                color: Theme.of(context).colorScheme.errorContainer,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        playerState.error!.split('\n').first,
+                        style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onErrorContainer, size: 18),
+                  ],
+                ),
               ),
             ),
           if (playerState.isTranslating)
