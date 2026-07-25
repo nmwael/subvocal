@@ -2,7 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../domain/services/srt_parser.dart';
+import '../../data/datasources/apertium_translate_api.dart';
+import '../../data/datasources/azure_translate_api.dart';
+import '../../data/datasources/fallback_translation_service.dart';
 import '../../data/datasources/google_translate_api.dart';
+import '../../data/datasources/libre_translate_api.dart';
 import '../../data/datasources/local_file_source.dart';
 import '../../data/datasources/my_memory_translate_api.dart';
 import '../../data/datasources/opensubtitles_api.dart';
@@ -27,13 +31,48 @@ final openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
   return OpenSubtitlesApi(ref.watch(_httpClientProvider), apiKey);
 });
 
+final _myMemoryProvider = Provider<MyMemoryTranslateApi>((ref) {
+  final email = ref.watch(settingsProvider.select((s) => s.myMemoryEmail));
+  return MyMemoryTranslateApi(ref.watch(_httpClientProvider), email: email);
+});
+
+final _apertiumProvider = Provider<ApertiumTranslateApi>((ref) {
+  return ApertiumTranslateApi(ref.watch(_httpClientProvider));
+});
+
+final _libreTranslateProvider = Provider<LibreTranslateApi>((ref) {
+  return LibreTranslateApi(ref.watch(_httpClientProvider));
+});
+
 final _translationServiceProvider = Provider<TranslationService>((ref) {
   const googleApiKey = String.fromEnvironment('GOOGLE_TRANSLATE_API_KEY', defaultValue: '');
   if (googleApiKey.isNotEmpty) {
     return GoogleTranslateApi(ref.watch(_httpClientProvider), googleApiKey);
   }
-  final email = ref.watch(settingsProvider.select((s) => s.myMemoryEmail));
-  return MyMemoryTranslateApi(ref.watch(_httpClientProvider), email: email);
+
+  const azureKey = String.fromEnvironment('AZURE_TRANSLATION_KEY', defaultValue: '');
+  const azureRegion = String.fromEnvironment('AZURE_TRANSLATION_REGION', defaultValue: '');
+  final hasAzure = azureKey.isNotEmpty && azureRegion.isNotEmpty;
+
+  final providerType = ref.watch(settingsProvider.select((s) => s.selectedTranslationProvider));
+  final myMemory = ref.watch(_myMemoryProvider);
+  final apertium = ref.watch(_apertiumProvider);
+  final libreTranslate = ref.watch(_libreTranslateProvider);
+
+  final services = <TranslationService>[];
+  if (hasAzure) {
+    services.add(AzureTranslateApi(ref.watch(_httpClientProvider), apiKey: azureKey, region: azureRegion));
+  }
+  services.addAll([myMemory, apertium, libreTranslate]);
+
+  return switch (providerType) {
+    TranslationProviderType.azure when hasAzure => services.first,
+    TranslationProviderType.myMemory => myMemory,
+    TranslationProviderType.apertium => apertium,
+    TranslationProviderType.libreTranslate => libreTranslate,
+    TranslationProviderType.auto => FallbackTranslationService(services),
+    _ => FallbackTranslationService(services),
+  };
 });
 
 final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {

@@ -10,6 +10,7 @@ abstract class SubtitleRepository {
   Future<(Subtitle?, Failure?)> translate(
     Subtitle subtitle,
     String targetLanguage, {
+    String? sourceLanguage,
     void Function(TranslationProgress progress)? onProgress,
   });
   Future<(String?, Failure?)> login(String username, String password);

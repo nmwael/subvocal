@@ -12,4 +12,18 @@ class Subtitle {
     this.language,
     required this.entries,
   });
+
+  Subtitle copyWith({
+    int? id,
+    String? title,
+    String? language,
+    List<SubtitleEntry>? entries,
+  }) {
+    return Subtitle(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      language: language ?? this.language,
+      entries: entries ?? this.entries,
+    );
+  }
 }

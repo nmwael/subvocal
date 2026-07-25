@@ -11,8 +11,14 @@ class TranslateSubtitle {
   Future<(Subtitle?, Failure?)> call(
     Subtitle subtitle,
     String targetLanguage, {
+    String? sourceLanguage,
     void Function(TranslationProgress progress)? onProgress,
   }) {
-    return _repository.translate(subtitle, targetLanguage, onProgress: onProgress);
+    return _repository.translate(
+      subtitle,
+      targetLanguage,
+      sourceLanguage: sourceLanguage,
+      onProgress: onProgress,
+    );
   }
 }

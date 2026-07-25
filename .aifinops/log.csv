@@ -6,3 +6,6 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-07-24T07:07:51Z,ses_06d1d2485ffeIoCKfIzvjbstjZ,103,build,big-pickle,38801,5321,1566,990464,0,0.000000
 2026-07-24T07:33:24Z,ses_06d1d2485ffeIoCKfIzvjbstjZ,103,build,big-pickle,57602,8462,2884,2412864,0,0.000000
 2026-07-24T08:14:33Z,ses_06d1d2485ffeIoCKfIzvjbstjZ,106,build,big-pickle,286355,24207,5904,9385280,0,0.000000
+2026-07-24T18:13:53Z,ses_06aae87dbffelozVjgk5lmHCwt,123,build,big-pickle,25083,1831,992,514368,0,0.000000
+2026-07-25T11:45:58Z,ses_066f84ec8ffeLydh7HkHOr0QMz,125,build,big-pickle,64801,7715,6073,2051840,0,0.000000
+2026-07-25T11:54:22Z,ses_066f84ec8ffeLydh7HkHOr0QMz,126,build,big-pickle,84647,13920,7113,3663936,0,0.000000
