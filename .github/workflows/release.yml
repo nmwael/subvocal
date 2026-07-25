@@ -33,10 +33,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build APK
-        run: |
-          flutter build apk --release \
-            --dart-define=AZURE_TRANSLATION_KEY=${{ secrets.AZURE_TRANSLATION_KEY }} \
-            --dart-define=AZURE_TRANSLATION_REGION=${{ secrets.AZURE_TRANSLATION_REGION }}
+        run: flutter build apk --release --dart-define=AZURE_TRANSLATION_KEY=${{ secrets.AZURE_TRANSLATION_KEY }} --dart-define=AZURE_TRANSLATION_REGION=${{ secrets.AZURE_TRANSLATION_REGION }}
 
       - name: Rename APK
         run: |
