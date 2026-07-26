@@ -29,11 +29,19 @@ graph TB
         PN[Podnapisi API]
         LF[Local File System]
         FT[flutter_tts]
+        TS[Translation Service]
+        FTS[Fallback Translation Service]
     end
     subgraph Providers
         OP[OpenSubtitles Provider]
         SDP[SubDL Provider]
         PNP[Podnapisi Provider]
+    end
+    subgraph Translation
+        GT[Google Translate]
+        MM[MyMemory]
+        LT[LibreTranslate]
+        AT[Apertium]
     end
 
     HS --> SS
@@ -46,6 +54,12 @@ graph TB
     SDP --> SD
     PNP --> PN
     SR --> LF
+    SR --> TS
+    TS --> FTS
+    FTS --> GT
+    FTS --> MM
+    FTS --> LT
+    FTS --> AT
     PS --> TTS
     PS --> SP
     TTS --> FT
@@ -68,7 +82,13 @@ lib/
 │   │   ├── subdl_api.dart
 │   │   ├── podnapisi_api.dart
 │   │   ├── local_file_source.dart
-│   │   └── translation_service.dart
+│   │   ├── translation_service.dart
+│   │   ├── fallback_translation_service.dart
+│   │   ├── google_translate_api.dart
+│   │   ├── my_memory_translate_api.dart
+│   │   ├── libre_translate_api.dart
+│   │   ├── apertium_translate_api.dart
+│   │   └── azure_translate_api.dart
 │   ├── models/
 │   │   └── search_result_model.dart
 │   └── repositories/
@@ -197,6 +217,10 @@ flutter test integration_test/
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `OPENSUBTITLES_API_KEY` | Yes | API key from opensubtitles.com |
+| `SUBDL_API_KEY` | No | API key from subdl.com (2,000 req/day free) |
+| `GOOGLE_TRANSLATE_API_KEY` | No | Google Cloud Translation API key |
+| `AZURE_TRANSLATE_API_KEY` | No | Microsoft Azure Translator key |
+| `AZURE_TRANSLATE_REGION` | No | Azure Translator region |
 | `AI_FUN_TOKEN` | No | GitHub PAT for AI tooling |
 | `OPENROUTER_API_KEY` | No | OpenRouter API key for AI |
 
@@ -240,6 +264,67 @@ The app supports multiple subtitle providers through a provider abstraction laye
 2. Implement `SubtitleProvider` interface
 3. Add to `SubtitleProviderAggregator`
 4. Update `SubtitleRepositoryImpl` with optional provider parameter
+
+---
+
+## Translation Services
+
+The app supports multiple translation services through a fallback pattern:
+
+### Translation Interface
+- **Location**: `lib/data/datasources/translation_service.dart`
+- **Contract**: `translate()` and `translateBatch()` methods
+- **Returns**: Tuple of `(result, failure)` for error handling
+
+### Fallback Translation Service
+- **Location**: `lib/data/datasources/fallback_translation_service.dart`
+- **Function**: Tries each translation service in order until one succeeds
+- **Benefit**: Automatic fallback if primary service fails or rate limits
+
+### Supported Services
+
+| Service | Auth | Rate Limit | Batch Support | Notes |
+|---------|------|------------|---------------|-------|
+| **Google Translate** | API Key | 100k chars/day | Yes | High quality, requires billing account |
+| **MyMemory** | Email (optional) | 5k chars/day | Yes | Free tier, join lines for batch |
+| **LibreTranslate** | None | Unlimited | Yes | Self-hosted option, open source |
+| **Apertium** | None | Unlimited | Yes | Open source, good for Romance languages |
+| **Azure Translate** | API Key | 2M chars/month | Yes | Enterprise grade, Microsoft ecosystem |
+
+### Translation Flow
+
+```mermaid
+graph TD
+    A[Subtitle Entry] --> B[TranslationService]
+    B --> C[FallbackTranslationService]
+    C --> D[Google Translate]
+    C --> E[MyMemory]
+    C --> F[LibreTranslate]
+    C --> G[Apertium]
+    D -->|Success| H[Translated Text]
+    D -->|Failure| E
+    E -->|Success| H
+    E -->|Failure| F
+    F -->|Success| H
+    F -->|Failure| G
+    G -->|Success| H
+    G -->|Failure| I[All Services Failed]
+```
+
+### Adding a New Translation Service
+
+1. Create `lib/data/datasources/{service}_translate_api.dart`
+2. Implement `TranslationService` interface
+3. Add to fallback chain in repository initialization
+4. Handle rate limits and errors appropriately
+
+### Batch Translation Optimization
+
+The app uses batch translation to reduce API calls:
+- Subtitle entries are grouped in batches of 10
+- Each batch is translated in parallel
+- Rate limit errors trigger exponential backoff
+- Failed entries fall back to original text
 
 ---
 
