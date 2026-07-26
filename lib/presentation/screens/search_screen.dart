@@ -171,6 +171,7 @@ class SearchScreen extends ConsumerWidget {
                         final download = ref.read(downloadSubtitleProvider);
                         final (subtitle, failure) = await download.call(
                           result.fileId,
+                          title: result.formattedTitle,
                         );
                         if (failure != null) {
                           if (context.mounted) {
@@ -188,8 +189,12 @@ class SearchScreen extends ConsumerWidget {
                               langSubtitle;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  PlayerScreen(subtitle: langSubtitle),
+                              builder: (_) => PlayerScreen(
+                                subtitle: langSubtitle,
+                                year: result.year,
+                                season: result.season,
+                                episode: result.episode,
+                              ),
                             ),
                           );
                         }

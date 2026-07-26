@@ -5,17 +5,51 @@ import '../../domain/entities/saved_subtitle.dart';
 import '../providers/saved_subtitles_provider.dart';
 import 'player_screen.dart';
 
+enum SortOption { titleAsc, dateNewest, dateOldest, language }
+
+final sortOptionProvider = StateProvider<SortOption>(
+  (ref) => SortOption.dateNewest,
+);
+
 class SavedTranslationsScreen extends ConsumerWidget {
   const SavedTranslationsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final savedAsync = ref.watch(savedSubtitlesProvider);
+    final sortOption = ref.watch(sortOptionProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Saved Translations'),
         centerTitle: true,
+        actions: [
+          PopupMenuButton<SortOption>(
+            icon: const Icon(Icons.sort),
+            tooltip: 'Sort by',
+            onSelected: (option) {
+              ref.read(sortOptionProvider.notifier).state = option;
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: SortOption.titleAsc,
+                child: Text('Title A-Z'),
+              ),
+              const PopupMenuItem(
+                value: SortOption.dateNewest,
+                child: Text('Newest First'),
+              ),
+              const PopupMenuItem(
+                value: SortOption.dateOldest,
+                child: Text('Oldest First'),
+              ),
+              const PopupMenuItem(
+                value: SortOption.language,
+                child: Text('Language'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: savedAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -41,16 +75,32 @@ class SavedTranslationsScreen extends ConsumerWidget {
               ),
             );
           }
+          final sortedItems = _sortItems(items, sortOption);
           return ListView.builder(
-            itemCount: items.length,
+            itemCount: sortedItems.length,
             itemBuilder: (context, index) {
-              final item = items[index];
+              final item = sortedItems[index];
               return _SavedSubtitleTile(item: item);
             },
           );
         },
       ),
     );
+  }
+
+  List<SavedSubtitle> _sortItems(List<SavedSubtitle> items, SortOption option) {
+    final sorted = List<SavedSubtitle>.from(items);
+    switch (option) {
+      case SortOption.titleAsc:
+        sorted.sort((a, b) => a.title.compareTo(b.title));
+      case SortOption.dateNewest:
+        sorted.sort((a, b) => b.savedAt.compareTo(a.savedAt));
+      case SortOption.dateOldest:
+        sorted.sort((a, b) => a.savedAt.compareTo(b.savedAt));
+      case SortOption.language:
+        sorted.sort((a, b) => a.language.compareTo(b.language));
+    }
+    return sorted;
   }
 }
 
@@ -65,9 +115,25 @@ class _SavedSubtitleTile extends ConsumerWidget {
     final dateStr =
         '${item.savedAt.day}/${item.savedAt.month}/${item.savedAt.year}';
 
+    String displayTitle;
+    if (item.isTvShow) {
+      displayTitle = '[TV] ${item.title}';
+      if (item.year != null) {
+        displayTitle = '$displayTitle (${item.year})';
+      }
+    } else {
+      displayTitle = item.title;
+      if (item.year != null) {
+        displayTitle = '$displayTitle (${item.year})';
+      }
+    }
+
     return ListTile(
-      leading: const Icon(Icons.subtitles),
-      title: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+      leading: Icon(
+        item.isTvShow ? Icons.tv : Icons.movie,
+        color: item.isTvShow ? Colors.blue : null,
+      ),
+      title: Text(displayTitle, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         '${item.language.toUpperCase()} - ${item.entryCount} entries - $dateStr',
         style: theme.textTheme.bodySmall,

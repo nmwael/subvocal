@@ -30,6 +30,9 @@ class PlayerState {
   final double syncOffset;
   final List<SubtitleEntry> entries;
   final String? error;
+  final String? year;
+  final int? season;
+  final int? episode;
 
   const PlayerState({
     this.isPlaying = false,
@@ -43,6 +46,9 @@ class PlayerState {
     this.syncOffset = 0.0,
     this.entries = const [],
     this.error,
+    this.year,
+    this.season,
+    this.episode,
   });
 
   double get seekProgress {
@@ -67,6 +73,9 @@ class PlayerState {
     double? syncOffset,
     List<SubtitleEntry>? entries,
     String? error,
+    String? year,
+    int? season,
+    int? episode,
   }) {
     return PlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
@@ -80,6 +89,9 @@ class PlayerState {
       syncOffset: syncOffset ?? this.syncOffset,
       entries: entries ?? this.entries,
       error: error ?? this.error,
+      year: year ?? this.year,
+      season: season ?? this.season,
+      episode: episode ?? this.episode,
     );
   }
 }
@@ -131,6 +143,10 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     String? language,
     String? voice,
     String? sourceLanguage,
+    String? title,
+    String? year,
+    int? season,
+    int? episode,
   }) async {
     _positionTimer?.cancel();
     _entryStartWallClock = null;
@@ -167,7 +183,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       );
       try {
         final (translated, failure) = await _subtitleRepository.translate(
-          Subtitle(id: null, title: '', entries: entries),
+          Subtitle(id: null, title: title ?? '', entries: entries),
           language,
           sourceLanguage: sourceLanguage,
           onProgress: (progress) {
@@ -204,6 +220,9 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       entries: playEntries,
       speed: state.speed,
       translatedSubtitle: state.translatedSubtitle,
+      year: year,
+      season: season,
+      episode: episode,
     );
     _startPositionTimer();
   }

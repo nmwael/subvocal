@@ -33,7 +33,13 @@ class SavedSubtitlesLocalSource {
     }
   }
 
-  Future<SavedSubtitle> save(Subtitle subtitle, String language) async {
+  Future<SavedSubtitle> save(
+    Subtitle subtitle,
+    String language, {
+    String? year,
+    int? season,
+    int? episode,
+  }) async {
     final sanitizedTitle = subtitle.title
         .toLowerCase()
         .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
@@ -49,6 +55,9 @@ class SavedSubtitlesLocalSource {
       entryCount: subtitle.entries.length,
       savedAt: DateTime.now(),
       entries: subtitle.entries,
+      year: year,
+      season: season,
+      episode: episode,
     );
     final items = await load();
     items.insert(0, saved);

@@ -47,7 +47,7 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   }
 
   @override
-  Future<(Subtitle?, Failure?)> download(int fileId) async {
+  Future<(Subtitle?, Failure?)> download(int fileId, {String? title}) async {
     final (link, failure) = await api.download(fileId);
     if (failure != null) return (null, failure);
     if (link == null) {
@@ -68,13 +68,14 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
       );
     }
 
-    return (Subtitle(id: fileId, title: '', entries: entries), null);
+    return (Subtitle(id: fileId, title: title ?? '', entries: entries), null);
   }
 
   Future<(Subtitle?, Failure?)> downloadFromProvider(
     dynamic fileId,
-    String providerSource,
-  ) async {
+    String providerSource, {
+    String? title,
+  }) async {
     if (providerSource == 'SubDL' && subdlApi != null) {
       final (link, failure) = await subdlApi!.download(fileId);
       if (failure != null) return (null, failure);
@@ -96,7 +97,7 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
         );
       }
 
-      return (Subtitle(id: fileId, title: '', entries: entries), null);
+      return (Subtitle(id: fileId, title: title ?? '', entries: entries), null);
     }
 
     if (providerSource == 'Podnapisi' && podnapisiApi != null) {
@@ -120,10 +121,10 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
         );
       }
 
-      return (Subtitle(id: fileId, title: '', entries: entries), null);
+      return (Subtitle(id: fileId, title: title ?? '', entries: entries), null);
     }
 
-    return download(fileId as int);
+    return download(fileId as int, title: title);
   }
 
   @override

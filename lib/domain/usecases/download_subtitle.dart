@@ -7,7 +7,7 @@ class DownloadSubtitle {
 
   DownloadSubtitle(this._repository);
 
-  Future<(Subtitle?, Failure?)> call(int fileId) {
-    return _repository.download(fileId);
+  Future<(Subtitle?, Failure?)> call(int fileId, {String? title}) {
+    return _repository.download(fileId, title: title);
   }
 }
