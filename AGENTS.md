@@ -22,7 +22,9 @@ graph TD
     H -->|Approved| I[Security Auditor Reviews]
     I --> J[Security Auditor Returns to Architect]
     J --> K{Final Architect Review}
-    K -->|Approved| L[Merge to Development]
+    K -->|Approved| L[Architect Creates PR]
+    L --> M{Human Reviews PR}
+    M -->|Approved| N[Merge to Development]
     K -->|Changes Needed| C
     E -->|Changes Needed| C
     H -->|Changes Needed| F
@@ -66,8 +68,9 @@ graph TD
 
 8. **Final Architect Review**
    - Reviews all work (implementation + tests + security audit)
-   - If approved, creates PR and merges
+   - If approved, creates PR targeting `development`
    - If changes needed, returns to appropriate stage
+   - **Human reviews and merges the PR to `development`**
 
 ### Memory Aid: YOU ALWAYS FORGET THE HITL GATE
 
