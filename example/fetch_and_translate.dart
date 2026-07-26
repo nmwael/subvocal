@@ -18,12 +18,16 @@ void main(List<String> args) async {
     }
   }
   if (apiKey.isEmpty) {
-    apiKey = Platform.environment['OPENSUBTITLES_API_KEY'] ?? 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM';
+    apiKey =
+        Platform.environment['OPENSUBTITLES_API_KEY'] ??
+        'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM';
   }
-  
+
   if (apiKey.isEmpty) {
     print('❌ Please provide OPENSUBTITLES_API_KEY via --dart-define');
-    print('   Example: dart run --dart-define=OPENSUBTITLES_API_KEY=your_key example/fetch_and_translate.dart');
+    print(
+      '   Example: dart run --dart-define=OPENSUBTITLES_API_KEY=your_key example/fetch_and_translate.dart',
+    );
     return;
   }
 
@@ -34,41 +38,52 @@ void main(List<String> args) async {
   try {
     // Step 1: Search for a movie
     print('🔍 Searching for "The Matrix" subtitles...');
-    final (searchResults, searchFailure) = await opensubtitlesApi.search('The Matrix', language: 'en');
-    
+    final (searchResults, searchFailure) = await opensubtitlesApi.search(
+      'The Matrix',
+      language: 'en',
+    );
+
     if (searchFailure != null) {
       print('❌ Search failed: $searchFailure');
       return;
     }
-    
+
     if (searchResults == null || searchResults.isEmpty) {
       print('❌ No results found');
       return;
     }
 
     print('✅ Found ${searchResults.length} results');
-    
+
     // Find first English subtitle
     final englishSub = searchResults.firstWhere(
       (r) => (r['attributes'] as Map?)?['language'] == 'en',
       orElse: () => searchResults.first,
     );
-    
+
     final fileId = int.parse(englishSub['id'].toString());
-    final title = (englishSub['attributes'] as Map?)?['feature_name'] ?? 'Unknown';
+    final title =
+        (englishSub['attributes'] as Map?)?['feature_name'] ?? 'Unknown';
     print('📥 Downloading: $title (file_id: $fileId)');
 
     // Step 2: Download subtitle
     print('📥 Downloading subtitle (file_id: $fileId)...');
-    var (downloadLink, downloadFailure) = await opensubtitlesApi.download(fileId);
+    var (downloadLink, downloadFailure) = await opensubtitlesApi.download(
+      fileId,
+    );
     if (downloadFailure != null || downloadLink == null) {
       print('❌ Download failed: $downloadFailure');
       // Try to login first (might be required for download)
       print('🔐 Attempting login...');
-      final token = await opensubtitlesApi.login('your_username', 'your_password');
+      final token = await opensubtitlesApi.login(
+        'your_username',
+        'your_password',
+      );
       if (token != null) {
         print('✅ Logged in, retrying download...');
-        final (retryLink, retryFailure) = await opensubtitlesApi.download(fileId);
+        final (retryLink, retryFailure) = await opensubtitlesApi.download(
+          fileId,
+        );
         if (retryFailure != null || retryLink == null) {
           print('❌ Retry failed: $retryFailure');
           return;
@@ -80,7 +95,9 @@ void main(List<String> args) async {
       }
     }
 
-    final (content, fetchFailure) = await opensubtitlesApi.fetchContent(downloadLink);
+    final (content, fetchFailure) = await opensubtitlesApi.fetchContent(
+      downloadLink,
+    );
     if (fetchFailure != null || content == null) {
       print('❌ Fetch failed: $fetchFailure');
       return;
@@ -96,7 +113,9 @@ void main(List<String> args) async {
     // Show first 5 entries
     print('\n=== First 5 Original Entries ===');
     for (final entry in entries.take(5)) {
-      print('${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}');
+      print(
+        '${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}',
+      );
       print('  "${entry.text}"');
     }
 
@@ -107,7 +126,10 @@ void main(List<String> args) async {
     int failCount = 0;
 
     for (final entry in entries) {
-      final (translatedText, failure) = await translateApi.translate(entry.text, 'es');
+      final (translatedText, failure) = await translateApi.translate(
+        entry.text,
+        'es',
+      );
       if (failure != null) {
         failCount++;
         translatedEntries.add(entry.text); // Keep original on failure
@@ -123,7 +145,9 @@ void main(List<String> args) async {
     print('\n=== First 5 Translated Entries ===');
     for (int i = 0; i < 5 && i < entries.length; i++) {
       final entry = entries[i];
-      print('${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}');
+      print(
+        '${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}',
+      );
       print('  Original: "${entry.text}"');
       print('  Spanish:  "${translatedEntries[i]}"');
     }
@@ -134,14 +158,15 @@ void main(List<String> args) async {
     for (int i = 0; i < entries.length; i++) {
       final entry = entries[i];
       buffer.writeln('${i + 1}');
-      buffer.writeln('${_formatTime(entry.start)} --> ${_formatTime(entry.end)}');
+      buffer.writeln(
+        '${_formatTime(entry.start)} --> ${_formatTime(entry.end)}',
+      );
       buffer.writeln(translatedEntries[i]);
       buffer.writeln();
     }
-    
+
     await File(outputFile).writeAsString(buffer.toString());
     print('\n💾 Saved translated SRT to: $outputFile');
-
   } finally {
     client.close();
   }

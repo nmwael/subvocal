@@ -24,7 +24,8 @@ void main() {
 
     setUp(() {
       final parser = SrtParser();
-      const srt = '1\n00:00:01,000 --> 00:00:04,000\nHello world\n\n'
+      const srt =
+          '1\n00:00:01,000 --> 00:00:04,000\nHello world\n\n'
           '2\n00:00:05,000 --> 00:00:08,000\nSecond subtitle';
       final entries = parser.parse(srt);
       testSubtitle = Subtitle(title: 'Test', entries: entries);
@@ -33,9 +34,7 @@ void main() {
     testWidgets('player screen renders with subtitle content', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp(
-            home: PlayerScreen(subtitle: testSubtitle),
-          ),
+          child: MaterialApp(home: PlayerScreen(subtitle: testSubtitle)),
         ),
       );
       await tester.pumpAndSettle(
@@ -52,9 +51,7 @@ void main() {
     testWidgets('player screen shows play/pause controls', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp(
-            home: PlayerScreen(subtitle: testSubtitle),
-          ),
+          child: MaterialApp(home: PlayerScreen(subtitle: testSubtitle)),
         ),
       );
       await tester.pumpAndSettle(
@@ -71,9 +68,7 @@ void main() {
     testWidgets('player screen shows subtitle display area', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp(
-            home: PlayerScreen(subtitle: testSubtitle),
-          ),
+          child: MaterialApp(home: PlayerScreen(subtitle: testSubtitle)),
         ),
       );
       await tester.pumpAndSettle(
@@ -89,9 +84,7 @@ void main() {
     testWidgets('player screen app bar has stop button', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp(
-            home: PlayerScreen(subtitle: testSubtitle),
-          ),
+          child: MaterialApp(home: PlayerScreen(subtitle: testSubtitle)),
         ),
       );
       await tester.pumpAndSettle(

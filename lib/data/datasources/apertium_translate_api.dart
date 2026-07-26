@@ -13,22 +13,38 @@ class ApertiumTranslateApi implements TranslationService {
   ApertiumTranslateApi(this._client);
 
   @override
-  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(String?, Failure?)> translate(
+    String text,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     try {
       final source = sourceLanguage ?? 'en';
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: {
-        'langpair': '$source|$targetLanguage',
-        'q': text,
-        'markUnknown': 'no',
-      });
+      final uri = Uri.parse(_baseUrl).replace(
+        queryParameters: {
+          'langpair': '$source|$targetLanguage',
+          'q': text,
+          'markUnknown': 'no',
+        },
+      );
 
       final response = await _client.get(uri);
 
       if (response.statusCode == 429) {
-        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+        return (
+          null,
+          const NetworkFailure(
+            'Rate limit exceeded. Please wait before trying again.',
+          ),
+        );
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+        return (
+          null,
+          NetworkFailure(
+            'Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}',
+          ),
+        );
       }
 
       final result = jsonDecode(response.body) as Map<String, dynamic>;
@@ -45,24 +61,40 @@ class ApertiumTranslateApi implements TranslationService {
   }
 
   @override
-  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(List<String>?, Failure?)> translateBatch(
+    List<String> texts,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     if (texts.isEmpty) return (<String>[], null);
     try {
       final source = sourceLanguage ?? 'en';
       final joined = texts.join('\n');
-      final uri = Uri.parse(_baseUrl).replace(queryParameters: {
-        'langpair': '$source|$targetLanguage',
-        'q': joined,
-        'markUnknown': 'no',
-      });
+      final uri = Uri.parse(_baseUrl).replace(
+        queryParameters: {
+          'langpair': '$source|$targetLanguage',
+          'q': joined,
+          'markUnknown': 'no',
+        },
+      );
 
       final response = await _client.get(uri);
 
       if (response.statusCode == 429) {
-        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+        return (
+          null,
+          const NetworkFailure(
+            'Rate limit exceeded. Please wait before trying again.',
+          ),
+        );
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+        return (
+          null,
+          NetworkFailure(
+            'Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}',
+          ),
+        );
       }
 
       final result = jsonDecode(response.body) as Map<String, dynamic>;
@@ -75,7 +107,12 @@ class ApertiumTranslateApi implements TranslationService {
 
       final translatedLines = translatedText.split('\n');
       if (translatedLines.length != texts.length) {
-        return (null, const NetworkFailure('Batch translation returned wrong number of lines'));
+        return (
+          null,
+          const NetworkFailure(
+            'Batch translation returned wrong number of lines',
+          ),
+        );
       }
       return (translatedLines, null);
     } on Exception catch (e) {

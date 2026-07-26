@@ -20,11 +20,11 @@ class _FakeLocalSource extends RecentSubtitlesLocalSource {
 Widget _createTestApp() {
   return ProviderScope(
     overrides: [
-      recentSubtitlesProvider.overrideWith((ref) => _FakeRecentSubtitlesNotifier()),
+      recentSubtitlesProvider.overrideWith(
+        (ref) => _FakeRecentSubtitlesNotifier(),
+      ),
     ],
-    child: const MaterialApp(
-      home: HomeScreen(),
-    ),
+    child: const MaterialApp(home: HomeScreen()),
   );
 }
 
@@ -40,5 +40,37 @@ void main() {
     await tester.pumpWidget(_createTestApp());
 
     expect(find.text('Search subtitles'), findsOneWidget);
+  });
+
+  testWidgets('shows alpha chip in app bar', (tester) async {
+    await tester.pumpWidget(_createTestApp());
+
+    expect(find.text('ALPHA'), findsOneWidget);
+  });
+
+  testWidgets('shows alpha notice banner', (tester) async {
+    await tester.pumpWidget(_createTestApp());
+
+    expect(
+      find.text(
+        'This app is in alpha. Features may change and bugs are expected.',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('dismisses alpha banner on tap', (tester) async {
+    await tester.pumpWidget(_createTestApp());
+
+    expect(find.text('Dismiss'), findsOneWidget);
+    await tester.tap(find.text('Dismiss'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(
+        'This app is in alpha. Features may change and bugs are expected.',
+      ),
+      findsNothing,
+    );
   });
 }

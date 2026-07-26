@@ -105,7 +105,29 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 80px 24px;
+      padding: 120px 24px 80px;
+    }
+
+    .alpha-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 183, 77, 0.15);
+      border-bottom: 1px solid rgba(255, 183, 77, 0.3);
+      color: #ffb74d;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .alpha-banner svg {
+      flex-shrink: 0;
     }
 
     .hero-badge {
@@ -314,13 +336,19 @@
       .hero-cta { flex-direction: column; width: 100%; }
       .btn { justify-content: center; }
       .read-aloud-btn { justify-content: center; width: 100%; }
-      .lang-switcher { top: 8px; right: 8px; }
-      .github-link { top: 8px; left: 8px; }
+      .lang-switcher { top: 40px; right: 8px; }
+      .github-link { top: 40px; left: 8px; }
       .lang-btn { padding: 5px 7px; font-size: 12px; }
+      .alpha-banner { font-size: 12px; padding: 6px 12px; }
     }
   </style>
 </head>
 <body>
+
+  <div class="alpha-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <span data-i18n="alpha-banner">This app is in alpha. Features may change and bugs are expected.</span>
+  </div>
 
   <nav class="lang-switcher">
     <button class="lang-btn active" data-lang="en"><img src="flags/gb.svg" alt="EN"> EN</button>
@@ -459,6 +487,7 @@
     const translations = {
       en: {
         badge: "Open Source",
+        "alpha-banner": "This app is in alpha. Features may change and bugs are expected.",
         "hero-title": 'Subtitles, <span data-i18n="hero-title-accent">spoken aloud</span>',
         "hero-title-accent": "spoken aloud",
         "hero-desc": "Subvocal reads subtitles in sync with your video. For those who cannot read, and for those learning a new language.",
@@ -489,6 +518,7 @@
       },
       es: {
         badge: "C\u00f3digo Abierto",
+        "alpha-banner": "Esta aplicaci\u00f3n est\u00e1 en fase alfa. Las funciones pueden cambiar y se esperan errores.",
         "hero-title": 'Subt\u00edtulos, <span data-i18n="hero-title-accent">le\u00eddos en voz alta</span>',
         "hero-title-accent": "le\u00eddos en voz alta",
         "hero-desc": "Subvocal lee los subt\u00edtulos sincronizados con tu video. Para quienes no pueden leer, y para quienes est\u00e1n aprendiendo un nuevo idioma.",
@@ -519,6 +549,7 @@
       },
       da: {
         badge: "\u00c5ben kildekode",
+        "alpha-banner": "Denne app er i alfa. Funktioner kan \u00e6ndres, og fejl forventes.",
         "hero-title": 'Undertekster, <span data-i18n="hero-title-accent">l\u00e6st h\u00f8jt</span>',
         "hero-title-accent": "l\u00e6st h\u00f8jt",
         "hero-desc": "Subvocal l\u00e6ser undertekster synkront med din video. For dem der ikke kan l\u00e6se, og for dem der l\u00e6rer et nyt sprog.",
@@ -549,6 +580,7 @@
       },
       gl: {
         badge: "C\u00f3digo Aberto",
+        "alpha-banner": "Esta app est\u00e1 en alfa. As funcionalidades poden cambiar e esper\u00e1nse erros.",
         "hero-title": 'Subt\u00edtulos, <span data-i18n="hero-title-accent">lidos en voz alta</span>',
         "hero-title-accent": "lidos en voz alta",
         "hero-desc": "Subvocal le os subt\u00edtulos sincronizados co teu v\u00eddeo. Para quen non pode ler, e para quen est\u00e1 aprendendo un novo idioma.",

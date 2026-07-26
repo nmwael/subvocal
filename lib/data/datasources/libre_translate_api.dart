@@ -12,10 +12,17 @@ class LibreTranslateApi implements TranslationService {
   final http.Client _client;
   final String _baseUrl;
 
-  LibreTranslateApi(this._client, {this._baseUrl = 'https://libretranslate.de'});
+  LibreTranslateApi(
+    this._client, {
+    this._baseUrl = 'https://libretranslate.de',
+  });
 
   @override
-  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(String?, Failure?)> translate(
+    String text,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     try {
       final body = jsonEncode({
         'q': text,
@@ -32,10 +39,20 @@ class LibreTranslateApi implements TranslationService {
       );
 
       if (response.statusCode == 429) {
-        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+        return (
+          null,
+          const NetworkFailure(
+            'Rate limit exceeded. Please wait before trying again.',
+          ),
+        );
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+        return (
+          null,
+          NetworkFailure(
+            'Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}',
+          ),
+        );
       }
 
       final result = jsonDecode(response.body) as Map<String, dynamic>;
@@ -50,7 +67,11 @@ class LibreTranslateApi implements TranslationService {
   }
 
   @override
-  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(List<String>?, Failure?)> translateBatch(
+    List<String> texts,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     if (texts.isEmpty) return (<String>[], null);
     try {
       final joined = texts.join('\n');
@@ -69,10 +90,20 @@ class LibreTranslateApi implements TranslationService {
       );
 
       if (response.statusCode == 429) {
-        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+        return (
+          null,
+          const NetworkFailure(
+            'Rate limit exceeded. Please wait before trying again.',
+          ),
+        );
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+        return (
+          null,
+          NetworkFailure(
+            'Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}',
+          ),
+        );
       }
 
       final result = jsonDecode(response.body) as Map<String, dynamic>;
@@ -83,7 +114,12 @@ class LibreTranslateApi implements TranslationService {
 
       final translatedLines = translatedText.split('\n');
       if (translatedLines.length != texts.length) {
-        return (null, const NetworkFailure('Batch translation returned wrong number of lines'));
+        return (
+          null,
+          const NetworkFailure(
+            'Batch translation returned wrong number of lines',
+          ),
+        );
       }
       return (translatedLines, null);
     } on Exception catch (e) {

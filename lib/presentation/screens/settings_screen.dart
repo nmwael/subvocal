@@ -8,25 +8,101 @@ import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
 
 const _iso6392To6391 = {
-  'afr': 'af', 'alb': 'sq', 'amh': 'am', 'ara': 'ar', 'arm': 'hy',
-  'aze': 'az', 'baq': 'eu', 'bel': 'be', 'ben': 'bn', 'bos': 'bs',
-  'bul': 'bg', 'bur': 'my', 'cat': 'ca', 'che': 'ce', 'zho': 'zh',
-  'hrv': 'hr', 'cze': 'cs', 'dan': 'da', 'div': 'dv', 'dut': 'nl',
-  'dzo': 'dz', 'eng': 'en', 'est': 'et', 'fao': 'fo', 'fij': 'fj',
-  'fin': 'fi', 'fre': 'fr', 'glg': 'gl', 'geo': 'ka', 'ger': 'de',
-  'ell': 'el', 'grn': 'gn', 'guj': 'gu', 'hat': 'ht', 'hau': 'ha',
-  'heb': 'he', 'hin': 'hi', 'hun': 'hu', 'ice': 'is', 'ind': 'id',
-  'gle': 'ga', 'ita': 'it', 'jpn': 'ja', 'jav': 'jv', 'kan': 'kn',
-  'kaz': 'kk', 'khm': 'km', 'kor': 'ko', 'kur': 'ku', 'kir': 'ky',
-  'lao': 'lo', 'lat': 'la', 'lav': 'lv', 'lit': 'lt', 'mkd': 'mk',
-  'may': 'ms', 'mal': 'ml', 'mlt': 'mt', 'mar': 'mr', 'mon': 'mn',
-  'nep': 'ne', 'nor': 'no', 'oci': 'oc', 'ori': 'or', 'per': 'fa',
-  'pol': 'pl', 'por': 'pt', 'pan': 'pa', 'rum': 'ro', 'rus': 'ru',
-  'smo': 'sm', 'srp': 'sr', 'sna': 'sn', 'snd': 'sd', 'sin': 'si',
-  'slk': 'sk', 'slv': 'sl', 'som': 'so', 'spa': 'es', 'swa': 'sw',
-  'swe': 'sv', 'tgl': 'tl', 'tam': 'ta', 'tat': 'tt', 'tel': 'te',
-  'tha': 'th', 'tur': 'tr', 'ukr': 'uk', 'urd': 'ur', 'uzb': 'uz',
-  'vie': 'vi', 'wel': 'cy', 'fry': 'fy', 'wol': 'wo', 'yid': 'yi',
+  'afr': 'af',
+  'alb': 'sq',
+  'amh': 'am',
+  'ara': 'ar',
+  'arm': 'hy',
+  'aze': 'az',
+  'baq': 'eu',
+  'bel': 'be',
+  'ben': 'bn',
+  'bos': 'bs',
+  'bul': 'bg',
+  'bur': 'my',
+  'cat': 'ca',
+  'che': 'ce',
+  'zho': 'zh',
+  'hrv': 'hr',
+  'cze': 'cs',
+  'dan': 'da',
+  'div': 'dv',
+  'dut': 'nl',
+  'dzo': 'dz',
+  'eng': 'en',
+  'est': 'et',
+  'fao': 'fo',
+  'fij': 'fj',
+  'fin': 'fi',
+  'fre': 'fr',
+  'glg': 'gl',
+  'geo': 'ka',
+  'ger': 'de',
+  'ell': 'el',
+  'grn': 'gn',
+  'guj': 'gu',
+  'hat': 'ht',
+  'hau': 'ha',
+  'heb': 'he',
+  'hin': 'hi',
+  'hun': 'hu',
+  'ice': 'is',
+  'ind': 'id',
+  'gle': 'ga',
+  'ita': 'it',
+  'jpn': 'ja',
+  'jav': 'jv',
+  'kan': 'kn',
+  'kaz': 'kk',
+  'khm': 'km',
+  'kor': 'ko',
+  'kur': 'ku',
+  'kir': 'ky',
+  'lao': 'lo',
+  'lat': 'la',
+  'lav': 'lv',
+  'lit': 'lt',
+  'mkd': 'mk',
+  'may': 'ms',
+  'mal': 'ml',
+  'mlt': 'mt',
+  'mar': 'mr',
+  'mon': 'mn',
+  'nep': 'ne',
+  'nor': 'no',
+  'oci': 'oc',
+  'ori': 'or',
+  'per': 'fa',
+  'pol': 'pl',
+  'por': 'pt',
+  'pan': 'pa',
+  'rum': 'ro',
+  'rus': 'ru',
+  'smo': 'sm',
+  'srp': 'sr',
+  'sna': 'sn',
+  'snd': 'sd',
+  'sin': 'si',
+  'slk': 'sk',
+  'slv': 'sl',
+  'som': 'so',
+  'spa': 'es',
+  'swa': 'sw',
+  'swe': 'sv',
+  'tgl': 'tl',
+  'tam': 'ta',
+  'tat': 'tt',
+  'tel': 'te',
+  'tha': 'th',
+  'tur': 'tr',
+  'ukr': 'uk',
+  'urd': 'ur',
+  'uzb': 'uz',
+  'vie': 'vi',
+  'wel': 'cy',
+  'fry': 'fy',
+  'wol': 'wo',
+  'yid': 'yi',
 };
 
 String _normalizeLangCode(String code) {
@@ -37,19 +113,26 @@ String _normalizeLangCode(String code) {
   return _iso6392To6391[bcp47] ?? bcp47;
 }
 
-final availableVoicesProvider = FutureProvider.autoDispose<List<Map<String, String>>>((ref) async {
-  final tts = ref.watch(flutterTtsProvider);
-  final language = ref.watch(settingsProvider).selectedLanguage;
-  final raw = await tts.getVoices;
-  if (raw is! List) return <Map<String, String>>[];
-  final allVoices = raw.whereType<Map>().map((v) =>
-      v.map((key, value) => MapEntry(key.toString(), value.toString()))).toList();
-  final filtered = allVoices.where((v) {
-    final voiceLang = _normalizeLangCode(v['language'] ?? '');
-    return voiceLang == language.toLowerCase();
-  }).toList();
-  return filtered;
-});
+final availableVoicesProvider =
+    FutureProvider.autoDispose<List<Map<String, String>>>((ref) async {
+      final tts = ref.watch(flutterTtsProvider);
+      final language = ref.watch(settingsProvider).selectedLanguage;
+      final raw = await tts.getVoices;
+      if (raw is! List) return <Map<String, String>>[];
+      final allVoices = raw
+          .whereType<Map>()
+          .map(
+            (v) => v.map(
+              (key, value) => MapEntry(key.toString(), value.toString()),
+            ),
+          )
+          .toList();
+      final filtered = allVoices.where((v) {
+        final voiceLang = _normalizeLangCode(v['language'] ?? '');
+        return voiceLang == language.toLowerCase();
+      }).toList();
+      return filtered;
+    });
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -81,7 +164,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       setState(() => _loginError = 'Please enter both username and password');
       return;
     }
-    final success = await ref.read(authProvider.notifier).login(username, password);
+    final success = await ref
+        .read(authProvider.notifier)
+        .login(username, password);
     if (!success && mounted) {
       setState(() => _loginError = 'Login failed. Check your credentials.');
     }
@@ -99,10 +184,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Readout Settings'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Readout Settings'), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -134,8 +216,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => ref.read(authProvider.notifier).logout(),
-                          child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                          onPressed: () =>
+                              ref.read(authProvider.notifier).logout(),
+                          child: const Text(
+                            'Logout',
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                     );
@@ -161,8 +247,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           border: const OutlineInputBorder(),
                           prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
-                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
                           ),
                         ),
                         textInputAction: TextInputAction.done,
@@ -170,7 +262,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                       if (_loginError != null) ...[
                         const SizedBox(height: 8),
-                        Text(_loginError!, style: const TextStyle(color: Colors.red)),
+                        Text(
+                          _loginError!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
                       ],
                       const SizedBox(height: 12),
                       ElevatedButton(
@@ -235,7 +330,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _VoiceSelector(
                     selectedVoice: settings.selectedVoice,
                     language: settings.selectedLanguage,
-                    onVoiceSelected: (voice) => notifier.setSelectedVoice(voice),
+                    onVoiceSelected: (voice) =>
+                        notifier.setSelectedVoice(voice),
                   ),
                 ],
               ),
@@ -329,8 +425,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       border: OutlineInputBorder(),
                     ),
                     items: const [
-                      DropdownMenuItem(value: 'en', child: Text('English (en)')),
-                      DropdownMenuItem(value: 'es', child: Text('Spanish (es)')),
+                      DropdownMenuItem(
+                        value: 'en',
+                        child: Text('English (en)'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'es',
+                        child: Text('Spanish (es)'),
+                      ),
                       DropdownMenuItem(value: 'da', child: Text('Danish (da)')),
                       DropdownMenuItem(value: 'fr', child: Text('French (fr)')),
                       DropdownMenuItem(value: 'de', child: Text('German (de)')),
@@ -348,7 +450,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       labelText: 'Email (optional)',
                       hintText: 'your@email.com',
                       border: OutlineInputBorder(),
-                      helperText: 'Raises MyMemory daily limit from 5,000 to 50,000 characters',
+                      helperText:
+                          'Raises MyMemory daily limit from 5,000 to 50,000 characters',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) => notifier.setMyMemoryEmail(value),
@@ -362,11 +465,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       border: OutlineInputBorder(),
                     ),
                     items: const [
-                      DropdownMenuItem(value: TranslationProviderType.auto, child: Text('Auto (try all)')),
-                      DropdownMenuItem(value: TranslationProviderType.azure, child: Text('Azure')),
-                      DropdownMenuItem(value: TranslationProviderType.myMemory, child: Text('MyMemory')),
-                      DropdownMenuItem(value: TranslationProviderType.apertium, child: Text('Apertium')),
-                      DropdownMenuItem(value: TranslationProviderType.libreTranslate, child: Text('LibreTranslate')),
+                      DropdownMenuItem(
+                        value: TranslationProviderType.auto,
+                        child: Text('Auto (try all)'),
+                      ),
+                      DropdownMenuItem(
+                        value: TranslationProviderType.azure,
+                        child: Text('Azure'),
+                      ),
+                      DropdownMenuItem(
+                        value: TranslationProviderType.myMemory,
+                        child: Text('MyMemory'),
+                      ),
+                      DropdownMenuItem(
+                        value: TranslationProviderType.apertium,
+                        child: Text('Apertium'),
+                      ),
+                      DropdownMenuItem(
+                        value: TranslationProviderType.libreTranslate,
+                        child: Text('LibreTranslate'),
+                      ),
                     ],
                     onChanged: (value) {
                       if (value != null) {
@@ -429,7 +547,9 @@ class _TestVoiceButton extends ConsumerWidget {
             label: const Text('Stop Sample'),
           )
         : ElevatedButton.icon(
-            onPressed: () => ref.read(testVoiceControllerProvider).playSample(rate, pitch, voice: voice),
+            onPressed: () => ref
+                .read(testVoiceControllerProvider)
+                .playSample(rate, pitch, voice: voice),
             icon: const Icon(Icons.play_arrow),
             label: const Text('Play Sample'),
           );
@@ -480,7 +600,9 @@ class _TranslatedTestPreview extends ConsumerWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -518,7 +640,9 @@ class _TranslatedTestButton extends ConsumerWidget {
             label: const Text('Stop Translated Sample'),
           )
         : ElevatedButton.icon(
-            onPressed: () => ref.read(testVoiceControllerProvider).playTranslatedSample(rate, pitch, language, voice: voice),
+            onPressed: () => ref
+                .read(testVoiceControllerProvider)
+                .playTranslatedSample(rate, pitch, language, voice: voice),
             icon: const Icon(Icons.play_arrow),
             label: const Text('Play Translated Sample'),
           );
@@ -544,15 +668,19 @@ class _VoiceSelector extends ConsumerWidget {
       loading: () => const LinearProgressIndicator(),
       error: (e, _) => Text(
         'Could not load voices: $e',
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.orange),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: Colors.orange),
       ),
       data: (voices) {
         if (voices.isEmpty) {
           return Text(
             'No voices available for ${language.toUpperCase()}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
           );
         }
         final validValue = voices.any((v) => v['name'] == selectedVoice)
@@ -565,14 +693,14 @@ class _VoiceSelector extends ConsumerWidget {
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               initialValue: validValue,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(border: OutlineInputBorder()),
               items: voices
-                  .map((v) => DropdownMenuItem(
-                        value: v['name'],
-                        child: Text(v['name'] ?? 'Unknown'),
-                      ))
+                  .map(
+                    (v) => DropdownMenuItem(
+                      value: v['name'],
+                      child: Text(v['name'] ?? 'Unknown'),
+                    ),
+                  )
                   .toList(),
               onChanged: onVoiceSelected,
             ),

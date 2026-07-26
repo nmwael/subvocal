@@ -25,8 +25,16 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   });
 
   @override
-  Future<(List<SearchResult>?, Failure?)> search(String query, {String? language}) async {
-    final (data, failure) = await api.search(query, language: language);
+  Future<(List<SearchResult>?, Failure?)> search(
+    String query, {
+    String? language,
+    String? type,
+  }) async {
+    final (data, failure) = await api.search(
+      query,
+      language: language,
+      type: type,
+    );
     if (failure != null) return (null, failure);
     if (data == null) return (<SearchResult>[], null);
 
@@ -42,15 +50,22 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   Future<(Subtitle?, Failure?)> download(int fileId) async {
     final (link, failure) = await api.download(fileId);
     if (failure != null) return (null, failure);
-    if (link == null) return (null, const NetworkFailure('Empty download link'));
+    if (link == null) {
+      return (null, const NetworkFailure('Empty download link'));
+    }
 
     final (content, fetchFailure) = await api.fetchContent(link);
     if (fetchFailure != null) return (null, fetchFailure);
-    if (content == null) return (null, const NetworkFailure('Empty subtitle content'));
+    if (content == null) {
+      return (null, const NetworkFailure('Empty subtitle content'));
+    }
 
     final entries = srtParser.parse(content);
     if (entries.isEmpty) {
-      return (null, const SrtParseFailure('No valid entries in downloaded subtitle'));
+      return (
+        null,
+        const SrtParseFailure('No valid entries in downloaded subtitle'),
+      );
     }
 
     return (Subtitle(id: fileId, title: '', entries: entries), null);
@@ -75,7 +90,10 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   Future<(String?, Failure?)> login(String username, String password) async {
     final token = await api.login(username, password);
     if (token == null) {
-      return (null, const NetworkFailure('Login failed. Check your credentials.'));
+      return (
+        null,
+        const NetworkFailure('Login failed. Check your credentials.'),
+      );
     }
     return (token, null);
   }
@@ -106,7 +124,10 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     const batchSize = 10;
     const maxRetries = 3;
     final total = subtitle.entries.length;
-    final translatedEntries = List<SubtitleEntry>.filled(total, subtitle.entries.first);
+    final translatedEntries = List<SubtitleEntry>.filled(
+      total,
+      subtitle.entries.first,
+    );
     var completed = 0;
 
     for (var i = 0; i < total; i += batchSize) {
@@ -126,7 +147,8 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
               text: text,
             );
           }
-          if (failure?.message.contains('Rate limit') == true && retry < maxRetries - 1) {
+          if (failure?.message.contains('Rate limit') == true &&
+              retry < maxRetries - 1) {
             final delay = (1 << retry) * 5;
             await Future.delayed(Duration(seconds: delay));
             continue;
@@ -153,11 +175,14 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
       onProgress?.call(TranslationProgress(completed: completed, total: total));
     }
 
-    return (Subtitle(
-      id: subtitle.id,
-      title: subtitle.title,
-      language: targetLanguage,
-      entries: translatedEntries,
-    ), null);
+    return (
+      Subtitle(
+        id: subtitle.id,
+        title: subtitle.title,
+        language: targetLanguage,
+        entries: translatedEntries,
+      ),
+      null,
+    );
   }
 }

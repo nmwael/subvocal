@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 
 void main() async {
   // Load Harry Potter SRT fixture
-  final file = File('test/fixtures/Harry.Potter.And.The.Sorcerers.Stone.2001.EXTENDED.720p.BluRay.H264.AAC-RARBG.srt');
+  final file = File(
+    'test/fixtures/Harry.Potter.And.The.Sorcerers.Stone.2001.EXTENDED.720p.BluRay.H264.AAC-RARBG.srt',
+  );
   final srtContent = await file.readAsString();
 
   print('=== Original SRT (First 5 Entries) ===');
@@ -14,7 +16,9 @@ void main() async {
   final entries = parser.parse(srtContent).take(5).toList();
 
   for (final entry in entries) {
-    print('${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}');
+    print(
+      '${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}',
+    );
     print('  "${entry.text}"');
   }
 
@@ -25,7 +29,10 @@ void main() async {
   print('\n=== Translating to Spanish (es) ===');
   final translatedEntries = <String>[];
   for (final entry in entries) {
-    final (translatedText, failure) = await translateApi.translate(entry.text, 'es');
+    final (translatedText, failure) = await translateApi.translate(
+      entry.text,
+      'es',
+    );
     if (failure != null) {
       print('Error: $failure');
       translatedEntries.add(entry.text);

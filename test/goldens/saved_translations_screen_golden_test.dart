@@ -60,8 +60,7 @@ void main() {
 
 class _FakeSavedNotifier extends StateNotifier<AsyncValue<List<SavedSubtitle>>>
     implements SavedSubtitlesNotifier {
-  _FakeSavedNotifier(List<SavedSubtitle> items)
-      : super(AsyncValue.data(items));
+  _FakeSavedNotifier(List<SavedSubtitle> items) : super(AsyncValue.data(items));
 
   @override
   Future<SavedSubtitle> save(subtitle, String language) async =>

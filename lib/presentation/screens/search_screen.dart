@@ -29,9 +29,9 @@ class SearchScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
             child: const Text('Login'),
           ),
@@ -43,14 +43,13 @@ class SearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(searchQueryProvider);
+    final contentType = ref.watch(searchContentTypeProvider);
     final resultsAsync = query.isNotEmpty
-        ? ref.watch(searchResultsProvider(query))
+        ? ref.watch(searchResultsProvider((query, contentType)))
         : const AsyncData<List<SearchResult>>([]);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Subtitles'),
-      ),
+      appBar: AppBar(title: const Text('Search Subtitles')),
       body: Column(
         children: [
           Padding(
@@ -63,7 +62,8 @@ class SearchScreen extends ConsumerWidget {
                 suffixIcon: query.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear),
-                        onPressed: () => ref.read(searchQueryProvider.notifier).state = '',
+                        onPressed: () =>
+                            ref.read(searchQueryProvider.notifier).state = '',
                       )
                     : null,
                 border: OutlineInputBorder(
@@ -71,9 +71,26 @@ class SearchScreen extends ConsumerWidget {
                 ),
                 filled: true,
               ),
-              onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
+              onChanged: (value) =>
+                  ref.read(searchQueryProvider.notifier).state = value,
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(value: 'all', label: Text('All')),
+                ButtonSegment(value: 'movie', label: Text('Movies')),
+                ButtonSegment(value: 'episode', label: Text('TV Episodes')),
+              ],
+              selected: {contentType},
+              onSelectionChanged: (selected) {
+                ref.read(searchContentTypeProvider.notifier).state =
+                    selected.first;
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
           Expanded(
             child: resultsAsync.when(
               data: (results) {
@@ -82,8 +99,10 @@ class SearchScreen extends ConsumerWidget {
                     child: Text(
                       'Enter a movie or show name to search',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                          ),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
                     ),
                   );
                 }
@@ -92,8 +111,10 @@ class SearchScreen extends ConsumerWidget {
                     child: Text(
                       'No results found for "$query"',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                          ),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
                     ),
                   );
                 }
@@ -112,7 +133,9 @@ class SearchScreen extends ConsumerWidget {
                         }
 
                         final download = ref.read(downloadSubtitleProvider);
-                        final (subtitle, failure) = await download.call(result.fileId);
+                        final (subtitle, failure) = await download.call(
+                          result.fileId,
+                        );
                         if (failure != null) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -122,11 +145,15 @@ class SearchScreen extends ConsumerWidget {
                           return;
                         }
                         if (subtitle != null && context.mounted) {
-                          final langSubtitle = subtitle.copyWith(language: result.language);
-                          ref.read(importedSubtitleProvider.notifier).state = langSubtitle;
+                          final langSubtitle = subtitle.copyWith(
+                            language: result.language,
+                          );
+                          ref.read(importedSubtitleProvider.notifier).state =
+                              langSubtitle;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => PlayerScreen(subtitle: langSubtitle),
+                              builder: (_) =>
+                                  PlayerScreen(subtitle: langSubtitle),
                             ),
                           );
                         }
@@ -140,9 +167,15 @@ class SearchScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 48,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
-                    Text('Error: ${error is Failure ? error.message : 'An unexpected error occurred'}'),
+                    Text(
+                      'Error: ${error is Failure ? error.message : 'An unexpected error occurred'}',
+                    ),
                   ],
                 ),
               ),

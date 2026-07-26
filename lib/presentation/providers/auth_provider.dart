@@ -12,8 +12,11 @@ class AuthState {
   const AuthState({required this.status, this.username});
 
   const AuthState.unknown() : status = AuthStatus.unknown, username = null;
-  const AuthState.authenticated(this.username) : status = AuthStatus.authenticated;
-  const AuthState.unauthenticated() : status = AuthStatus.unauthenticated, username = null;
+  const AuthState.authenticated(this.username)
+    : status = AuthStatus.authenticated;
+  const AuthState.unauthenticated()
+    : status = AuthStatus.unauthenticated,
+      username = null;
 }
 
 final tokenStorageProvider = Provider<TokenStorage>((ref) => TokenStorage());
@@ -70,4 +73,6 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   }
 }
 
-final authProvider = AsyncNotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authProvider = AsyncNotifierProvider<AuthNotifier, AuthState>(
+  AuthNotifier.new,
+);

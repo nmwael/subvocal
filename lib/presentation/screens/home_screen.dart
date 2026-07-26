@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
+import '../widgets/alpha_chip.dart';
+import '../widgets/alpha_notice_banner.dart';
 import 'player_screen.dart';
 import 'saved_translations_screen.dart';
 import 'search_screen.dart';
@@ -19,15 +21,18 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('subvocal'),
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [Text('subvocal'), SizedBox(width: 8), AlphaChip()],
+        ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
           ),
         ],
@@ -36,6 +41,7 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const AlphaNoticeBanner(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
@@ -70,7 +76,9 @@ class HomeScreen extends ConsumerWidget {
                   OutlinedButton.icon(
                     onPressed: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const SavedTranslationsScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const SavedTranslationsScreen(),
+                        ),
                       );
                     },
                     icon: const Icon(Icons.bookmark),
@@ -100,8 +108,15 @@ class HomeScreen extends ConsumerWidget {
                   final item = recentSubtitles[index];
                   return ListTile(
                     leading: const Icon(Icons.history),
-                    title: Text(item.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                    subtitle: Text(item.language ?? 'SRT', style: theme.textTheme.bodySmall),
+                    title: Text(
+                      item.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Text(
+                      item.language ?? 'SRT',
+                      style: theme.textTheme.bodySmall,
+                    ),
                     trailing: const Icon(Icons.play_arrow),
                     onTap: () => _openRecent(context, ref, item),
                   );
@@ -114,26 +129,28 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  void _openRecent(BuildContext context, WidgetRef ref, RecentSubtitleInfo info) {
+  void _openRecent(
+    BuildContext context,
+    WidgetRef ref,
+    RecentSubtitleInfo info,
+  ) {
     if (info.filePath.isNotEmpty) {
-      ref.read(subtitleRepositoryProvider).importFromFile(info.filePath).then(
-        (result) {
-          final (subtitle, failure) = result;
-          if (failure != null && context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(failure.message)),
-            );
-            return;
-          }
-          if (subtitle != null && context.mounted) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => PlayerScreen(subtitle: subtitle),
-              ),
-            );
-          }
-        },
-      );
+      ref.read(subtitleRepositoryProvider).importFromFile(info.filePath).then((
+        result,
+      ) {
+        final (subtitle, failure) = result;
+        if (failure != null && context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(failure.message)));
+          return;
+        }
+        if (subtitle != null && context.mounted) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => PlayerScreen(subtitle: subtitle)),
+          );
+        }
+      });
     }
   }
 }
