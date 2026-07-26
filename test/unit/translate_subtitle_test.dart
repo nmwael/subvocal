@@ -74,8 +74,9 @@ class _MockRepository implements SubtitleRepository {
         targetLanguage,
       );
       if (failure != null) return (null, failure);
-      if (translatedText == null)
+      if (translatedText == null) {
         return (null, const NetworkFailure('Empty translation result'));
+      }
       translatedEntries.add(
         SubtitleEntry(
           index: entry.index,

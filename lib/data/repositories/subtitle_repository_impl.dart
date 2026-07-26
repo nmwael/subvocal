@@ -50,13 +50,15 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   Future<(Subtitle?, Failure?)> download(int fileId) async {
     final (link, failure) = await api.download(fileId);
     if (failure != null) return (null, failure);
-    if (link == null)
+    if (link == null) {
       return (null, const NetworkFailure('Empty download link'));
+    }
 
     final (content, fetchFailure) = await api.fetchContent(link);
     if (fetchFailure != null) return (null, fetchFailure);
-    if (content == null)
+    if (content == null) {
       return (null, const NetworkFailure('Empty subtitle content'));
+    }
 
     final entries = srtParser.parse(content);
     if (entries.isEmpty) {
