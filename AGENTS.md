@@ -8,24 +8,66 @@ This project uses a Human-in-the-Loop (HITL) approval workflow. Specialist subag
 
 ## Workflow
 
-1. **Architect** explores the codebase and produces an implementation plan (creates a GitHub issue for tracking)
-2. **Human reviews and approves the plan** — **HARD GATE: developer must not start until human gives explicit approval**.
+This project uses a Human-in-the-Loop (HITL) approval workflow with **architect as coordinator**. Each stage returns to the architect for review before proceeding to the next.
 
-   **Option A — Manual approval** (human comments `approved` on the issue):
-   ```bash
-   ./scripts/watch-approval.sh
-   ```
-   Polls the latest open enhancement issue every 10s. When a comment containing `approved`, `lgtm`, `looks good`, or `go ahead` is detected, sends a notification and exits 0.
+```mermaid
+graph TD
+    A[Architect Plans] --> B{Human Approves}
+    B -->|Approved| C[Developer Implements]
+    C --> D[Developer Returns to Architect]
+    D --> E{Architect Reviews Implementation}
+    E -->|Approved| F[Tester Writes Tests]
+    F --> G[Tester Returns to Architect]
+    G --> H{Architect Reviews Tests}
+    H -->|Approved| I[Security Auditor Reviews]
+    I --> J[Security Auditor Returns to Architect]
+    J --> K{Final Architect Review}
+    K -->|Approved| L[Merge to Development]
+    K -->|Changes Needed| C
+    E -->|Changes Needed| C
+    H -->|Changes Needed| F
+```
 
-   **Option B — Direct notify** (human approves in chat):
-   ```bash
-   ./scripts/workflow-notify.sh approved "developer starting"
-   ```
-3. **Developer** implements code changes following the approved plan (works autonomously, presents completed work for review)
-4. **Tester** writes and runs tests to validate changes (works autonomously, presents completed test results for review, closes the GitHub issue when done)
-5. **Security Auditor** reviews the final code for vulnerabilities (read-only)
+### Step-by-Step Process
 
-Step 2 (human approval) is NEVER skippable. Steps 3-5 may be skipped per task scope, but never without first passing step 2.
+1. **Architect Plans**
+   - Explores codebase and produces implementation plan
+   - Creates GitHub issue with WHY/WHAT/HOW template
+   - Notifies human: `./scripts/workflow-notify.sh plan-ready "plan ready for review"`
+
+2. **Human Reviews and Approves** — **HARD GATE**
+   - **Option A**: Comment `approved` on the issue, then run `./scripts/watch-approval.sh`
+   - **Option B**: Approve in chat, then run `./scripts/workflow-notify.sh approved "developer starting"`
+
+3. **Developer Implements**
+   - Implements code changes following approved plan
+   - Works autonomously, presents completed work for review
+   - Notifies architect: `./scripts/workflow-notify.sh impl-done "ready for review"`
+
+4. **Architect Reviews Implementation**
+   - Reviews code against plan and clean architecture principles
+   - If approved, passes to tester
+   - If changes needed, returns to developer
+
+5. **Tester Writes Tests**
+   - Writes and runs tests to validate changes
+   - Works autonomously, presents completed test results
+   - Notifies architect: `./scripts/workflow-notify.sh tests-done "test results ready"`
+
+6. **Architect Reviews Tests**
+   - Reviews test coverage and quality
+   - If approved, passes to security auditor
+   - If changes needed, returns to tester
+
+7. **Security Auditor Reviews**
+   - Inspects code for vulnerabilities (OWASP Top 10, injection, auth flaws)
+   - Read-only — cannot modify code
+   - Notifies architect: `./scripts/workflow-notify.sh audit-done "audit complete"`
+
+8. **Final Architect Review**
+   - Reviews all work (implementation + tests + security audit)
+   - If approved, creates PR and merges
+   - If changes needed, returns to appropriate stage
 
 ### Memory Aid: YOU ALWAYS FORGET THE HITL GATE
 
@@ -67,6 +109,8 @@ Implements code changes. Edits source files and runs build/compile commands auto
 > ```bash
 > ./scripts/workflow-notify.sh impl-done "ready for review"
 > ```
+>
+> **IMPORTANT**: After notification, **do not proceed directly to testing**. Wait for the architect to review your work and either approve (pass to tester) or request changes (return to developer).
 
 ### `@tester`
 Writes and runs tests. Edits test files and executes test commands autonomously. When tests are complete, presents results and asks for human review. On failure, retries up to 3 times before escalating to the user.
@@ -213,7 +257,7 @@ This project runs in a devcontainer with the following setup:
 
 ## Diagram Convention
 
-When architecture diagrams are required in documentation (e.g., DEVELOPMENT.md), use PlantUML fenced code blocks with ````plantuml` syntax. This ensures diagrams are renderable by PlantUML-compatible tools and remain readable as plain text.
+When architecture diagrams are required in documentation (e.g., DEVELOPMENT.md), use Mermaid fenced code blocks with ````mermaid` syntax. This ensures diagrams are renderable by Mermaid-compatible tools and remain readable as plain text.
 
 ## Pull Requests
 
@@ -233,14 +277,15 @@ How does the implementation work? Key design decisions and architecture notes.
 ## Project Summary
 
 ### Goal
-Cross-platform Flutter app for picking subtitles from OpenSubtitles and reading them aloud via TTS in sync with streaming video (Netflix, Prime, etc.). Useful for accessibility (visually impaired) and language learning.
+Cross-platform Flutter app for picking subtitles from OpenSubtitles, SubDL, or Podnapisi and reading them aloud via TTS in sync with streaming video (Netflix, Prime, etc.). Useful for accessibility (visually impaired) and language learning.
 
 ### Key Decisions
-- **Clean Architecture**: Domain (SRT parsing, TTS orchestration) independent from Flutter framework and OpenSubtitles API details
+- **Clean Architecture**: Domain (SRT parsing, TTS orchestration) independent from Flutter framework and API details
 - **Riverpod**: State management — simpler than BLoC, compile-safe, good for solo dev
 - **Custom SRT parser**: SRT format is simple; avoids dependency risk
 - **flutter_tts**: Wraps platform TTS (Android TTS / iOS AVSpeechSynthesizer)
-- **OpenSubtitles REST API v2**: Largest subtitle database; free tier available
+- **Multiple subtitle providers**: OpenSubtitles (primary), SubDL (2,000 req/day free), Podnapisi (zero auth, 2.2M+ subtitles)
+- **Provider aggregator**: Searches all providers, deduplicates results, provides fallback
 - **SRT-timed utterance scheduling**: Calculate delays between subtitle entries from timestamps
 
 ### Relevant Files
