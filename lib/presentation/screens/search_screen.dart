@@ -189,8 +189,12 @@ class SearchScreen extends ConsumerWidget {
                               langSubtitle;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  PlayerScreen(subtitle: langSubtitle),
+                              builder: (_) => PlayerScreen(
+                                subtitle: langSubtitle,
+                                year: result.year,
+                                season: result.season,
+                                episode: result.episode,
+                              ),
                             ),
                           );
                         }

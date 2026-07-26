@@ -63,8 +63,13 @@ class _FakeSavedNotifier extends StateNotifier<AsyncValue<List<SavedSubtitle>>>
   _FakeSavedNotifier(List<SavedSubtitle> items) : super(AsyncValue.data(items));
 
   @override
-  Future<SavedSubtitle> save(subtitle, String language) async =>
-      throw UnimplementedError();
+  Future<SavedSubtitle> save(
+    subtitle,
+    String language, {
+    String? year,
+    int? season,
+    int? episode,
+  }) async => throw UnimplementedError();
 
   @override
   Future<void> delete(String id) async {}

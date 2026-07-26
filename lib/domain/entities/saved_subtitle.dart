@@ -8,6 +8,9 @@ class SavedSubtitle {
   final int entryCount;
   final DateTime savedAt;
   final List<SubtitleEntry> entries;
+  final String? year;
+  final int? season;
+  final int? episode;
 
   const SavedSubtitle({
     required this.id,
@@ -16,7 +19,12 @@ class SavedSubtitle {
     required this.entryCount,
     required this.savedAt,
     required this.entries,
+    this.year,
+    this.season,
+    this.episode,
   });
+
+  bool get isTvShow => season != null && episode != null;
 
   Subtitle toSubtitle() =>
       Subtitle(id: null, title: title, language: language, entries: entries);
@@ -27,6 +35,9 @@ class SavedSubtitle {
     'language': language,
     'entryCount': entryCount,
     'savedAt': savedAt.toIso8601String(),
+    'year': year,
+    'season': season,
+    'episode': episode,
     'entries': entries
         .map(
           (e) => {
@@ -60,6 +71,9 @@ class SavedSubtitle {
       savedAt:
           DateTime.tryParse(json['savedAt'] as String? ?? '') ?? DateTime.now(),
       entries: entries,
+      year: json['year'] as String?,
+      season: json['season'] as int?,
+      episode: json['episode'] as int?,
     );
   }
 }

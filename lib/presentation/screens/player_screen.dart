@@ -13,8 +13,17 @@ import '../widgets/subtitle_display.dart';
 
 class PlayerScreen extends ConsumerStatefulWidget {
   final Subtitle subtitle;
+  final String? year;
+  final int? season;
+  final int? episode;
 
-  const PlayerScreen({super.key, required this.subtitle});
+  const PlayerScreen({
+    super.key,
+    required this.subtitle,
+    this.year,
+    this.season,
+    this.episode,
+  });
 
   @override
   ConsumerState<PlayerScreen> createState() => _PlayerScreenState();
@@ -35,6 +44,10 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             language: settings.selectedLanguage,
             voice: settings.selectedVoice,
             sourceLanguage: widget.subtitle.language,
+            title: widget.subtitle.title,
+            year: widget.year,
+            season: widget.season,
+            episode: widget.episode,
           );
     });
   }
@@ -69,6 +82,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 await saved.save(
                   playerState.translatedSubtitle!,
                   playerState.translatedSubtitle!.language ?? '',
+                  year: playerState.year,
+                  season: playerState.season,
+                  episode: playerState.episode,
                 );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
