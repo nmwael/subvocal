@@ -105,10 +105,12 @@ void main() {
     });
 
     testWidgets('error state', (tester) async {
-      await tester.pumpWidget(_buildPlayerScreen(
-        isPlaying: false,
-        error: 'Translation failed: Rate limit exceeded',
-      ));
+      await tester.pumpWidget(
+        _buildPlayerScreen(
+          isPlaying: false,
+          error: 'Translation failed: Rate limit exceeded',
+        ),
+      );
       await tester.pump();
       await expectLater(
         find.byType(MaterialApp),
@@ -117,11 +119,13 @@ void main() {
     });
 
     testWidgets('translating state', (tester) async {
-      await tester.pumpWidget(_buildPlayerScreen(
-        isPlaying: false,
-        isTranslating: true,
-        progress: const TranslationProgress(completed: 5, total: 10),
-      ));
+      await tester.pumpWidget(
+        _buildPlayerScreen(
+          isPlaying: false,
+          isTranslating: true,
+          progress: const TranslationProgress(completed: 5, total: 10),
+        ),
+      );
       await tester.pump();
       await expectLater(
         find.byType(MaterialApp),
@@ -130,21 +134,23 @@ void main() {
     });
 
     testWidgets('with translated subtitle', (tester) async {
-      await tester.pumpWidget(_buildPlayerScreen(
-        isPlaying: true,
-        translatedSubtitle: const Subtitle(
-          title: 'The Matrix',
-          language: 'es',
-          entries: [
-            SubtitleEntry(
-              index: 1,
-              start: Duration(seconds: 1),
-              end: Duration(seconds: 4),
-              text: 'Hola, mundo!',
-            ),
-          ],
+      await tester.pumpWidget(
+        _buildPlayerScreen(
+          isPlaying: true,
+          translatedSubtitle: const Subtitle(
+            title: 'The Matrix',
+            language: 'es',
+            entries: [
+              SubtitleEntry(
+                index: 1,
+                start: Duration(seconds: 1),
+                end: Duration(seconds: 4),
+                text: 'Hola, mundo!',
+              ),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pump();
       await expectLater(
         find.byType(MaterialApp),

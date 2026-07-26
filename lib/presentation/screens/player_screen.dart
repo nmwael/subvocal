@@ -28,7 +28,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final settings = ref.read(settingsProvider);
-      ref.read(playerProvider.notifier).load(
+      ref
+          .read(playerProvider.notifier)
+          .load(
             widget.subtitle.entries,
             language: settings.selectedLanguage,
             voice: settings.selectedVoice,
@@ -48,7 +50,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
     final playerState = ref.watch(playerProvider);
     final playerNotifier = ref.read(playerProvider.notifier);
 
-    final currentEntry = playerState.entries.isNotEmpty &&
+    final currentEntry =
+        playerState.entries.isNotEmpty &&
             playerState.currentIndex < playerState.entries.length
         ? playerState.entries[playerState.currentIndex]
         : null;
@@ -90,7 +93,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 context: context,
                 builder: (_) => AlertDialog(
                   title: const Text('Translation Error'),
-                  content: SingleChildScrollView(child: Text(playerState.error!)),
+                  content: SingleChildScrollView(
+                    child: Text(playerState.error!),
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
@@ -108,29 +113,36 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                     Expanded(
                       child: Text(
                         playerState.error!.split('\n').first,
-                        style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                        ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onErrorContainer, size: 18),
+                    Icon(
+                      Icons.info_outline,
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      size: 18,
+                    ),
                   ],
                 ),
               ),
             ),
           if (playerState.isTranslating)
-            _TranslationProgressIndicator(progress: playerState.translationProgress),
-          Expanded(
-            child: SubtitleDisplay(currentEntry: currentEntry),
-          ),
+            _TranslationProgressIndicator(
+              progress: playerState.translationProgress,
+            ),
+          Expanded(child: SubtitleDisplay(currentEntry: currentEntry)),
           if (playerState.entries.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Slider(
                 value: playerState.seekProgress,
                 onChanged: (value) {
-                  final index = (value * (playerState.entries.length - 1)).round();
+                  final index = (value * (playerState.entries.length - 1))
+                      .round();
                   final entry = playerState.entries[index];
                   playerNotifier.seek(entry.start);
                 },
@@ -171,9 +183,7 @@ class _TranslationProgressIndicator extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          LinearProgressIndicator(
-            value: progress?.fraction ?? 0.0,
-          ),
+          LinearProgressIndicator(value: progress?.fraction ?? 0.0),
           const SizedBox(height: 8),
           Text(
             'Translating $completed/$total entries...',

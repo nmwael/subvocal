@@ -21,7 +21,11 @@ class _MockApi extends OpenSubtitlesApi {
   _MockApi() : super(_MockHttpClient(), '');
 
   @override
-  Future<(List<Map<String, dynamic>>?, Failure?)> search(String query, {String? language}) async {
+  Future<(List<Map<String, dynamic>>?, Failure?)> search(
+    String query, {
+    String? language,
+    String? type,
+  }) async {
     return (null, null);
   }
 
@@ -38,12 +42,20 @@ class _MockApi extends OpenSubtitlesApi {
 
 class _MockTranslationService implements TranslationService {
   @override
-  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(String?, Failure?)> translate(
+    String text,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     return ('Translated: $text', null);
   }
 
   @override
-  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(List<String>?, Failure?)> translateBatch(
+    List<String> texts,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     return (texts.map((t) => 'Translated: $t').toList(), null);
   }
 }
@@ -68,7 +80,9 @@ void main() {
     test('imports valid SRT file', () async {
       final tempDir = Directory.systemTemp.createTempSync('subvocal_test_');
       final file = File('${tempDir.path}/test.srt');
-      await file.writeAsString('1\n00:00:01,000 --> 00:00:04,000\nHello, world!');
+      await file.writeAsString(
+        '1\n00:00:01,000 --> 00:00:04,000\nHello, world!',
+      );
 
       final (subtitle, failure) = await repository.importFromFile(file.path);
 
@@ -82,7 +96,9 @@ void main() {
     });
 
     test('returns failure for non-existent file', () async {
-      final (subtitle, failure) = await repository.importFromFile('/nonexistent/file.srt');
+      final (subtitle, failure) = await repository.importFromFile(
+        '/nonexistent/file.srt',
+      );
 
       expect(subtitle, isNull);
       expect(failure, isA<FileAccessFailure>());

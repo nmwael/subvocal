@@ -28,7 +28,10 @@ class SavedTranslationsScreen extends ConsumerWidget {
                 children: [
                   Icon(Icons.bookmark_border, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('No saved translations', style: TextStyle(color: Colors.grey)),
+                  Text(
+                    'No saved translations',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                   SizedBox(height: 8),
                   Text(
                     'Save a translation from the player screen',
@@ -59,7 +62,8 @@ class _SavedSubtitleTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final dateStr = '${item.savedAt.day}/${item.savedAt.month}/${item.savedAt.year}';
+    final dateStr =
+        '${item.savedAt.day}/${item.savedAt.month}/${item.savedAt.year}';
 
     return ListTile(
       leading: const Icon(Icons.subtitles),
@@ -90,10 +94,18 @@ class _SavedSubtitleTile extends ConsumerWidget {
                 context: context,
                 builder: (ctx) => AlertDialog(
                   title: const Text('Delete translation?'),
-                  content: Text('Delete "${item.title}" (${item.language.toUpperCase()})?'),
+                  content: Text(
+                    'Delete "${item.title}" (${item.language.toUpperCase()})?',
+                  ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                    TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('Delete'),
+                    ),
                   ],
                 ),
               );

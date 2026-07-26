@@ -10,8 +10,8 @@ class BugReportHelper {
   final AppLogger _logger;
 
   BugReportHelper({DeviceInfoPlugin? deviceInfo, AppLogger? logger})
-      : _deviceInfo = deviceInfo ?? DeviceInfoPlugin(),
-        _logger = logger ?? appLogger;
+    : _deviceInfo = deviceInfo ?? DeviceInfoPlugin(),
+      _logger = logger ?? appLogger;
 
   Future<Map<String, String>> collectDeviceInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -47,7 +47,9 @@ class BugReportHelper {
 
   String buildLogs({int maxLines = 80}) {
     final lines = _logger.exportLogs().split('\n');
-    final recent = lines.length > maxLines ? lines.sublist(lines.length - maxLines) : lines;
+    final recent = lines.length > maxLines
+        ? lines.sublist(lines.length - maxLines)
+        : lines;
     return recent.join('\n');
   }
 
@@ -71,7 +73,10 @@ class BugReportHelper {
 
       final query = params.entries
           .where((e) => e.value.isNotEmpty)
-          .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .map(
+            (e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+          )
           .join('&');
 
       final url = Uri.parse(

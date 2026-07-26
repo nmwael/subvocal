@@ -33,7 +33,8 @@ class SettingsState {
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       selectedVoice: selectedVoice ?? this.selectedVoice,
       myMemoryEmail: myMemoryEmail ?? this.myMemoryEmail,
-      selectedTranslationProvider: selectedTranslationProvider ?? this.selectedTranslationProvider,
+      selectedTranslationProvider:
+          selectedTranslationProvider ?? this.selectedTranslationProvider,
     );
   }
 }
@@ -66,6 +67,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   }
 }
 
-final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>((ref) {
-  return SettingsNotifier();
-});
+final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>(
+  (ref) {
+    return SettingsNotifier();
+  },
+);

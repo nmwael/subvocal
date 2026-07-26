@@ -14,13 +14,21 @@ class SubtitleDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.subtitles_off, size: 64, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
+            Icon(
+              Icons.subtitles_off,
+              size: 64,
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.3),
+            ),
             const SizedBox(height: 16),
             Text(
               'No subtitle loaded',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
             ),
           ],
         ),
@@ -36,9 +44,9 @@ class SubtitleDisplay extends StatelessWidget {
             Text(
               currentEntry!.text,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -51,8 +59,10 @@ class SubtitleDisplay extends StatelessWidget {
               child: Text(
                 '${currentEntry!.start.toString().substring(0, 10)} → ${currentEntry!.end.toString().substring(0, 10)}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.5),
+                ),
               ),
             ),
           ],

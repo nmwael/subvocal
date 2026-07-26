@@ -9,7 +9,9 @@ import 'player_provider.dart';
 import 'search_provider.dart';
 import 'settings_provider.dart';
 
-final testVoiceEntriesProvider = FutureProvider<List<SubtitleEntry>>((ref) async {
+final testVoiceEntriesProvider = FutureProvider<List<SubtitleEntry>>((
+  ref,
+) async {
   final content = await rootBundle.loadString(
     'test/fixtures/Harry.Potter.And.The.Sorcerers.Stone.2001.EXTENDED.720p.BluRay.H264.AAC-RARBG.srt',
   );
@@ -22,17 +24,18 @@ final testVoicePlayingProvider = StateProvider<bool>((ref) => false);
 
 final translatedTestPlayingProvider = StateProvider<bool>((ref) => false);
 
-final translatedTestPreviewProvider = FutureProvider.autoDispose.family<List<String>, String>((ref, language) async {
-  final entries = await ref.watch(testVoiceEntriesProvider.future);
-  if (entries.isEmpty) return [];
+final translatedTestPreviewProvider = FutureProvider.autoDispose
+    .family<List<String>, String>((ref, language) async {
+      final entries = await ref.watch(testVoiceEntriesProvider.future);
+      if (entries.isEmpty) return [];
 
-  final subtitle = Subtitle(title: 'Test', entries: entries);
-  final translate = ref.read(translateSubtitleProvider);
-  final (translated, failure) = await translate(subtitle, language);
-  if (failure != null) throw failure;
-  if (translated == null) return [];
-  return translated.entries.map((e) => e.text).toList();
-});
+      final subtitle = Subtitle(title: 'Test', entries: entries);
+      final translate = ref.read(translateSubtitleProvider);
+      final (translated, failure) = await translate(subtitle, language);
+      if (failure != null) throw failure;
+      if (translated == null) return [];
+      return translated.entries.map((e) => e.text).toList();
+    });
 
 class TestVoiceController {
   final FlutterTts _tts;
@@ -62,7 +65,12 @@ class TestVoiceController {
     _ref.read(testVoicePlayingProvider.notifier).state = false;
   }
 
-  Future<void> playTranslatedSample(double rate, double pitch, String language, {String? voice}) async {
+  Future<void> playTranslatedSample(
+    double rate,
+    double pitch,
+    String language, {
+    String? voice,
+  }) async {
     final entries = _ref.read(testVoiceEntriesProvider).valueOrNull;
     if (entries == null || entries.isEmpty) return;
 

@@ -4,18 +4,28 @@ import '../../data/datasources/saved_subtitles_local_source.dart';
 import '../../domain/entities/saved_subtitle.dart';
 import '../../domain/entities/subtitle.dart';
 
-final savedSubtitlesLocalSourceProvider = Provider<SavedSubtitlesLocalSource>((ref) {
+final savedSubtitlesLocalSourceProvider = Provider<SavedSubtitlesLocalSource>((
+  ref,
+) {
   return SavedSubtitlesLocalSource();
 });
 
-final savedSubtitlesProvider = StateNotifierProvider<SavedSubtitlesNotifier, AsyncValue<List<SavedSubtitle>>>((ref) {
-  return SavedSubtitlesNotifier(ref.watch(savedSubtitlesLocalSourceProvider));
-});
+final savedSubtitlesProvider =
+    StateNotifierProvider<
+      SavedSubtitlesNotifier,
+      AsyncValue<List<SavedSubtitle>>
+    >((ref) {
+      return SavedSubtitlesNotifier(
+        ref.watch(savedSubtitlesLocalSourceProvider),
+      );
+    });
 
-class SavedSubtitlesNotifier extends StateNotifier<AsyncValue<List<SavedSubtitle>>> {
+class SavedSubtitlesNotifier
+    extends StateNotifier<AsyncValue<List<SavedSubtitle>>> {
   final SavedSubtitlesLocalSource _localSource;
 
-  SavedSubtitlesNotifier(this._localSource) : super(const AsyncValue.loading()) {
+  SavedSubtitlesNotifier(this._localSource)
+    : super(const AsyncValue.loading()) {
     _load();
   }
 

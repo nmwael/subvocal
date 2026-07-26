@@ -18,10 +18,13 @@ class RecentSubtitleInfo {
     'addedAt': addedAt.toIso8601String(),
   };
 
-  factory RecentSubtitleInfo.fromJson(Map<String, dynamic> json) => RecentSubtitleInfo(
-    title: json['title'] as String? ?? 'Unknown',
-    filePath: json['filePath'] as String? ?? '',
-    language: json['language'] as String?,
-    addedAt: DateTime.tryParse(json['addedAt'] as String? ?? '') ?? DateTime.now(),
-  );
+  factory RecentSubtitleInfo.fromJson(Map<String, dynamic> json) =>
+      RecentSubtitleInfo(
+        title: json['title'] as String? ?? 'Unknown',
+        filePath: json['filePath'] as String? ?? '',
+        language: json['language'] as String?,
+        addedAt:
+            DateTime.tryParse(json['addedAt'] as String? ?? '') ??
+            DateTime.now(),
+      );
 }

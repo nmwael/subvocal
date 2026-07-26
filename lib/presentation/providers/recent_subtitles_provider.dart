@@ -4,9 +4,10 @@ import '../../data/datasources/recent_subtitles_local_source.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 import '../../domain/entities/subtitle.dart';
 
-final _recentSubtitlesLocalSourceProvider = Provider<RecentSubtitlesLocalSource>((ref) {
-  return RecentSubtitlesLocalSource();
-});
+final _recentSubtitlesLocalSourceProvider =
+    Provider<RecentSubtitlesLocalSource>((ref) {
+      return RecentSubtitlesLocalSource();
+    });
 
 class RecentSubtitlesNotifier extends StateNotifier<List<RecentSubtitleInfo>> {
   final RecentSubtitlesLocalSource _localSource;
@@ -43,6 +44,11 @@ class RecentSubtitlesNotifier extends StateNotifier<List<RecentSubtitleInfo>> {
   }
 }
 
-final recentSubtitlesProvider = StateNotifierProvider<RecentSubtitlesNotifier, List<RecentSubtitleInfo>>((ref) {
-  return RecentSubtitlesNotifier(ref.watch(_recentSubtitlesLocalSourceProvider));
-});
+final recentSubtitlesProvider =
+    StateNotifierProvider<RecentSubtitlesNotifier, List<RecentSubtitleInfo>>((
+      ref,
+    ) {
+      return RecentSubtitlesNotifier(
+        ref.watch(_recentSubtitlesLocalSourceProvider),
+      );
+    });

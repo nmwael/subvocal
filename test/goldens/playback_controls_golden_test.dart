@@ -14,8 +14,18 @@ void main() {
       const state = PlayerState(
         isPlaying: true,
         entries: [
-          SubtitleEntry(index: 1, start: Duration.zero, end: Duration(seconds: 3), text: 'A'),
-          SubtitleEntry(index: 2, start: Duration(seconds: 3), end: Duration(seconds: 6), text: 'B'),
+          SubtitleEntry(
+            index: 1,
+            start: Duration.zero,
+            end: Duration(seconds: 3),
+            text: 'A',
+          ),
+          SubtitleEntry(
+            index: 2,
+            start: Duration(seconds: 3),
+            end: Duration(seconds: 6),
+            text: 'B',
+          ),
         ],
         speed: 0.5,
         syncOffset: 0.0,

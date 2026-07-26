@@ -20,11 +20,11 @@ class _FakeLocalSource extends RecentSubtitlesLocalSource {
 Widget _createTestApp() {
   return ProviderScope(
     overrides: [
-      recentSubtitlesProvider.overrideWith((ref) => _FakeRecentSubtitlesNotifier()),
+      recentSubtitlesProvider.overrideWith(
+        (ref) => _FakeRecentSubtitlesNotifier(),
+      ),
     ],
-    child: const MaterialApp(
-      home: HomeScreen(),
-    ),
+    child: const MaterialApp(home: HomeScreen()),
   );
 }
 

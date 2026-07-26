@@ -8,10 +8,18 @@ class FallbackTranslationService implements TranslationService {
   FallbackTranslationService(this._services);
 
   @override
-  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(String?, Failure?)> translate(
+    String text,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     final errors = <String>[];
     for (var i = 0; i < _services.length; i++) {
-      final (result, failure) = await _services[i].translate(text, targetLanguage, sourceLanguage: sourceLanguage);
+      final (result, failure) = await _services[i].translate(
+        text,
+        targetLanguage,
+        sourceLanguage: sourceLanguage,
+      );
       if (failure == null) return (result, null);
       if (failure.message.contains('Rate limit')) return (result, failure);
 
@@ -22,14 +30,25 @@ class FallbackTranslationService implements TranslationService {
         source: 'FallbackTranslationService',
       );
     }
-    return (null, NetworkFailure('All translation services failed:\n${errors.join('\n')}'));
+    return (
+      null,
+      NetworkFailure('All translation services failed:\n${errors.join('\n')}'),
+    );
   }
 
   @override
-  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(List<String>?, Failure?)> translateBatch(
+    List<String> texts,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     final errors = <String>[];
     for (var i = 0; i < _services.length; i++) {
-      final (result, failure) = await _services[i].translateBatch(texts, targetLanguage, sourceLanguage: sourceLanguage);
+      final (result, failure) = await _services[i].translateBatch(
+        texts,
+        targetLanguage,
+        sourceLanguage: sourceLanguage,
+      );
       if (failure == null) return (result, null);
       if (failure.message.contains('Rate limit')) return (result, failure);
 
@@ -40,6 +59,9 @@ class FallbackTranslationService implements TranslationService {
         source: 'FallbackTranslationService',
       );
     }
-    return (null, NetworkFailure('All translation services failed:\n${errors.join('\n')}'));
+    return (
+      null,
+      NetworkFailure('All translation services failed:\n${errors.join('\n')}'),
+    );
   }
 }

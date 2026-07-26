@@ -37,7 +37,9 @@ class _SmartMockClient extends http.BaseClient {
     final path = request.url.path;
     if (path.endsWith('/login')) {
       lastLoginRequest = request;
-      final bytes = utf8.encode(jsonEncode({'token': 'jwt-token-123', 'status': 200}));
+      final bytes = utf8.encode(
+        jsonEncode({'token': 'jwt-token-123', 'status': 200}),
+      );
       return http.StreamedResponse(
         Stream.value(bytes),
         200,
@@ -47,7 +49,9 @@ class _SmartMockClient extends http.BaseClient {
     if (path.endsWith('/download')) {
       lastDownloadRequest = request;
       lastDownloadHeaders = Map.from(request.headers);
-      final bytes = utf8.encode(jsonEncode({'link': 'https://dl.opensubtitles.com/file.srt'}));
+      final bytes = utf8.encode(
+        jsonEncode({'link': 'https://dl.opensubtitles.com/file.srt'}),
+      );
       return http.StreamedResponse(
         Stream.value(bytes),
         201,
@@ -131,7 +135,9 @@ void main() {
               'id': '4100274',
               'type': 'subtitle',
               'attributes': {
-                'files': [{'file_id': 4182483}],
+                'files': [
+                  {'file_id': 4182483},
+                ],
                 'feature_details': {'title': 'Test Movie', 'year': 2020},
                 'language': 'en',
                 'release': 'Test.Movie.2020.1080p',
@@ -193,47 +199,56 @@ void main() {
       expect(failure!.message, contains('HTTP 500'));
     });
 
-    test('returns descriptive error message from response error field', () async {
-      final client = _MockHttpClient(
-        statusCode: 404,
-        body: {'error': 'Resource not found'},
-      );
-      final api = OpenSubtitlesApi(client, apiKey);
+    test(
+      'returns descriptive error message from response error field',
+      () async {
+        final client = _MockHttpClient(
+          statusCode: 404,
+          body: {'error': 'Resource not found'},
+        );
+        final api = OpenSubtitlesApi(client, apiKey);
 
-      final (data, failure) = await api.search('test');
+        final (data, failure) = await api.search('test');
 
-      expect(data, isNull);
-      expect(failure, isA<NetworkFailure>());
-      expect(failure!.message, contains('Resource not found'));
-    });
+        expect(data, isNull);
+        expect(failure, isA<NetworkFailure>());
+        expect(failure!.message, contains('Resource not found'));
+      },
+    );
 
-    test('returns descriptive error message from response message field', () async {
-      final client = _MockHttpClient(
-        statusCode: 401,
-        body: {'message': 'Invalid API key'},
-      );
-      final api = OpenSubtitlesApi(client, apiKey);
+    test(
+      'returns descriptive error message from response message field',
+      () async {
+        final client = _MockHttpClient(
+          statusCode: 401,
+          body: {'message': 'Invalid API key'},
+        );
+        final api = OpenSubtitlesApi(client, apiKey);
 
-      final (data, failure) = await api.search('test');
+        final (data, failure) = await api.search('test');
 
-      expect(data, isNull);
-      expect(failure, isA<NetworkFailure>());
-      expect(failure!.message, contains('Invalid API key'));
-    });
+        expect(data, isNull);
+        expect(failure, isA<NetworkFailure>());
+        expect(failure!.message, contains('Invalid API key'));
+      },
+    );
 
-    test('falls back to HTTP status when response body has no error field', () async {
-      final client = _MockHttpClient(
-        statusCode: 503,
-        body: {'status': 503, 'info': 'service unavailable'},
-      );
-      final api = OpenSubtitlesApi(client, apiKey);
+    test(
+      'falls back to HTTP status when response body has no error field',
+      () async {
+        final client = _MockHttpClient(
+          statusCode: 503,
+          body: {'status': 503, 'info': 'service unavailable'},
+        );
+        final api = OpenSubtitlesApi(client, apiKey);
 
-      final (data, failure) = await api.search('test');
+        final (data, failure) = await api.search('test');
 
-      expect(data, isNull);
-      expect(failure, isA<NetworkFailure>());
-      expect(failure!.message, contains('HTTP 503'));
-    });
+        expect(data, isNull);
+        expect(failure, isA<NetworkFailure>());
+        expect(failure!.message, contains('HTTP 503'));
+      },
+    );
 
     test('returns NetworkFailure on socket exception', () async {
       final client = _MockHttpClient(
@@ -358,7 +373,9 @@ void main() {
       );
       final api = OpenSubtitlesApi(client, apiKey);
 
-      final (content, failure) = await api.fetchContent('https://example.com/file.srt');
+      final (content, failure) = await api.fetchContent(
+        'https://example.com/file.srt',
+      );
 
       expect(failure, isNull);
       expect(content, isNotNull);
@@ -368,7 +385,9 @@ void main() {
       final client = _MockHttpClient(statusCode: 429);
       final api = OpenSubtitlesApi(client, apiKey);
 
-      final (content, failure) = await api.fetchContent('https://example.com/file.srt');
+      final (content, failure) = await api.fetchContent(
+        'https://example.com/file.srt',
+      );
 
       expect(content, isNull);
       expect(failure, isA<NetworkFailure>());
@@ -382,22 +401,29 @@ void main() {
       );
       final api = OpenSubtitlesApi(client, apiKey);
 
-      final (content, failure) = await api.fetchContent('https://example.com/file.srt');
+      final (content, failure) = await api.fetchContent(
+        'https://example.com/file.srt',
+      );
 
       expect(content, isNull);
       expect(failure, isA<NetworkFailure>());
       expect(failure!.message, contains('Internal server error'));
     });
 
-    test('falls back to HTTP status in fetchContent failure with empty body', () async {
-      final client = _MockHttpClient(statusCode: 502);
-      final api = OpenSubtitlesApi(client, apiKey);
+    test(
+      'falls back to HTTP status in fetchContent failure with empty body',
+      () async {
+        final client = _MockHttpClient(statusCode: 502);
+        final api = OpenSubtitlesApi(client, apiKey);
 
-      final (content, failure) = await api.fetchContent('https://example.com/file.srt');
+        final (content, failure) = await api.fetchContent(
+          'https://example.com/file.srt',
+        );
 
-      expect(content, isNull);
-      expect(failure, isA<NetworkFailure>());
-      expect(failure!.message, contains('HTTP 502'));
-    });
+        expect(content, isNull);
+        expect(failure, isA<NetworkFailure>());
+        expect(failure!.message, contains('HTTP 502'));
+      },
+    );
   });
 }

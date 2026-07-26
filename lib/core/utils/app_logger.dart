@@ -31,8 +31,7 @@ class AppLogger {
 
   final Queue<LogEntry> _entries = Queue<LogEntry>();
 
-  UnmodifiableListView<LogEntry> get entries =>
-      UnmodifiableListView(_entries);
+  UnmodifiableListView<LogEntry> get entries => UnmodifiableListView(_entries);
 
   void debug(String message, {String? source, Object? error}) =>
       _log(LogLevel.debug, message, source: source, error: error);
@@ -47,13 +46,15 @@ class AppLogger {
       _log(LogLevel.error, message, source: source, error: error);
 
   void _log(LogLevel level, String message, {String? source, Object? error}) {
-    _entries.addLast(LogEntry(
-      timestamp: DateTime.now(),
-      level: level,
-      message: message,
-      source: source,
-      error: error,
-    ));
+    _entries.addLast(
+      LogEntry(
+        timestamp: DateTime.now(),
+        level: level,
+        message: message,
+        source: source,
+        error: error,
+      ),
+    );
     while (_entries.length > _maxEntries) {
       _entries.removeFirst();
     }

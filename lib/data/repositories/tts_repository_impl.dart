@@ -15,8 +15,10 @@ class TtsRepositoryImpl implements TtsRepository {
   double _speed = 0.5;
   Duration _offset = Duration.zero;
   Timer? _scheduleTimer;
-  final StreamController<int> _indexController = StreamController<int>.broadcast();
-  final StreamController<void> _completionController = StreamController<void>.broadcast();
+  final StreamController<int> _indexController =
+      StreamController<int>.broadcast();
+  final StreamController<void> _completionController =
+      StreamController<void>.broadcast();
 
   TtsRepositoryImpl(this._tts);
 
@@ -54,7 +56,7 @@ class TtsRepositoryImpl implements TtsRepository {
     }
 
     _isPlaying = true;
-    
+
     final entry = _entries[_currentIndex];
     _indexController.add(_currentIndex);
 
@@ -80,20 +82,19 @@ class TtsRepositoryImpl implements TtsRepository {
 
     if (adjustedDelay <= Duration.zero) {
       _currentIndex = nextIndex;
-      _scheduleTimer = Timer.periodic(
-        const Duration(milliseconds: 50),
-            (timer) {
-          timer.cancel();
-          
-          _speakCurrent();
-        },
-      );
+      _scheduleTimer = Timer.periodic(const Duration(milliseconds: 50), (
+        timer,
+      ) {
+        timer.cancel();
+
+        _speakCurrent();
+      });
       return;
     }
 
     _scheduleTimer = Timer(adjustedDelay, () {
       _currentIndex = nextIndex;
-      
+
       _speakCurrent();
     });
   }
@@ -103,7 +104,7 @@ class TtsRepositoryImpl implements TtsRepository {
     if (!_isPlaying && _isPaused) {
       _isPaused = false;
       _isPlaying = true;
-      
+
       await _speakCurrent();
     } else if (!_isPlaying && _entries.isNotEmpty) {
       await speak(_entries);
@@ -123,7 +124,7 @@ class TtsRepositoryImpl implements TtsRepository {
     if (_isPaused) {
       _isPaused = false;
       _isPlaying = true;
-      
+
       await _speakCurrent();
     }
   }
@@ -147,7 +148,6 @@ class TtsRepositoryImpl implements TtsRepository {
       _currentIndex = 0;
       _isPaused = false;
       if (_isPlaying) {
-        
         await _speakCurrent();
       }
       return;
@@ -169,7 +169,6 @@ class TtsRepositoryImpl implements TtsRepository {
     _isPaused = false;
 
     if (_isPlaying) {
-      
       await _speakCurrent();
     }
   }
@@ -203,8 +202,13 @@ class TtsRepositoryImpl implements TtsRepository {
   Future<List<Map<String, String>>> getVoices() async {
     final raw = await _tts.getVoices;
     if (raw is! List) return [];
-    return raw.whereType<Map>().map((v) =>
-        v.map((key, value) => MapEntry(key.toString(), value.toString()))).toList();
+    return raw
+        .whereType<Map>()
+        .map(
+          (v) =>
+              v.map((key, value) => MapEntry(key.toString(), value.toString())),
+        )
+        .toList();
   }
 
   @override
@@ -219,8 +223,9 @@ class TtsRepositoryImpl implements TtsRepository {
   int get currentIndex => _currentIndex;
 
   @override
-  Duration get currentPosition =>
-      _currentIndex < _entries.length ? _entries[_currentIndex].start : Duration.zero;
+  Duration get currentPosition => _currentIndex < _entries.length
+      ? _entries[_currentIndex].start
+      : Duration.zero;
 
   @override
   Stream<int> get onIndexChanged => _indexController.stream;

@@ -4,7 +4,11 @@ import '../entities/subtitle.dart';
 import '../entities/translation_progress.dart';
 
 abstract class SubtitleRepository {
-  Future<(List<SearchResult>?, Failure?)> search(String query, {String? language});
+  Future<(List<SearchResult>?, Failure?)> search(
+    String query, {
+    String? language,
+    String? type,
+  });
   Future<(Subtitle?, Failure?)> download(int fileId);
   Future<(Subtitle?, Failure?)> importFromFile(String filePath);
   Future<(Subtitle?, Failure?)> translate(

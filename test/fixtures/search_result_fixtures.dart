@@ -5,10 +5,7 @@ final Map<String, dynamic> fullResult = {
     'files': [
       {'file_id': 12345},
     ],
-    'feature_details': {
-      'title': 'Inception',
-      'year': 2010,
-    },
+    'feature_details': {'title': 'Inception', 'year': 2010},
   },
 };
 
@@ -23,9 +20,7 @@ final Map<String, dynamic> stringIdResult = {
   },
 };
 
-final Map<String, dynamic> nullAttributesResult = {
-  'attributes': null,
-};
+final Map<String, dynamic> nullAttributesResult = {'attributes': null};
 
 final Map<String, dynamic> noFeatureDetailsResult = {
   'attributes': {

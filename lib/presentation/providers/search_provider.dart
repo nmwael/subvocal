@@ -24,10 +24,15 @@ final _httpClientProvider = Provider<http.Client>((ref) => http.Client());
 
 final srtParserProvider = Provider<SrtParser>((ref) => SrtParser());
 
-final _localFileSourceProvider = Provider<LocalFileSource>((ref) => LocalFileSource());
+final _localFileSourceProvider = Provider<LocalFileSource>(
+  (ref) => LocalFileSource(),
+);
 
 final openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
-  const apiKey = String.fromEnvironment('OPENSUBTITLES_API_KEY', defaultValue: 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM');
+  const apiKey = String.fromEnvironment(
+    'OPENSUBTITLES_API_KEY',
+    defaultValue: 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM',
+  );
   return OpenSubtitlesApi(ref.watch(_httpClientProvider), apiKey);
 });
 
@@ -45,23 +50,40 @@ final _libreTranslateProvider = Provider<LibreTranslateApi>((ref) {
 });
 
 final _translationServiceProvider = Provider<TranslationService>((ref) {
-  const googleApiKey = String.fromEnvironment('GOOGLE_TRANSLATE_API_KEY', defaultValue: '');
+  const googleApiKey = String.fromEnvironment(
+    'GOOGLE_TRANSLATE_API_KEY',
+    defaultValue: '',
+  );
   if (googleApiKey.isNotEmpty) {
     return GoogleTranslateApi(ref.watch(_httpClientProvider), googleApiKey);
   }
 
-  const azureKey = String.fromEnvironment('AZURE_TRANSLATION_KEY', defaultValue: '');
-  const azureRegion = String.fromEnvironment('AZURE_TRANSLATION_REGION', defaultValue: '');
+  const azureKey = String.fromEnvironment(
+    'AZURE_TRANSLATION_KEY',
+    defaultValue: '',
+  );
+  const azureRegion = String.fromEnvironment(
+    'AZURE_TRANSLATION_REGION',
+    defaultValue: '',
+  );
   final hasAzure = azureKey.isNotEmpty && azureRegion.isNotEmpty;
 
-  final providerType = ref.watch(settingsProvider.select((s) => s.selectedTranslationProvider));
+  final providerType = ref.watch(
+    settingsProvider.select((s) => s.selectedTranslationProvider),
+  );
   final myMemory = ref.watch(_myMemoryProvider);
   final apertium = ref.watch(_apertiumProvider);
   final libreTranslate = ref.watch(_libreTranslateProvider);
 
   final services = <TranslationService>[];
   if (hasAzure) {
-    services.add(AzureTranslateApi(ref.watch(_httpClientProvider), apiKey: azureKey, region: azureRegion));
+    services.add(
+      AzureTranslateApi(
+        ref.watch(_httpClientProvider),
+        apiKey: azureKey,
+        region: azureRegion,
+      ),
+    );
   }
   services.addAll([myMemory, apertium, libreTranslate]);
 
@@ -102,13 +124,31 @@ final translateSubtitleProvider = Provider<TranslateSubtitle>((ref) {
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final searchResultsProvider = FutureProvider.autoDispose.family<List<SearchResult>, String>((ref, query) async {
-  if (query.isEmpty) return [];
-  final searchSubtitles = ref.watch(searchSubtitlesProvider);
-  final (results, failure) = await searchSubtitles.call(query);
-  if (failure != null) throw failure;
-  return results ?? [];
-});
+final searchContentTypeProvider = StateProvider<String>((ref) => 'all');
+
+final searchResultsProvider = FutureProvider.autoDispose
+    .family<List<SearchResult>, (String, String)>((ref, params) async {
+      final (query, contentType) = params;
+      if (query.isEmpty) return [];
+      final searchSubtitles = ref.watch(searchSubtitlesProvider);
+      final preferredLanguage = ref.watch(
+        settingsProvider.select((s) => s.selectedLanguage),
+      );
+      final (results, failure) = await searchSubtitles.call(
+        query,
+        type: contentType,
+      );
+      if (failure != null) throw failure;
+      final items = results ?? [];
+      items.sort((a, b) {
+        final aMatches = a.language == preferredLanguage;
+        final bMatches = b.language == preferredLanguage;
+        if (aMatches && !bMatches) return -1;
+        if (!aMatches && bMatches) return 1;
+        return 0;
+      });
+      return items;
+    });
 
 final importedSubtitleProvider = StateProvider<Subtitle?>((ref) => null);
 

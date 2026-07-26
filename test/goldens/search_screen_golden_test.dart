@@ -11,9 +11,7 @@ void main() {
       await screenMatchesGolden(
         tester,
         ProviderScope(
-          overrides: [
-            searchQueryProvider.overrideWith((ref) => ''),
-          ],
+          overrides: [searchQueryProvider.overrideWith((ref) => '')],
           child: const SearchScreen(),
         ),
         'search_screen_empty',
@@ -24,9 +22,7 @@ void main() {
       await screenMatchesGolden(
         tester,
         ProviderScope(
-          overrides: [
-            searchQueryProvider.overrideWith((ref) => 'matrix'),
-          ],
+          overrides: [searchQueryProvider.overrideWith((ref) => 'matrix')],
           child: const SearchScreen(),
         ),
         'search_screen_with_query',

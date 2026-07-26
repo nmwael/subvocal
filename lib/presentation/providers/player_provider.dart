@@ -89,7 +89,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   StreamSubscription<int>? _indexSubscription;
 
   PlayerNotifier(this._ttsRepository, [this._subtitleRepository])
-      : super(const PlayerState()) {
+    : super(const PlayerState()) {
     _indexSubscription = _ttsRepository.onIndexChanged.listen((index) {
       state = state.copyWith(
         currentIndex: index,
@@ -104,7 +104,12 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     super.dispose();
   }
 
-  Future<void> load(List<SubtitleEntry> entries, {String? language, String? voice, String? sourceLanguage}) async {
+  Future<void> load(
+    List<SubtitleEntry> entries, {
+    String? language,
+    String? voice,
+    String? sourceLanguage,
+  }) async {
     if (language != null) {
       await _ttsRepository.setLanguage(language);
     }
@@ -113,7 +118,13 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     }
 
     var playEntries = entries;
-    if (language != null && language.isNotEmpty && _subtitleRepository != null) {
+    final shouldTranslate =
+        language != null &&
+        language.isNotEmpty &&
+        _subtitleRepository != null &&
+        sourceLanguage != language;
+
+    if (shouldTranslate) {
       state = state.copyWith(
         isTranslating: true,
         translationProgress: const TranslationProgress(completed: 0, total: 0),
@@ -129,7 +140,9 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
         );
         state = state.copyWith(isTranslating: false);
         if (failure != null) {
-          state = state.copyWith(error: 'Translation failed: ${failure.message}');
+          state = state.copyWith(
+            error: 'Translation failed: ${failure.message}',
+          );
           return;
         }
         if (translated != null) {
@@ -204,13 +217,15 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
   void setSyncOffset(double offsetSeconds) {
     state = state.copyWith(syncOffset: offsetSeconds);
-    _ttsRepository.setOffset(Duration(
-      milliseconds: (offsetSeconds * 1000).round(),
-    ));
+    _ttsRepository.setOffset(
+      Duration(milliseconds: (offsetSeconds * 1000).round()),
+    );
   }
 }
 
-final playerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((ref) {
+final playerProvider = StateNotifierProvider<PlayerNotifier, PlayerState>((
+  ref,
+) {
   final ttsRepo = ref.watch(ttsRepositoryProvider);
   final subtitleRepo = ref.watch(subtitleRepositoryProvider);
   return PlayerNotifier(ttsRepo, subtitleRepo);

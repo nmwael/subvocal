@@ -10,10 +10,7 @@ Widget buildGoldenApp({
 }) {
   return ProviderScope(
     overrides: overrides,
-    child: MaterialApp(
-      theme: AppTheme.darkTheme,
-      home: child,
-    ),
+    child: MaterialApp(theme: AppTheme.darkTheme, home: child),
   );
 }
 

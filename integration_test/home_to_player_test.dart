@@ -15,7 +15,9 @@ void main() {
   });
 
   group('Home to Player flow', () {
-    testWidgets('shows import and search buttons on home screen', (tester) async {
+    testWidgets('shows import and search buttons on home screen', (
+      tester,
+    ) async {
       await tester.pumpWidget(const SubvocalApp());
       await tester.pumpAndSettle(
         const Duration(milliseconds: 100),

@@ -10,7 +10,11 @@ import 'package:subvocal/domain/usecases/translate_subtitle.dart';
 
 class _MockTranslationService implements TranslationService {
   @override
-  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(String?, Failure?)> translate(
+    String text,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     if (text.contains('error')) {
       return (null, const NetworkFailure('Translation failed'));
     }
@@ -18,7 +22,11 @@ class _MockTranslationService implements TranslationService {
   }
 
   @override
-  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(List<String>?, Failure?)> translateBatch(
+    List<String> texts,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     final results = <String>[];
     for (final text in texts) {
       if (text.contains('error')) {
@@ -34,7 +42,11 @@ class _MockRepository implements SubtitleRepository {
   final TranslationService _api = _MockTranslationService();
 
   @override
-  Future<(List<SearchResult>?, Failure?)> search(String query, {String? language}) async {
+  Future<(List<SearchResult>?, Failure?)> search(
+    String query, {
+    String? language,
+    String? type,
+  }) async {
     return (null, null);
   }
 
@@ -57,22 +69,32 @@ class _MockRepository implements SubtitleRepository {
   }) async {
     final translatedEntries = <SubtitleEntry>[];
     for (final entry in subtitle.entries) {
-      final (translatedText, failure) = await _api.translate(entry.text, targetLanguage);
+      final (translatedText, failure) = await _api.translate(
+        entry.text,
+        targetLanguage,
+      );
       if (failure != null) return (null, failure);
-      if (translatedText == null) return (null, const NetworkFailure('Empty translation result'));
-      translatedEntries.add(SubtitleEntry(
-        index: entry.index,
-        start: entry.start,
-        end: entry.end,
-        text: translatedText,
-      ));
+      if (translatedText == null) {
+        return (null, const NetworkFailure('Empty translation result'));
+      }
+      translatedEntries.add(
+        SubtitleEntry(
+          index: entry.index,
+          start: entry.start,
+          end: entry.end,
+          text: translatedText,
+        ),
+      );
     }
-    return (Subtitle(
-      id: subtitle.id,
-      title: subtitle.title,
-      language: targetLanguage,
-      entries: translatedEntries,
-    ), null);
+    return (
+      Subtitle(
+        id: subtitle.id,
+        title: subtitle.title,
+        language: targetLanguage,
+        entries: translatedEntries,
+      ),
+      null,
+    );
   }
 
   @override
@@ -104,8 +126,18 @@ void main() {
         title: 'Test',
         language: 'en',
         entries: [
-          SubtitleEntry(index: 1, start: Duration(seconds: 1), end: Duration(seconds: 4), text: 'Hello'),
-          SubtitleEntry(index: 2, start: Duration(seconds: 5), end: Duration(seconds: 8), text: 'World'),
+          SubtitleEntry(
+            index: 1,
+            start: Duration(seconds: 1),
+            end: Duration(seconds: 4),
+            text: 'Hello',
+          ),
+          SubtitleEntry(
+            index: 2,
+            start: Duration(seconds: 5),
+            end: Duration(seconds: 8),
+            text: 'World',
+          ),
         ],
       );
 
@@ -128,7 +160,14 @@ void main() {
     test('returns failure when translation fails', () async {
       const original = Subtitle(
         title: 'Test',
-        entries: [SubtitleEntry(index: 1, start: Duration(seconds: 1), end: Duration(seconds: 4), text: 'error')],
+        entries: [
+          SubtitleEntry(
+            index: 1,
+            start: Duration(seconds: 1),
+            end: Duration(seconds: 4),
+            text: 'error',
+          ),
+        ],
       );
 
       final (translated, failure) = await translateSubtitle(original, 'es');
