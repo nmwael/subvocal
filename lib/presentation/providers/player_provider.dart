@@ -9,6 +9,7 @@ import '../../domain/entities/subtitle_entry.dart';
 import '../../domain/entities/translation_progress.dart';
 import '../../domain/repositories/tts_repository.dart';
 import '../../domain/repositories/subtitle_repository.dart';
+import '../../domain/services/srt_parser.dart';
 import 'search_provider.dart';
 
 final flutterTtsProvider = Provider<FlutterTts>((ref) => FlutterTts());
@@ -87,20 +88,41 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   final TtsRepository _ttsRepository;
   final SubtitleRepository? _subtitleRepository;
   StreamSubscription<int>? _indexSubscription;
+  StreamSubscription<void>? _completionSubscription;
+  Timer? _positionTimer;
+  Duration _entryStartOffset = Duration.zero;
+  DateTime? _entryStartWallClock;
 
   PlayerNotifier(this._ttsRepository, [this._subtitleRepository])
     : super(const PlayerState()) {
     _indexSubscription = _ttsRepository.onIndexChanged.listen((index) {
-      state = state.copyWith(
-        currentIndex: index,
-        currentPosition: _ttsRepository.currentPosition,
-      );
+      final entryStart = _ttsRepository.currentPosition;
+      _entryStartOffset = entryStart;
+      _entryStartWallClock = DateTime.now();
+      state = state.copyWith(currentIndex: index, currentPosition: entryStart);
+    });
+    _completionSubscription = _ttsRepository.onPlaybackComplete.listen((_) {
+      _positionTimer?.cancel();
+      state = state.copyWith(isPlaying: false, isPaused: false);
+    });
+  }
+
+  void _startPositionTimer() {
+    _positionTimer?.cancel();
+    _positionTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_entryStartWallClock != null) {
+        final elapsed = DateTime.now().difference(_entryStartWallClock!);
+        final position = _entryStartOffset + elapsed;
+        state = state.copyWith(currentPosition: position);
+      }
     });
   }
 
   @override
   void dispose() {
     _indexSubscription?.cancel();
+    _completionSubscription?.cancel();
+    _positionTimer?.cancel();
     super.dispose();
   }
 
@@ -110,6 +132,13 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     String? voice,
     String? sourceLanguage,
   }) async {
+    _positionTimer?.cancel();
+    _entryStartWallClock = null;
+    if (state.isPlaying || state.isPaused) {
+      await _ttsRepository.stop();
+    }
+    state = const PlayerState();
+
     if (language != null) {
       await _ttsRepository.setLanguage(language);
     }
@@ -117,7 +146,14 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       await _ttsRepository.setVoice({'name': voice, 'locale': language ?? ''});
     }
 
-    var playEntries = entries;
+    var playEntries = entries.map((e) {
+      return SubtitleEntry(
+        index: e.index,
+        start: e.start,
+        end: e.end,
+        text: SrtParser.sanitize(e.text),
+      );
+    }).toList();
     final shouldTranslate =
         language != null &&
         language.isNotEmpty &&
@@ -169,25 +205,30 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       speed: state.speed,
       translatedSubtitle: state.translatedSubtitle,
     );
+    _startPositionTimer();
   }
 
   void play() {
     _ttsRepository.play();
     state = state.copyWith(isPlaying: true, isPaused: false);
+    _startPositionTimer();
   }
 
   void pause() {
     _ttsRepository.pause();
     state = state.copyWith(isPlaying: false, isPaused: true);
+    _positionTimer?.cancel();
   }
 
   void resume() {
     _ttsRepository.resume();
     state = state.copyWith(isPlaying: true, isPaused: false);
+    _startPositionTimer();
   }
 
   void stop() {
     _ttsRepository.stop();
+    _positionTimer?.cancel();
     state = const PlayerState();
   }
 
@@ -207,6 +248,8 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
 
   void seek(Duration position) {
     _ttsRepository.seek(position);
+    _entryStartOffset = position;
+    _entryStartWallClock = DateTime.now();
     state = state.copyWith(currentPosition: position);
   }
 

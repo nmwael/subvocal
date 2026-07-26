@@ -33,7 +33,7 @@ class SrtParser {
         int.parse(match.group(8)!),
       );
 
-      final text = _sanitize(lines.sublist(2).join('\n').trim());
+      final text = sanitize(lines.sublist(2).join('\n').trim());
       if (text.isEmpty) continue;
 
       entries.add(
@@ -54,7 +54,7 @@ class SrtParser {
     '&nbsp;': ' ',
   };
 
-  static String _sanitize(String text) {
+  static String sanitize(String text) {
     var result = text.replaceAll(_htmlTagPattern, '');
     for (final entry in _htmlEntities.entries) {
       result = result.replaceAll(entry.key, entry.value);
