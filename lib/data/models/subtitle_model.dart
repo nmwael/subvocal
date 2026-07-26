@@ -15,11 +15,6 @@ class SubtitleModel {
   });
 
   Subtitle toEntity() {
-    return Subtitle(
-      id: id,
-      title: title,
-      language: language,
-      entries: entries,
-    );
+    return Subtitle(id: id, title: title, language: language, entries: entries);
   }
 }

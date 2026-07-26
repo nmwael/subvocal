@@ -6,9 +6,7 @@ import 'package:subvocal/presentation/providers/test_voice_provider.dart';
 import 'package:subvocal/presentation/screens/settings_screen.dart';
 
 void main() {
-  Widget buildTestWidget({
-    List<Override> overrides = const [],
-  }) {
+  Widget buildTestWidget({List<Override> overrides = const []}) {
     return ProviderScope(
       overrides: [
         authProvider.overrideWith(() => _MockAuthNotifier()),
@@ -16,9 +14,7 @@ void main() {
         translatedTestPlayingProvider.overrideWith((ref) => false),
         ...overrides,
       ],
-      child: const MaterialApp(
-        home: SettingsScreen(),
-      ),
+      child: const MaterialApp(home: SettingsScreen()),
     );
   }
 
@@ -32,26 +28,36 @@ void main() {
   });
 
   testWidgets('Voice selector renders with available voices', (tester) async {
-    await tester.pumpWidget(buildTestWidget(
-      overrides: [
-        availableVoicesProvider.overrideWith((ref) async => [
+    await tester.pumpWidget(
+      buildTestWidget(
+        overrides: [
+          availableVoicesProvider.overrideWith(
+            (ref) async => [
               {'name': 'Alice', 'language': 'en-US'},
               {'name': 'Bob', 'language': 'en-GB'},
-            ]),
-      ],
-    ));
+            ],
+          ),
+        ],
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Voice'), findsOneWidget);
     expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
   });
 
-  testWidgets('Voice selector shows empty state when no voices', (tester) async {
-    await tester.pumpWidget(buildTestWidget(
-      overrides: [
-        availableVoicesProvider.overrideWith((ref) async => <Map<String, String>>[]),
-      ],
-    ));
+  testWidgets('Voice selector shows empty state when no voices', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildTestWidget(
+        overrides: [
+          availableVoicesProvider.overrideWith(
+            (ref) async => <Map<String, String>>[],
+          ),
+        ],
+      ),
+    );
     await tester.pump();
 
     expect(find.textContaining('No voices available'), findsOneWidget);
@@ -60,14 +66,15 @@ void main() {
 
   testWidgets('Translated preview shows text when available', (tester) async {
     await tester.binding.setSurfaceSize(const Size(800, 3000));
-    await tester.pumpWidget(buildTestWidget(
-      overrides: [
-        translatedTestPreviewProvider('en').overrideWith((ref) async => [
-              'Hola, mundo!',
-              'Segunda línea',
-            ]),
-      ],
-    ));
+    await tester.pumpWidget(
+      buildTestWidget(
+        overrides: [
+          translatedTestPreviewProvider(
+            'en',
+          ).overrideWith((ref) async => ['Hola, mundo!', 'Segunda línea']),
+        ],
+      ),
+    );
     await tester.pump();
     await tester.pump();
 
@@ -76,13 +83,19 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(800, 600));
   });
 
-  testWidgets('Translated preview shows empty state when no translations', (tester) async {
+  testWidgets('Translated preview shows empty state when no translations', (
+    tester,
+  ) async {
     await tester.binding.setSurfaceSize(const Size(800, 3000));
-    await tester.pumpWidget(buildTestWidget(
-      overrides: [
-        translatedTestPreviewProvider('en').overrideWith((ref) async => <String>[]),
-      ],
-    ));
+    await tester.pumpWidget(
+      buildTestWidget(
+        overrides: [
+          translatedTestPreviewProvider(
+            'en',
+          ).overrideWith((ref) async => <String>[]),
+        ],
+      ),
+    );
     await tester.pump();
     await tester.pump();
 

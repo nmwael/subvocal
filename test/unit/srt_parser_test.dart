@@ -20,7 +20,8 @@ void main() {
     });
 
     test('parses multiple subtitle entries', () {
-      const srt = '1\n00:00:01,000 --> 00:00:04,000\nFirst line\n\n'
+      const srt =
+          '1\n00:00:01,000 --> 00:00:04,000\nFirst line\n\n'
           '2\n00:00:05,000 --> 00:00:08,000\nSecond line';
       final entries = parser.parse(srt);
       expect(entries.length, 2);
@@ -62,10 +63,14 @@ void main() {
     test('handles timestamps with hours', () {
       const srt = '1\n01:02:03,004 --> 02:03:04,005\nLong content';
       final entries = parser.parse(srt);
-      expect(entries[0].start,
-          const Duration(hours: 1, minutes: 2, seconds: 3, milliseconds: 4));
-      expect(entries[0].end,
-          const Duration(hours: 2, minutes: 3, seconds: 4, milliseconds: 5));
+      expect(
+        entries[0].start,
+        const Duration(hours: 1, minutes: 2, seconds: 3, milliseconds: 4),
+      );
+      expect(
+        entries[0].end,
+        const Duration(hours: 2, minutes: 3, seconds: 4, milliseconds: 5),
+      );
     });
   });
 

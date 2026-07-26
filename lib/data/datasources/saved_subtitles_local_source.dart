@@ -24,14 +24,26 @@ class SavedSubtitlesLocalSource {
           .map(SavedSubtitle.fromJson)
           .toList();
     } catch (e) {
-      appLogger.error('Failed to load saved subtitles', source: 'SavedSubtitlesLocalSource', error: e);
+      appLogger.error(
+        'Failed to load saved subtitles',
+        source: 'SavedSubtitlesLocalSource',
+        error: e,
+      );
       return [];
     }
   }
 
   Future<SavedSubtitle> save(Subtitle subtitle, String language) async {
+    final sanitizedTitle = subtitle.title
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+    final id = sanitizedTitle.isNotEmpty
+        ? '${sanitizedTitle}_$language'
+        : 'subtitle_${DateTime.now().microsecondsSinceEpoch}';
+
     final saved = SavedSubtitle(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: id,
       title: subtitle.title,
       language: language,
       entryCount: subtitle.entries.length,
@@ -54,9 +66,15 @@ class SavedSubtitlesLocalSource {
     try {
       final path = await _filePath;
       final file = File(path);
-      await file.writeAsString(jsonEncode(items.map((e) => e.toJson()).toList()));
+      await file.writeAsString(
+        jsonEncode(items.map((e) => e.toJson()).toList()),
+      );
     } catch (e) {
-      appLogger.error('Failed to write saved subtitles', source: 'SavedSubtitlesLocalSource', error: e);
+      appLogger.error(
+        'Failed to write saved subtitles',
+        source: 'SavedSubtitlesLocalSource',
+        error: e,
+      );
     }
   }
 }

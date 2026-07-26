@@ -26,7 +26,9 @@ void main() {
     });
 
     test('returns failure for non-existent file', () async {
-      final (content, failure) = await localFileSource.readFile('/nonexistent/file.srt');
+      final (content, failure) = await localFileSource.readFile(
+        '/nonexistent/file.srt',
+      );
 
       expect(content, isNull);
       expect(failure, isA<FileAccessFailure>());

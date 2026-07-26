@@ -37,9 +37,7 @@ Widget _createTestApp(Subtitle subtitle) {
         return PlayerNotifier(repo);
       }),
     ],
-    child: MaterialApp(
-      home: PlayerScreen(subtitle: subtitle),
-    ),
+    child: MaterialApp(home: PlayerScreen(subtitle: subtitle)),
   );
 }
 

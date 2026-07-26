@@ -1,8 +1,9 @@
 import '../../domain/entities/subtitle_entry.dart';
 
 class SrtParser {
-  static final _timestampPattern =
-      RegExp(r'^(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})$');
+  static final _timestampPattern = RegExp(
+    r'^(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})$',
+  );
   static final _htmlTagPattern = RegExp(r'<[^>]*>');
 
   List<SubtitleEntry> parse(String content) {
@@ -35,12 +36,9 @@ class SrtParser {
       final text = _sanitize(lines.sublist(2).join('\n').trim());
       if (text.isEmpty) continue;
 
-      entries.add(SubtitleEntry(
-        index: index,
-        start: start,
-        end: end,
-        text: text,
-      ));
+      entries.add(
+        SubtitleEntry(index: index, start: start, end: end, text: text),
+      );
     }
 
     return entries;
@@ -73,7 +71,12 @@ class SrtParser {
     return result.trim();
   }
 
-  Duration _parseTimestamp(int hours, int minutes, int seconds, int milliseconds) {
+  Duration _parseTimestamp(
+    int hours,
+    int minutes,
+    int seconds,
+    int milliseconds,
+  ) {
     return Duration(
       hours: hours,
       minutes: minutes,

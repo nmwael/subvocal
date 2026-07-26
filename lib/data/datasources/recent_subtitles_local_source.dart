@@ -23,7 +23,11 @@ class RecentSubtitlesLocalSource {
           .map(RecentSubtitleInfo.fromJson)
           .toList();
     } catch (e) {
-      appLogger.error('Failed to load recent subtitles', source: 'RecentSubtitlesLocalSource', error: e);
+      appLogger.error(
+        'Failed to load recent subtitles',
+        source: 'RecentSubtitlesLocalSource',
+        error: e,
+      );
       return [];
     }
   }
@@ -32,9 +36,15 @@ class RecentSubtitlesLocalSource {
     try {
       final path = await _filePath;
       final file = File(path);
-      await file.writeAsString(jsonEncode(items.map((e) => e.toJson()).toList()));
+      await file.writeAsString(
+        jsonEncode(items.map((e) => e.toJson()).toList()),
+      );
     } catch (e) {
-      appLogger.error('Failed to write recent subtitles', source: 'RecentSubtitlesLocalSource', error: e);
+      appLogger.error(
+        'Failed to write recent subtitles',
+        source: 'RecentSubtitlesLocalSource',
+        error: e,
+      );
     }
   }
 }

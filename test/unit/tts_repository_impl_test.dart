@@ -42,11 +42,11 @@ class _MockFlutterTts extends FlutterTts {
 
   @override
   Future<dynamic> get getVoices async => [
-        {'name': 'Alice', 'language': 'en-US'},
-        {'name': 'Bob', 'language': 'eng'},
-        {'name': 'Pedro', 'language': 'es-ES'},
-        {'name': 'Marie', 'language': 'fra'},
-      ];
+    {'name': 'Alice', 'language': 'en-US'},
+    {'name': 'Bob', 'language': 'eng'},
+    {'name': 'Pedro', 'language': 'es-ES'},
+    {'name': 'Marie', 'language': 'fra'},
+  ];
 }
 
 List<SubtitleEntry> _createEntries() {

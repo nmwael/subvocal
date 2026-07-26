@@ -47,7 +47,8 @@ class _PlaybackControlsState extends State<PlaybackControls> {
     final h = d.inHours;
     final m = d.inMinutes.remainder(60);
     final s = d.inSeconds.remainder(60);
-    if (h > 0) return '$h:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+    if (h > 0)
+      return '$h:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
@@ -153,7 +154,9 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                           controller: _timeController,
                           keyboardType: const TextInputType.numberWithOptions(),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9:]'),
+                            ),
                           ],
                           decoration: InputDecoration(
                             hintText: 'e.g. 5:30 or 1:02:15',
@@ -173,8 +176,9 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                       : GestureDetector(
                           onTap: hasEntries
                               ? () {
-                                  _timeController.text =
-                                      _formatDuration(widget.playerState.currentPosition);
+                                  _timeController.text = _formatDuration(
+                                    widget.playerState.currentPosition,
+                                  );
                                   setState(() => _isEditingTime = true);
                                 }
                               : null,
@@ -191,7 +195,9 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                               suffixIcon: const Icon(Icons.edit, size: 16),
                             ),
                             child: Text(
-                              _formatDuration(widget.playerState.currentPosition),
+                              _formatDuration(
+                                widget.playerState.currentPosition,
+                              ),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
@@ -210,7 +216,8 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                     min: -5.0,
                     max: 5.0,
                     divisions: 20,
-                    label: '${widget.playerState.syncOffset.toStringAsFixed(1)}s',
+                    label:
+                        '${widget.playerState.syncOffset.toStringAsFixed(1)}s',
                     onChanged: hasEntries ? widget.onSyncOffsetChanged : null,
                   ),
                 ),
@@ -273,11 +280,7 @@ class _ControlButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: tooltip,
-      child: IconButton(
-        icon: Icon(icon),
-        iconSize: size,
-        onPressed: onPressed,
-      ),
+      child: IconButton(icon: Icon(icon), iconSize: size, onPressed: onPressed),
     );
   }
 }

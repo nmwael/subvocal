@@ -18,16 +18,18 @@ class _MockAuthNotifier extends AsyncNotifier<AuthState>
   Future<void> logout() async {}
 }
 
-Widget _buildSettingsScreen({
-  List<Override> overrides = const [],
-}) {
+Widget _buildSettingsScreen({List<Override> overrides = const []}) {
   return buildGoldenApp(
     overrides: [
       authProvider.overrideWith(() => _MockAuthNotifier()),
       testVoicePlayingProvider.overrideWith((ref) => false),
       translatedTestPlayingProvider.overrideWith((ref) => false),
-      availableVoicesProvider.overrideWith((ref) async => <Map<String, String>>[]),
-      translatedTestPreviewProvider('en').overrideWith((ref) async => <String>[]),
+      availableVoicesProvider.overrideWith(
+        (ref) async => <Map<String, String>>[],
+      ),
+      translatedTestPreviewProvider(
+        'en',
+      ).overrideWith((ref) async => <String>[]),
       ...overrides,
     ],
     child: const SettingsScreen(),
@@ -49,14 +51,18 @@ void main() {
 
     testWidgets('with voices', (tester) async {
       await tester.binding.setSurfaceSize(const Size(800, 3000));
-      await tester.pumpWidget(_buildSettingsScreen(
-        overrides: [
-          availableVoicesProvider.overrideWith((ref) async => [
+      await tester.pumpWidget(
+        _buildSettingsScreen(
+          overrides: [
+            availableVoicesProvider.overrideWith(
+              (ref) async => [
                 {'name': 'Alice', 'language': 'en-US'},
                 {'name': 'Bob', 'language': 'en-GB'},
-              ]),
-        ],
-      ));
+              ],
+            ),
+          ],
+        ),
+      );
       await tester.pump();
       await expectLater(
         find.byType(MaterialApp),
@@ -67,12 +73,15 @@ void main() {
 
     testWidgets('no voices', (tester) async {
       await tester.binding.setSurfaceSize(const Size(800, 3000));
-      await tester.pumpWidget(_buildSettingsScreen(
-        overrides: [
-          availableVoicesProvider
-              .overrideWith((ref) async => <Map<String, String>>[]),
-        ],
-      ));
+      await tester.pumpWidget(
+        _buildSettingsScreen(
+          overrides: [
+            availableVoicesProvider.overrideWith(
+              (ref) async => <Map<String, String>>[],
+            ),
+          ],
+        ),
+      );
       await tester.pump();
       await expectLater(
         find.byType(MaterialApp),

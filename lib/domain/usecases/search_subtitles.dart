@@ -7,7 +7,11 @@ class SearchSubtitles {
 
   SearchSubtitles(this._repository);
 
-  Future<(List<SearchResult>?, Failure?)> call(String query, {String? language}) {
-    return _repository.search(query, language: language);
+  Future<(List<SearchResult>?, Failure?)> call(
+    String query, {
+    String? language,
+    String? type,
+  }) {
+    return _repository.search(query, language: language, type: type);
   }
 }

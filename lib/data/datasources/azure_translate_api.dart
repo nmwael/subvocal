@@ -14,21 +14,29 @@ class AzureTranslateApi implements TranslationService {
   final String _apiKey;
   final String _region;
 
-  AzureTranslateApi(this._client, {required String apiKey, required String region})
-      : _apiKey = apiKey,
-        _region = region;
+  AzureTranslateApi(
+    this._client, {
+    required String apiKey,
+    required String region,
+  }) : _apiKey = apiKey,
+       _region = region;
 
   @override
-  Future<(String?, Failure?)> translate(String text, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(String?, Failure?)> translate(
+    String text,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     try {
-      final params = {
-        'api-version': '3.0',
-        'to': targetLanguage,
-      };
+      final params = {'api-version': '3.0', 'to': targetLanguage};
       if (sourceLanguage != null) params['from'] = sourceLanguage;
 
-      final uri = Uri.parse('$_baseUrl/translate').replace(queryParameters: params);
-      final body = jsonEncode([{'Text': text}]);
+      final uri = Uri.parse(
+        '$_baseUrl/translate',
+      ).replace(queryParameters: params);
+      final body = jsonEncode([
+        {'Text': text},
+      ]);
 
       final response = await _client.post(
         uri,
@@ -41,10 +49,20 @@ class AzureTranslateApi implements TranslationService {
       );
 
       if (response.statusCode == 429) {
-        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+        return (
+          null,
+          const NetworkFailure(
+            'Rate limit exceeded. Please wait before trying again.',
+          ),
+        );
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+        return (
+          null,
+          NetworkFailure(
+            'Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}',
+          ),
+        );
       }
 
       final result = jsonDecode(response.body) as List<dynamic>;
@@ -66,16 +84,19 @@ class AzureTranslateApi implements TranslationService {
   }
 
   @override
-  Future<(List<String>?, Failure?)> translateBatch(List<String> texts, String targetLanguage, {String? sourceLanguage}) async {
+  Future<(List<String>?, Failure?)> translateBatch(
+    List<String> texts,
+    String targetLanguage, {
+    String? sourceLanguage,
+  }) async {
     if (texts.isEmpty) return (<String>[], null);
     try {
-      final params = {
-        'api-version': '3.0',
-        'to': targetLanguage,
-      };
+      final params = {'api-version': '3.0', 'to': targetLanguage};
       if (sourceLanguage != null) params['from'] = sourceLanguage;
 
-      final uri = Uri.parse('$_baseUrl/translate').replace(queryParameters: params);
+      final uri = Uri.parse(
+        '$_baseUrl/translate',
+      ).replace(queryParameters: params);
       final body = jsonEncode(texts.map((t) => {'Text': t}).toList());
 
       final response = await _client.post(
@@ -89,15 +110,30 @@ class AzureTranslateApi implements TranslationService {
       );
 
       if (response.statusCode == 429) {
-        return (null, const NetworkFailure('Rate limit exceeded. Please wait before trying again.'));
+        return (
+          null,
+          const NetworkFailure(
+            'Rate limit exceeded. Please wait before trying again.',
+          ),
+        );
       }
       if (response.statusCode != 200) {
-        return (null, NetworkFailure('Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}'));
+        return (
+          null,
+          NetworkFailure(
+            'Translation failed: ${_extractErrorMessage(response.body, response.statusCode)}',
+          ),
+        );
       }
 
       final result = jsonDecode(response.body) as List<dynamic>;
       if (result.length != texts.length) {
-        return (null, const NetworkFailure('Batch translation returned wrong number of results'));
+        return (
+          null,
+          const NetworkFailure(
+            'Batch translation returned wrong number of results',
+          ),
+        );
       }
       final translatedTexts = result.map((item) {
         final translations = item['translations'] as List<dynamic>;

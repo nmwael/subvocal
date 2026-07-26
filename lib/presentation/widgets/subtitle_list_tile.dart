@@ -18,7 +18,10 @@ class SubtitleListTile extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: theme.colorScheme.primaryContainer,
-        child: Icon(Icons.subtitles, color: theme.colorScheme.onPrimaryContainer),
+        child: Icon(
+          Icons.subtitles,
+          color: theme.colorScheme.onPrimaryContainer,
+        ),
       ),
       title: Text(
         result.title,
@@ -34,7 +37,10 @@ class SubtitleListTile extends StatelessWidget {
           ],
           if (result.language != null)
             Chip(
-              label: Text(result.language!, style: const TextStyle(fontSize: 11)),
+              label: Text(
+                result.language!,
+                style: const TextStyle(fontSize: 11),
+              ),
               visualDensity: VisualDensity.compact,
               padding: EdgeInsets.zero,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

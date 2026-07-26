@@ -6,14 +6,16 @@ import 'package:subvocal/data/datasources/my_memory_translate_api.dart';
 
 void main() async {
   print('=== Harry Potter SRT Translation Demo: English -> Danish (da) ===');
-  
+
   // Load Harry Potter SRT fixture
-  final file = File('test/fixtures/Harry.Potter.And.The.Sorcerers.Stone.2001.EXTENDED.720p.BluRay.H264.AAC-RARBG.srt');
+  final file = File(
+    'test/fixtures/Harry.Potter.And.The.Sorcerers.Stone.2001.EXTENDED.720p.BluRay.H264.AAC-RARBG.srt',
+  );
   if (!await file.exists()) {
     print('❌ Fixture file not found');
     return;
   }
-  
+
   final srtContent = await file.readAsString();
 
   // Parse SRT
@@ -22,7 +24,9 @@ void main() async {
 
   print('\n=== Original SRT (First 5 Entries) ===');
   for (final entry in entries) {
-    print('${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}');
+    print(
+      '${entry.index}: ${_formatTime(entry.start)} --> ${_formatTime(entry.end)}',
+    );
     print('  "${entry.text}"');
   }
 
@@ -34,7 +38,11 @@ void main() async {
   final translatedEntries = <String>[];
   for (final entry in entries) {
     // MyMemory translate(text, targetLang, {sourceLang})
-    final (translatedText, failure) = await translateApi.translate(entry.text, 'da', sourceLanguage: 'en');
+    final (translatedText, failure) = await translateApi.translate(
+      entry.text,
+      'da',
+      sourceLanguage: 'en',
+    );
     if (failure != null) {
       print('❌ Translation error: $failure');
       translatedEntries.add(entry.text);
