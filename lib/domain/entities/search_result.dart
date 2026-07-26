@@ -1,10 +1,11 @@
 class SearchResult {
-  final int fileId;
+  final dynamic fileId;
   final String title;
   final String? year;
   final String? language;
   final int? subtitleCount;
   final String? releaseName;
+  final String? providerSource;
 
   const SearchResult({
     required this.fileId,
@@ -13,5 +14,6 @@ class SearchResult {
     this.language,
     this.subtitleCount,
     this.releaseName,
+    this.providerSource,
   });
 }
