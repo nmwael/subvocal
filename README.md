@@ -12,13 +12,6 @@ aloud via TTS in sync with streaming video.
 
 **For those who cannot read, and for those learning a new language.**
 
-## Quick Start
-
-```bash
-flutter pub get
-flutter run
-```
-
 ## Download
 
 Grab the latest build from [Releases](https://github.com/nmwael/subvocal/releases).
