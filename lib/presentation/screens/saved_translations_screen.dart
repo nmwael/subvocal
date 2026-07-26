@@ -67,7 +67,7 @@ class _SavedSubtitleTile extends ConsumerWidget {
 
     return ListTile(
       leading: const Icon(Icons.subtitles),
-      title: Text(item.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         '${item.language.toUpperCase()} - ${item.entryCount} entries - $dateStr',
         style: theme.textTheme.bodySmall,

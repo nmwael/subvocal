@@ -177,7 +177,14 @@ class OpenSubtitlesApi {
           ),
         );
       }
-      return (response.body, null);
+      final bytes = response.bodyBytes;
+      String content;
+      try {
+        content = utf8.decode(bytes);
+      } on FormatException {
+        content = latin1.decode(bytes);
+      }
+      return (content, null);
     } on SocketException catch (e) {
       return (null, NetworkFailure('No internet connection: $e'));
     } catch (e) {

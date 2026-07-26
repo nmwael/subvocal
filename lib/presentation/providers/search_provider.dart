@@ -126,6 +126,39 @@ final searchQueryProvider = StateProvider<String>((ref) => '');
 
 final searchContentTypeProvider = StateProvider<String>((ref) => 'all');
 
+final searchStreamingProvider = StateProvider<String>((ref) => '');
+
+const streamingServiceTags = {
+  'NF': 'Netflix',
+  'AMZN': 'Amazon Prime',
+  'PRIME': 'Amazon Prime',
+  'DSNY': 'Disney+',
+  'DP': 'Disney+',
+  'MAX': 'HBO Max',
+  'HMAX': 'HBO Max',
+  'HULU': 'Hulu',
+  'PCOK': 'Peacock',
+  'PMNT': 'Paramount+',
+  'ATVP': 'Apple TV+',
+};
+
+bool _matchesStreamingTag(String? releaseName, String serviceKey) {
+  if (releaseName == null || releaseName.isEmpty) return false;
+  final upper = releaseName.toUpperCase();
+  final parts = upper.split(RegExp(r'[.\s\-_]'));
+  return parts.any((part) {
+    final clean = part.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    if (clean == serviceKey) return true;
+    if (serviceKey == 'AMZN' && clean == 'PRIME') return true;
+    if (serviceKey == 'PRIME' && clean == 'AMZN') return true;
+    if (serviceKey == 'DSNY' && clean == 'DP') return true;
+    if (serviceKey == 'DP' && clean == 'DSNY') return true;
+    if (serviceKey == 'MAX' && clean == 'HMAX') return true;
+    if (serviceKey == 'HMAX' && clean == 'MAX') return true;
+    return false;
+  });
+}
+
 final searchResultsProvider = FutureProvider.autoDispose
     .family<List<SearchResult>, (String, String)>((ref, params) async {
       final (query, contentType) = params;
@@ -134,12 +167,18 @@ final searchResultsProvider = FutureProvider.autoDispose
       final preferredLanguage = ref.watch(
         settingsProvider.select((s) => s.selectedLanguage),
       );
+      final streamingFilter = ref.watch(searchStreamingProvider);
       final (results, failure) = await searchSubtitles.call(
         query,
         type: contentType,
       );
       if (failure != null) throw failure;
-      final items = results ?? [];
+      var items = results ?? [];
+      if (streamingFilter.isNotEmpty) {
+        items = items
+            .where((r) => _matchesStreamingTag(r.releaseName, streamingFilter))
+            .toList();
+      }
       items.sort((a, b) {
         final aMatches = a.language == preferredLanguage;
         final bMatches = b.language == preferredLanguage;
