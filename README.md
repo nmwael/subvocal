@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/nmwael/subvocal)](https://github.com/nmwael/subvocal/stargazers)
 [![GitHub release](https://img.shields.io/github/v/release/nmwael/subvocal)](https://github.com/nmwael/subvocal/releases)
+[![AI Cost](https://img.shields.io/badge/AI%20Cost-%240.21-brightgreen)](https://github.com/nmwael/subvocal/blob/main/.aifinops/log.csv)
 
 Cross-platform Flutter app: pick subtitles from OpenSubtitles and read them
 aloud via TTS in sync with streaming video.
