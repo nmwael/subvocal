@@ -155,6 +155,9 @@ class SubdlSearchResultModel {
   final String? year;
   final String? language;
   final String? releaseName;
+  final int? season;
+  final int? episode;
+  final String? episodeName;
 
   SubdlSearchResultModel({
     required this.id,
@@ -162,6 +165,9 @@ class SubdlSearchResultModel {
     this.year,
     this.language,
     this.releaseName,
+    this.season,
+    this.episode,
+    this.episodeName,
   });
 
   factory SubdlSearchResultModel.fromJson(Map<String, dynamic> json) {
@@ -171,6 +177,9 @@ class SubdlSearchResultModel {
       year: json['year'] as String?,
       language: json['language'] as String?,
       releaseName: json['release_name'] as String?,
+      season: json['season_number'] as int?,
+      episode: json['episode_number'] as int?,
+      episodeName: json['episode_name'] as String?,
     );
   }
 
@@ -182,6 +191,9 @@ class SubdlSearchResultModel {
       language: language,
       releaseName: releaseName,
       providerSource: 'SubDL',
+      season: season,
+      episode: episode,
+      episodeName: episodeName,
     );
   }
 }

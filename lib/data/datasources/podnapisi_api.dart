@@ -140,6 +140,9 @@ class PodnapisiSearchResultModel {
   final String? year;
   final String? language;
   final String? releaseName;
+  final int? season;
+  final int? episode;
+  final String? episodeName;
 
   PodnapisiSearchResultModel({
     required this.id,
@@ -147,6 +150,9 @@ class PodnapisiSearchResultModel {
     this.year,
     this.language,
     this.releaseName,
+    this.season,
+    this.episode,
+    this.episodeName,
   });
 
   factory PodnapisiSearchResultModel.fromJson(Map<String, dynamic> json) {
@@ -156,6 +162,9 @@ class PodnapisiSearchResultModel {
       year: json['year']?.toString(),
       language: json['lang'] as String?,
       releaseName: json['release_name'] as String?,
+      season: json['season'] as int?,
+      episode: json['episode'] as int?,
+      episodeName: json['episode_name'] as String?,
     );
   }
 
@@ -167,6 +176,9 @@ class PodnapisiSearchResultModel {
       language: language,
       releaseName: releaseName,
       providerSource: 'Podnapisi',
+      season: season,
+      episode: episode,
+      episodeName: episodeName,
     );
   }
 }

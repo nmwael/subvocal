@@ -171,6 +171,7 @@ class SearchScreen extends ConsumerWidget {
                         final download = ref.read(downloadSubtitleProvider);
                         final (subtitle, failure) = await download.call(
                           result.fileId,
+                          title: result.formattedTitle,
                         );
                         if (failure != null) {
                           if (context.mounted) {

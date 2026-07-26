@@ -131,6 +131,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     String? language,
     String? voice,
     String? sourceLanguage,
+    String? title,
   }) async {
     _positionTimer?.cancel();
     _entryStartWallClock = null;
@@ -167,7 +168,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       );
       try {
         final (translated, failure) = await _subtitleRepository.translate(
-          Subtitle(id: null, title: '', entries: entries),
+          Subtitle(id: null, title: title ?? '', entries: entries),
           language,
           sourceLanguage: sourceLanguage,
           onProgress: (progress) {
