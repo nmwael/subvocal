@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
+import '../widgets/alpha_chip.dart';
+import '../widgets/alpha_notice_banner.dart';
 import 'player_screen.dart';
 import 'saved_translations_screen.dart';
 import 'search_screen.dart';
@@ -19,7 +21,10 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('subvocal'),
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [Text('subvocal'), SizedBox(width: 8), AlphaChip()],
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -36,6 +41,7 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const AlphaNoticeBanner(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
