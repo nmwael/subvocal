@@ -242,13 +242,13 @@ void main() {
         expect(repository.isPlaying, true);
       });
 
-      test('play starts again when stopped with entries', () async {
+      test('play does nothing when stopped', () async {
         await repository.speak(_createEntries());
         await repository.stop();
 
         await repository.play();
 
-        expect(repository.isPlaying, true);
+        expect(repository.isPlaying, false);
       });
     });
   });

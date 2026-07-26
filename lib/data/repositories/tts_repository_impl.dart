@@ -101,13 +101,10 @@ class TtsRepositoryImpl implements TtsRepository {
 
   @override
   Future<void> play() async {
-    if (!_isPlaying && _isPaused) {
+    if (_isPaused) {
       _isPaused = false;
       _isPlaying = true;
-
       await _speakCurrent();
-    } else if (!_isPlaying && _entries.isNotEmpty) {
-      await speak(_entries);
     }
   }
 
@@ -175,11 +172,15 @@ class TtsRepositoryImpl implements TtsRepository {
 
   @override
   Future<void> stop() async {
+    final wasPlaying = _isPlaying || _isPaused;
     _isPlaying = false;
     _isPaused = false;
     _currentIndex = 0;
     _scheduleTimer?.cancel();
     await _tts.stop();
+    if (wasPlaying) {
+      _completionController.add(null);
+    }
   }
 
   @override

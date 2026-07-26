@@ -9,6 +9,18 @@ import '../widgets/subtitle_list_tile.dart';
 import 'player_screen.dart';
 import 'settings_screen.dart';
 
+const _streamingServices = [
+  ('', 'All'),
+  ('NF', 'Netflix'),
+  ('AMZN', 'Prime'),
+  ('DSNY', 'Disney+'),
+  ('MAX', 'HBO Max'),
+  ('HULU', 'Hulu'),
+  ('PCOK', 'Peacock'),
+  ('PMNT', 'Paramount+'),
+  ('ATVP', 'Apple TV+'),
+];
+
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
 
@@ -44,6 +56,7 @@ class SearchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(searchQueryProvider);
     final contentType = ref.watch(searchContentTypeProvider);
+    final streamingFilter = ref.watch(searchStreamingProvider);
     final resultsAsync = query.isNotEmpty
         ? ref.watch(searchResultsProvider((query, contentType)))
         : const AsyncData<List<SearchResult>>([]);
@@ -87,6 +100,29 @@ class SearchScreen extends ConsumerWidget {
               onSelectionChanged: (selected) {
                 ref.read(searchContentTypeProvider.notifier).state =
                     selected.first;
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _streamingServices.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final (tag, label) = _streamingServices[index];
+                final isSelected = streamingFilter == tag;
+                return FilterChip(
+                  label: Text(label, style: const TextStyle(fontSize: 12)),
+                  selected: isSelected,
+                  onSelected: (_) {
+                    ref.read(searchStreamingProvider.notifier).state = tag;
+                  },
+                  visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                );
               },
             ),
           ),
