@@ -7,6 +7,7 @@ class SearchResultModel {
   final String? language;
   final int? subtitleCount;
   final String? releaseName;
+  final String? providerSource;
 
   const SearchResultModel({
     required this.fileId,
@@ -15,6 +16,7 @@ class SearchResultModel {
     this.language,
     this.subtitleCount,
     this.releaseName,
+    this.providerSource,
   });
 
   factory SearchResultModel.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class SearchResultModel {
       year: extractYear(),
       language: attributes?['language'] as String?,
       releaseName: attributes?['release'] as String?,
+      providerSource: 'OpenSubtitles',
     );
   }
 
@@ -72,6 +75,7 @@ class SearchResultModel {
       language: language,
       subtitleCount: subtitleCount,
       releaseName: releaseName,
+      providerSource: providerSource,
     );
   }
 }

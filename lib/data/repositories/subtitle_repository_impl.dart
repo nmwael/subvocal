@@ -8,21 +8,34 @@ import '../../domain/entities/translation_progress.dart';
 import '../../domain/repositories/subtitle_repository.dart';
 import '../datasources/local_file_source.dart';
 import '../datasources/opensubtitles_api.dart';
+import '../datasources/podnapisi_api.dart';
+import '../datasources/subdl_api.dart';
 import '../datasources/translation_service.dart';
-import '../models/search_result_model.dart';
+import '../repositories/subtitle_provider_aggregator.dart';
 
 class SubtitleRepositoryImpl implements SubtitleRepository {
   final OpenSubtitlesApi api;
+  final SubdlApi? subdlApi;
+  final PodnapisiApi? podnapisiApi;
   final LocalFileSource localFileSource;
   final SrtParser srtParser;
   final TranslationService translateService;
+  late final SubtitleProviderAggregator _aggregator;
 
   SubtitleRepositoryImpl({
     required this.api,
+    this.subdlApi,
+    this.podnapisiApi,
     required this.localFileSource,
     required this.srtParser,
     required this.translateService,
-  });
+  }) {
+    _aggregator = SubtitleProviderAggregator(
+      opensubtitles: api,
+      subdl: subdlApi,
+      podnapisi: podnapisiApi,
+    );
+  }
 
   @override
   Future<(List<SearchResult>?, Failure?)> search(
@@ -30,20 +43,7 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     String? language,
     String? type,
   }) async {
-    final (data, failure) = await api.search(
-      query,
-      language: language,
-      type: type,
-    );
-    if (failure != null) return (null, failure);
-    if (data == null) return (<SearchResult>[], null);
-
-    final results = data.map((json) {
-      final model = SearchResultModel.fromJson(json);
-      return model.toEntity();
-    }).toList();
-
-    return (results, null);
+    return _aggregator.search(query, language: language, type: type);
   }
 
   @override
@@ -69,6 +69,61 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     }
 
     return (Subtitle(id: fileId, title: '', entries: entries), null);
+  }
+
+  Future<(Subtitle?, Failure?)> downloadFromProvider(
+    dynamic fileId,
+    String providerSource,
+  ) async {
+    if (providerSource == 'SubDL' && subdlApi != null) {
+      final (link, failure) = await subdlApi!.download(fileId);
+      if (failure != null) return (null, failure);
+      if (link == null) {
+        return (null, const NetworkFailure('Empty download link'));
+      }
+
+      final (content, fetchFailure) = await subdlApi!.fetchContent(link);
+      if (fetchFailure != null) return (null, fetchFailure);
+      if (content == null) {
+        return (null, const NetworkFailure('Empty subtitle content'));
+      }
+
+      final entries = srtParser.parse(content);
+      if (entries.isEmpty) {
+        return (
+          null,
+          const SrtParseFailure('No valid entries in downloaded subtitle'),
+        );
+      }
+
+      return (Subtitle(id: fileId, title: '', entries: entries), null);
+    }
+
+    if (providerSource == 'Podnapisi' && podnapisiApi != null) {
+      final (link, failure) = await podnapisiApi!.download(fileId);
+      if (failure != null) return (null, failure);
+      if (link == null) {
+        return (null, const NetworkFailure('Empty download link'));
+      }
+
+      final (content, fetchFailure) = await podnapisiApi!.fetchContent(link);
+      if (fetchFailure != null) return (null, fetchFailure);
+      if (content == null) {
+        return (null, const NetworkFailure('Empty subtitle content'));
+      }
+
+      final entries = srtParser.parse(content);
+      if (entries.isEmpty) {
+        return (
+          null,
+          const SrtParseFailure('No valid entries in downloaded subtitle'),
+        );
+      }
+
+      return (Subtitle(id: fileId, title: '', entries: entries), null);
+    }
+
+    return download(fileId as int);
   }
 
   @override
