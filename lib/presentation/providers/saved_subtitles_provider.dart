@@ -34,8 +34,20 @@ class SavedSubtitlesNotifier
     state = AsyncValue.data(items);
   }
 
-  Future<SavedSubtitle> save(Subtitle subtitle, String language) async {
-    final saved = await _localSource.save(subtitle, language);
+  Future<SavedSubtitle> save(
+    Subtitle subtitle,
+    String language, {
+    String? year,
+    int? season,
+    int? episode,
+  }) async {
+    final saved = await _localSource.save(
+      subtitle,
+      language,
+      year: year,
+      season: season,
+      episode: episode,
+    );
     await _load();
     return saved;
   }
