@@ -1,3 +1,4 @@
+import '../../core/utils/app_logger.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/errors/failures.dart';
 import '../datasources/opensubtitles_api.dart';
@@ -43,6 +44,12 @@ class SubtitleProviderAggregator {
         language: language,
         type: type,
       );
+      if (sdFailure != null) {
+        appLogger.warning(
+          'SubDL search failed: ${sdFailure.message}',
+          source: 'SubtitleProviderAggregator',
+        );
+      }
       if (sdResults != null) {
         allResults.addAll(sdResults);
       }
@@ -54,6 +61,12 @@ class SubtitleProviderAggregator {
         language: language,
         type: type,
       );
+      if (pnFailure != null) {
+        appLogger.warning(
+          'Podnapisi search failed: ${pnFailure.message}',
+          source: 'SubtitleProviderAggregator',
+        );
+      }
       if (pnResults != null) {
         allResults.addAll(pnResults);
       }

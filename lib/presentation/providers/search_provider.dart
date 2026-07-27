@@ -10,6 +10,8 @@ import '../../data/datasources/libre_translate_api.dart';
 import '../../data/datasources/local_file_source.dart';
 import '../../data/datasources/my_memory_translate_api.dart';
 import '../../data/datasources/opensubtitles_api.dart';
+import '../../data/datasources/podnapisi_api.dart';
+import '../../data/datasources/subdl_api.dart';
 import '../../data/datasources/translation_service.dart';
 import '../../data/repositories/subtitle_repository_impl.dart';
 import 'settings_provider.dart';
@@ -34,6 +36,16 @@ final openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
     defaultValue: 'PgbtQmDgz18n4zCJKeMMXFwPunhwRMQM',
   );
   return OpenSubtitlesApi(ref.watch(_httpClientProvider), apiKey);
+});
+
+final _subdlApiProvider = Provider<SubdlApi?>((ref) {
+  const apiKey = String.fromEnvironment('SUBDL_API_KEY', defaultValue: '');
+  if (apiKey.isEmpty) return null;
+  return SubdlApi(ref.watch(_httpClientProvider), apiKey);
+});
+
+final _podnapisiApiProvider = Provider<PodnapisiApi>((ref) {
+  return PodnapisiApi(ref.watch(_httpClientProvider));
 });
 
 final _myMemoryProvider = Provider<MyMemoryTranslateApi>((ref) {
@@ -100,6 +112,8 @@ final _translationServiceProvider = Provider<TranslationService>((ref) {
 final subtitleRepositoryProvider = Provider<SubtitleRepositoryImpl>((ref) {
   return SubtitleRepositoryImpl(
     api: ref.watch(openSubtitlesApiProvider),
+    subdlApi: ref.watch(_subdlApiProvider),
+    podnapisiApi: ref.watch(_podnapisiApiProvider),
     localFileSource: ref.watch(_localFileSourceProvider),
     srtParser: ref.watch(srtParserProvider),
     translateService: ref.watch(_translationServiceProvider),
