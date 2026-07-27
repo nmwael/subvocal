@@ -9,7 +9,7 @@ abstract class SubtitleRepository {
     String? language,
     String? type,
   });
-  Future<(Subtitle?, Failure?)> download(int fileId);
+  Future<(Subtitle?, Failure?)> download(int fileId, {String? title});
   Future<(Subtitle?, Failure?)> importFromFile(String filePath);
   Future<(Subtitle?, Failure?)> translate(
     Subtitle subtitle,

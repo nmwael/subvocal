@@ -32,6 +32,7 @@ void main() {
           entryCount: 120,
           savedAt: DateTime(2025, 1, 15),
           entries: const [],
+          year: '1999',
         ),
         SavedSubtitle(
           id: '2',
@@ -40,6 +41,18 @@ void main() {
           entryCount: 95,
           savedAt: DateTime(2025, 1, 10),
           entries: const [],
+          year: '2010',
+        ),
+        SavedSubtitle(
+          id: '3',
+          title: 'The Office',
+          language: 'en',
+          entryCount: 150,
+          savedAt: DateTime(2025, 1, 5),
+          entries: const [],
+          year: '2005',
+          season: 2,
+          episode: 5,
         ),
       ];
       await screenMatchesGolden(
@@ -63,8 +76,13 @@ class _FakeSavedNotifier extends StateNotifier<AsyncValue<List<SavedSubtitle>>>
   _FakeSavedNotifier(List<SavedSubtitle> items) : super(AsyncValue.data(items));
 
   @override
-  Future<SavedSubtitle> save(subtitle, String language) async =>
-      throw UnimplementedError();
+  Future<SavedSubtitle> save(
+    subtitle,
+    String language, {
+    String? year,
+    int? season,
+    int? episode,
+  }) async => throw UnimplementedError();
 
   @override
   Future<void> delete(String id) async {}

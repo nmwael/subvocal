@@ -7,6 +7,10 @@ class SearchResultModel {
   final String? language;
   final int? subtitleCount;
   final String? releaseName;
+  final String? providerSource;
+  final int? season;
+  final int? episode;
+  final String? episodeName;
 
   const SearchResultModel({
     required this.fileId,
@@ -15,6 +19,10 @@ class SearchResultModel {
     this.language,
     this.subtitleCount,
     this.releaseName,
+    this.providerSource,
+    this.season,
+    this.episode,
+    this.episodeName,
   });
 
   factory SearchResultModel.fromJson(Map<String, dynamic> json) {
@@ -55,12 +63,45 @@ class SearchResultModel {
       return 'Unknown';
     }
 
+    int? extractSeason() {
+      final featureDetails = attributes?['feature_details'];
+      if (featureDetails is Map<String, dynamic>) {
+        final season = featureDetails['season_number'];
+        if (season is int) return season;
+        if (season is String) return int.tryParse(season);
+      }
+      return null;
+    }
+
+    int? extractEpisode() {
+      final featureDetails = attributes?['feature_details'];
+      if (featureDetails is Map<String, dynamic>) {
+        final episode = featureDetails['episode_number'];
+        if (episode is int) return episode;
+        if (episode is String) return int.tryParse(episode);
+      }
+      return null;
+    }
+
+    String? extractEpisodeName() {
+      final featureDetails = attributes?['feature_details'];
+      if (featureDetails is Map<String, dynamic>) {
+        final name = featureDetails['episode_name'];
+        if (name is String && name.isNotEmpty) return name;
+      }
+      return null;
+    }
+
     return SearchResultModel(
       fileId: parseFileId(),
       title: extractTitle(),
       year: extractYear(),
       language: attributes?['language'] as String?,
       releaseName: attributes?['release'] as String?,
+      providerSource: 'OpenSubtitles',
+      season: extractSeason(),
+      episode: extractEpisode(),
+      episodeName: extractEpisodeName(),
     );
   }
 
@@ -72,6 +113,10 @@ class SearchResultModel {
       language: language,
       subtitleCount: subtitleCount,
       releaseName: releaseName,
+      providerSource: providerSource,
+      season: season,
+      episode: episode,
+      episodeName: episodeName,
     );
   }
 }
