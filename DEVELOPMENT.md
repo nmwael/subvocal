@@ -1,92 +1,7 @@
 # subvocal — Development Guide
 
-## Overview
-
-**subvocal** is a cross-platform Flutter app that lets users pick subtitles (from
-OpenSubtitles or local `.srt` files) and have them read aloud via TTS in sync
-with streaming video (Netflix, Prime, etc.).
-
----
-
-## System Architecture
-
-```plantuml
-@startuml
-!theme plain
-
-package "Presentation Layer" {
-  [Home Screen]
-  [Search Screen]
-  [Player Screen]
-}
-
-package "Domain Layer" {
-  [SRT Parser]
-  [TTS Engine Service]
-  [Subtitle Repository (interface)]
-}
-
-package "Data Layer" {
-  [OpenSubtitles API]
-  [Local File System]
-  [flutter_tts]
-}
-
-[Home Screen] --> [Search Screen]
-[Search Screen] --> [Subtitle Repository (interface)]
-[Subtitle Repository (interface)] --> [OpenSubtitles API]
-[Subtitle Repository (interface)] --> [Local File System]
-[Player Screen] --> [TTS Engine Service]
-[Player Screen] --> [SRT Parser]
-[TTS Engine Service] --> [flutter_tts]
-@enduml
-```
-
----
-
-## Directory Structure
-
-```
-lib/
-├── core/
-│   ├── constants/
-│   ├── errors/
-│   ├── theme/
-│   └── utils/
-├── data/
-│   ├── datasources/
-│   │   ├── opensubtitles_api.dart
-│   │   └── local_file_source.dart
-│   ├── models/
-│   └── repositories/
-├── domain/
-│   ├── entities/
-│   ├── repositories/  (abstract)
-│   └── usecases/
-├── presentation/
-│   ├── providers/
-│   ├── screens/
-│   │   ├── home_screen.dart
-│   │   ├── search_screen.dart
-│   │   └── player_screen.dart
-│   └── widgets/
-├── app.dart
-└── main.dart
-```
-
----
-
-## Agent Workflow
-
-All code changes follow the HITL workflow described in `AGENTS.md`:
-
-1. **@architect** produces a plan and creates a GitHub issue
-2. **Human** reviews and approves (comments `approved` on the issue)
-3. **@developer** implements autonomously
-4. **@tester** writes/executes tests
-5. **@security-auditor** reviews final code
-
-Notifications via ntfy.sh (topic: `subvocal-hitl`).
+For system architecture (subtitle providers, translation services, TTS engine,
+data flow diagrams), see [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ---
 
@@ -169,6 +84,10 @@ flutter test integration_test/
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `OPENSUBTITLES_API_KEY` | Yes | API key from opensubtitles.com |
+| `SUBDL_API_KEY` | No | API key from subdl.com (2,000 req/day free) |
+| `GOOGLE_TRANSLATE_API_KEY` | No | Google Cloud Translation API key |
+| `AZURE_TRANSLATE_API_KEY` | No | Azure Translator subscription key |
+| `AZURE_TRANSLATE_REGION` | No | Azure Translator region |
 | `AI_FUN_TOKEN` | No | GitHub PAT for AI tooling |
 | `OPENROUTER_API_KEY` | No | OpenRouter API key for AI |
 

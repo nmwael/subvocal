@@ -30,8 +30,8 @@ Grab the latest build from [Releases](https://github.com/nmwael/subvocal/release
 ## Documentation
 
 - `AGENTS.md` — HITL workflow for code changes
+- `ARCHITECTURE.md` — system design, providers, TTS, data flow
 - `DEVELOPMENT.md` — dev setup, build, test
-- `PLAN.md` — architecture and implementation plan
 - `docs/` — reference books (Clean Code, Clean Architecture, etc.)
 
 ## License
