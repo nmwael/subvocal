@@ -406,29 +406,29 @@
 
       <h3 id="How_the_Architect_Plans">How the Architect Plans</h3>
 
-      <p>When I ask the architect to do something, it doesn't start coding. It explores the codebase using LSP and search tools, understands the existing patterns, and produces a structured plan in the form of a GitHub issue. Here's a real example — issue #167, wiring SubDL and Podnapisi subtitle providers:</p>
+      <p>When I ask the architect to do something, it doesn't start coding. It explores the codebase using LSP and search tools, understands the existing patterns, and produces a structured plan in the form of a GitHub issue. Here's a real example — issue #143, fixing Danish character encoding during TTS playback:</p>
 
       <pre><code>## WHY
-SubDL and Podnapisi APIs are fully implemented but never wired
-into the dependency graph. The SubtitleProviderAggregator accepts
-them as optional params, but search_provider.dart only passes
-OpenSubtitlesApi. Users only get results from OpenSubtitles.
+Danish locale characters (æ, ø, å) are corrupted when subtitles
+are downloaded from OpenSubtitles and played via TTS. The
+fetchContent() method uses response.body which internally decodes
+bytes as UTF-8 (with allowMalformed). When the downloaded SRT
+file is Latin-1/Windows-1252 encoded (common for European
+subtitles), non-ASCII characters become Unicode replacement
+characters (U+FFFD), appearing as ??? in both the UI and TTS.
 
 ## WHAT
-1. Add SubdlApi and PodnapisiApi Riverpod providers
-2. Pass them to SubtitleRepositoryImpl in subtitleRepositoryProvider
-3. Add providerSource param to DownloadSubtitle use case
-4. Update search_screen.dart to pass result.providerSource
-5. Log secondary provider failures in SubtitleProviderAggregator
+1. Detect encoding from Content-Type header or byte pattern
+2. Decode SRT content using correct encoding (Latin-1/CP1252)
+3. Normalize to UTF-8 before returning to callers
+4. Add encoding detection tests for European subtitle samples
 
 ## HOW
-search_provider.dart: add _subdlProvider, _podnapisiProvider.
-subtitle_repository.dart: add providerSource to download().
-download_subtitle.dart: pass providerSource through.
-search_screen.dart: read result.providerSource.
-subtitle_provider_aggregator.dart: add appLogger.warning.</code></pre>
+opensubtitles_api.dart: add _detectEncoding() helper.
+fetchContent(): use detected encoding for body decoding.
+Add unit tests with sample Latin-1 encoded SRT content.</code></pre>
 
-      <p>Notice the structure: <strong>WHY</strong> explains the problem ( APIs implemented but not wired). <strong>WHAT</strong> lists the changes needed. <strong>HOW</strong> specifies the exact files and methods. This isn't vague — it's a precise implementation plan that the developer can follow without asking clarifying questions.</p>
+      <p>Notice the structure: <strong>WHY</strong> explains the problem (Danish characters corrupted by wrong encoding). <strong>WHAT</strong> lists the changes needed. <strong>HOW</strong> specifies the exact files and methods. This isn't vague — it's a precise implementation plan that the developer can follow without asking clarifying questions.</p>
 
       <p>The architect then calls <code>create-issue.sh</code> to create the issue on GitHub, which automatically creates the <code>issue/{number}-{slug}</code> branch. Then it calls <code>watch-approval.sh</code> and waits for me to approve before any code is written.</p>
 
