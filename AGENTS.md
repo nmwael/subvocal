@@ -34,7 +34,8 @@ graph TD
 
 1. **Architect Plans**
    - Explores codebase and produces implementation plan
-   - Creates GitHub issue with WHY/WHAT/HOW template
+   - Creates GitHub issue with WHY/WHAT/HOW template: `./scripts/create-issue.sh --create-branch`
+   - Branch `issue/{number}-{slug}` is automatically created from the issue
    - Notifies human: `./scripts/workflow-notify.sh plan-ready "plan ready for review"`
 
 2. **Human Reviews and Approves** — **HARD GATE**
@@ -42,6 +43,7 @@ graph TD
    - **Option B**: Approve in chat, then run `./scripts/workflow-notify.sh approved "developer starting"`
 
 3. **Developer Implements**
+   - Switches to issue branch: `git checkout issue/{number}-{slug}`
    - Implements code changes following approved plan
    - Works autonomously, presents completed work for review
    - Notifies architect: `./scripts/workflow-notify.sh impl-done "ready for review"`
@@ -198,11 +200,12 @@ graph LR
 |---|---|---|---|
 | `main` | Production releases only | Human (manual PR from `development`) | Release build + pages deploy |
 | `development` | Integration branch — all PRs target here | Human (after CI passes) | Full CI (analyze + test + integration) |
-| `feature/*` | Individual work branches | PR to `development` | CI runs on PR |
+| `issue/*` | Issue-driven work branches | PR to `development` | CI runs on PR |
 
 - **PRs always target `development`**, never `main` directly
 - **`main` is production** — only merged from `development` when ready to release
 - **Development builds must always work** — CI enforces this on every push/PR to `development`
+- **Issue branches** are created from GitHub issues: `issue/{number}-{slug}`
 - Use `./scripts/sync-main.sh` (defaults to `development`) to keep feature branches up to date
 
 ### PRE-FLIGHT CHECK (MANDATORY BEFORE ANY CODE CHANGE)
@@ -314,6 +317,7 @@ All scripts are in `scripts/` and accept `--help` for usage. Use these instead o
 | `watch-approval.sh` | Poll an issue for human approval |
 | `workflow-notify.sh` | Look up latest issue + send workflow notification |
 | `create-issue.sh` | Create a GitHub issue with WHY/WHAT/HOW template |
+| `create-branch-from-issue.sh` | Create branch `issue/{number}-{slug}` from a GitHub issue |
 | `pr-create.sh` | Create a pull request with WHY/WHAT/HOW template (targets `development` by default) |
 
 ### Code Quality
@@ -350,8 +354,11 @@ All scripts are in `scripts/` and accept `--help` for usage. Use these instead o
 ### Quick Reference
 
 ```bash
-# Create issue + notify
-./scripts/create-issue.sh --title "Add X" --why "Need it" --what "Added X" --how "Via Y" --notify
+# Create issue + branch + notify
+./scripts/create-issue.sh --title "Add X" --why "Need it" --what "Added X" --how "Via Y" --notify --create-branch
+
+# Create branch from existing issue
+./scripts/create-branch-from-issue.sh --issue 42 --title "add-subtitle-search"
 
 # Run pre-commit checks
 ./scripts/run-checks.sh --format
