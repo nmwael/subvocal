@@ -299,7 +299,7 @@
   <article>
     <div class="container">
 
-      <h2>Why AI OPS?</h2>
+      <h2 id="Why_AI_OPS">Why AI OPS?</h2>
 
       <p>I'm building <strong>subvocal</strong> — a Flutter app that reads subtitles aloud in sync with streaming video. It's for people who can't read, and for language learners who want to hear pronunciation while reading along.</p>
 
@@ -311,7 +311,7 @@
 
       <div class="divider"></div>
 
-      <h2>The Environment</h2>
+      <h2 id="The_Environment">The Environment</h2>
 
       <p>Everything starts with the devcontainer. When I open this project in VS Code (or when an AI agent starts working), it gets a reproducible environment with exactly the tools needed — and nothing more.</p>
 
@@ -323,7 +323,7 @@
 
       <p>The base image is Debian Bullseye. On top of it, four features install OpenCode (the AI agent framework), Flutter SDK, GitHub CLI, and Node.js. No manual setup, no "works on my machine" — every agent gets the same environment.</p>
 
-      <h3>API Key Isolation</h3>
+      <h3 id="API_Key_Isolation">API Key Isolation</h3>
 
       <p>The clever part is <strong>API key forwarding</strong>. API keys are passed from my host machine into the container as environment variables via <code>containerEnv</code>:</p>
 
@@ -339,7 +339,7 @@
 
       <p>None are stored in the repository or the container image. The agents can use them (for OpenSubtitles, translation services, AI providers), but they never touch disk. If the container is destroyed, the keys vanish. This is <strong>AI isolation</strong> — the agents have access to the APIs they need, but the keys stay on my machine.</p>
 
-      <h3>GPG Signing as a Hard Gate</h3>
+      <h3 id="GPG_Signing_as_a_Hard_Gate">GPG Signing as a Hard Gate</h3>
 
       <p>Every git commit must be <strong>GPG-signed</strong> using a hardware token (YubiKey). The devcontainer forwards the GPG agent socket from the host machine, so signing works inside the container even though the hardware token is physically connected to the host.</p>
 
@@ -353,7 +353,7 @@
 
       <p>The practical effect: every commit in the repository is cryptographically signed. You can verify any commit with <code>git log --show-signature</code>. This matters for a project that uses AI agents — signed commits prove which changes were made by a human (via hardware token) versus which were automated.</p>
 
-      <h3>LSP: Token Optimization for AI</h3>
+      <h3 id="LSP_Token_Optimization_for_AI">LSP: Token Optimization for AI</h3>
 
       <p>One of the most impactful settings in <code>opencode.json</code> is <strong>"lsp": true</strong>. This enables Language Server Protocol support, which gives AI agents access to the Dart language server.</p>
 
@@ -361,7 +361,7 @@
 
       <p>The result: <strong>fewer tokens spent on context gathering</strong>. Instead of loading 500 lines of code to understand one function, the agent loads 20 lines of targeted, LSP-provided context. Across hundreds of agent interactions per day, this adds up to significant token savings.</p>
 
-      <h3>Agent Permissions</h3>
+      <h3 id="Agent_Permissions">Agent Permissions</h3>
 
       <p>Each agent has explicit permission boundaries defined in <code>opencode.json</code>. The architect — the primary agent I interact with — is <strong>read-only</strong>:</p>
 
@@ -377,34 +377,34 @@
 
       <p>This permission model is the foundation of the HITL workflow. The architect can't accidentally edit code while planning. The developer can't skip the approval gate. Every agent operates within its defined boundaries.</p>
 
-      <h3>VS Code Extensions</h3>
+      <h3 id="VS_Code_Extensions">VS Code Extensions</h3>
 
       <p>VS Code extensions install automatically — Dart, Flutter, SonarLint, GitLens, PlantUML, ESLint, Prettier, YAML, Markdown, EditorConfig, Spell Checker, Error Lens, and Git Graph. These aren't just developer conveniences — they provide the LSP infrastructure that makes token-efficient AI work possible. The Dart extension provides the language server. SonarLint provides static analysis. Error Lens surfaces issues inline. The environment is identical whether I'm working locally or an AI agent is working in a cloud session.</p>
 
       <div class="divider"></div>
 
-      <h2>Building the AI Team</h2>
+      <h2 id="Building_the_AI_Team">Building the AI Team</h2>
 
-      <p>The core of AI OPS is the <strong>agent configuration</strong> in <code>opencode.json</code>. I defined five agents, each with a specific role, model, and permission set:</p>
+      <p>The core of AI OPS is the <strong>agent configuration</strong> in <code>opencode.json</code>. I defined five agents, each with a specific role, model configuration, and permission set:</p>
 
       <table>
         <thead>
-          <tr><th>Agent</th><th>Role</th><th>Model</th><th>Permissions</th></tr>
+          <tr><th>Agent</th><th>Role</th><th>Permissions</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>architect</strong></td><td>Plans, reviews, creates issues/PRs</td><td>nemotron-3-super-120b</td><td>Read-only (no edit, no bash)</td></tr>
-          <tr><td><strong>developer</strong></td><td>Implements code changes</td><td>kimi-k2.6</td><td>Full access</td></tr>
-          <tr><td><strong>tester</strong></td><td>Writes and runs tests</td><td>kimi-k2.6</td><td>Full access</td></tr>
-          <tr><td><strong>security-auditor</strong></td><td>Reviews for vulnerabilities</td><td>nemotron-nano-9b</td><td>Read-only</td></tr>
-          <tr><td><strong>ux-ui</strong></td><td>Reviews UI/accessibility</td><td>kimi-k2.6</td><td>Read-only</td></tr>
+          <tr><td><strong>architect</strong></td><td>Plans, reviews, creates issues/PRs</td><td>Read-only (no edit, no bash)</td></tr>
+          <tr><td><strong>developer</strong></td><td>Implements code changes</td><td>Full access</td></tr>
+          <tr><td><strong>tester</strong></td><td>Writes and runs tests</td><td>Full access</td></tr>
+          <tr><td><strong>security-auditor</strong></td><td>Reviews for vulnerabilities</td><td>Read-only</td></tr>
+          <tr><td><strong>ux-ui</strong></td><td>Reviews UI/accessibility</td><td>Read-only</td></tr>
         </tbody>
       </table>
 
       <p>The key design decision: <strong>the architect is the primary agent</strong> — the one I talk to directly. It cannot edit files or run commands. This forces it to plan rather than implement. The developer and tester are subagents that the architect delegates to. They have full access but work autonomously and return results for review.</p>
 
-      <p>Temperature is lower (0.2) for implementers who need precision, higher (0.4) for planners who need creativity. The tester gets more steps than other agents because writing tests is the most token-intensive task.</p>
+      <p>Temperature is configured per agent — lower for implementers who need precision, higher for planners who need creativity. The tester gets more steps than other agents because writing tests is the most token-intensive task. Models are also configured per agent, but if a specific model isn't available, OpenCode falls back to the default model.</p>
 
-      <h3>How the Architect Plans</h3>
+      <h3 id="How_the_Architect_Plans">How the Architect Plans</h3>
 
       <p>When I ask the architect to do something, it doesn't start coding. It explores the codebase using LSP and search tools, understands the existing patterns, and produces a structured plan in the form of a GitHub issue. Here's a real example — issue #167, wiring SubDL and Podnapisi subtitle providers:</p>
 
@@ -434,7 +434,7 @@ subtitle_provider_aggregator.dart: add appLogger.warning.</code></pre>
 
       <div class="divider"></div>
 
-      <h2>The Workflow That Won't Let Me Screw Up</h2>
+      <h2 id="The_Workflow_That_Wont_Let_Me_Screw_Up">The Workflow That Won't Let Me Screw Up</h2>
 
       <p>The <strong>Human-in-the-Loop (HITL)</strong> workflow is the most important part of AI OPS. It's a pipeline with a hard gate that cannot be skipped:</p>
 
@@ -472,25 +472,25 @@ graph TD
 
       <div class="divider"></div>
 
-      <h2>Case Study: Wiring Subtitle Providers</h2>
+      <h2 id="Case_Study_Wiring_Subtitle_Providers">Case Study: Wiring Subtitle Providers</h2>
 
       <p>To show how this works in practice, here's the full journey of issue #167 — wiring SubDL and Podnapisi subtitle providers — from request to merge.</p>
 
-      <h3>Step 1: The Request</h3>
+      <h3 id="Step_1_The_Request">Step 1: The Request</h3>
 
       <p>I noticed that SubDL and Podnapisi APIs were fully implemented but never wired into the dependency graph. The app only used OpenSubtitles. I told the architect: "Wire SubDL and Podnapisi providers into the app."</p>
 
-      <h3>Step 2: The Plan</h3>
+      <h3 id="Step_2_The_Plan">Step 2: The Plan</h3>
 
       <p>The architect explored the codebase. It found that <code>search_provider.dart</code> only passed <code>OpenSubtitlesApi</code> to the repository, even though <code>SubtitleProviderAggregator</code> accepted optional params for SubDL and Podnapisi. It found that <code>downloadFromProvider</code> existed but was never called.</p>
 
       <p>It produced the WHY/WHAT/HOW plan (shown earlier) and created issue #167 on GitHub with the <code>issue/167-wire-subdl-podnapisi</code> branch. Then it called <code>watch-approval.sh</code> and waited.</p>
 
-      <h3>Step 3: Human Approval</h3>
+      <h3 id="Step_3_Human_Approval">Step 3: Human Approval</h3>
 
       <p>I reviewed the plan. It was correct — the APIs were implemented but not wired. I commented "approved" on the issue. The watch-approval script detected the keyword and unblocked the architect.</p>
 
-      <h3>Step 4: Developer Implements</h3>
+      <h3 id="Step_4_Developer_Implements">Step 4: Developer Implements</h3>
 
       <p>The architect delegated to the developer subagent. The developer:</p>
       <ul>
@@ -503,11 +503,11 @@ graph TD
 
       <p>The developer committed each change with GPG-signed conventional commits, pushed the branch, and called <code>workflow-notify.sh impl-done</code>.</p>
 
-      <h3>Step 5: Tests</h3>
+      <h3 id="Step_5_Tests">Step 5: Tests</h3>
 
       <p>The architect reviewed the implementation, then delegated to the tester. The tester wrote unit tests for the new provider wiring, verified existing tests still passed, and called <code>workflow-notify.sh tests-done</code>.</p>
 
-      <h3>Step 6: PR and Merge</h3>
+      <h3 id="Step_6_PR_and_Merge">Step 6: PR and Merge</h3>
 
       <p>The architect created PR #168 with the WHY/WHAT/HOW body matching the issue. CI ran — analyze-and-test passed, integration-test was skipped (no integration paths changed). I reviewed the PR and merged it to <code>development</code>.</p>
 
@@ -515,7 +515,7 @@ graph TD
 
       <div class="divider"></div>
 
-      <h2>Giving AI Engineering Principles</h2>
+      <h2 id="Giving_AI_Engineering_Principles">Giving AI Engineering Principles</h2>
 
       <p>Raw AI models know how to write code, but they don't know <em>your</em> standards. I solved this by injecting <strong>six reference books</strong> into every agent's context via the <code>instructions</code> field in <code>opencode.json</code>:</p>
 
@@ -539,11 +539,11 @@ graph TD
 
       <div class="divider"></div>
 
-      <h2>Scripts That Save Tokens and Time</h2>
+      <h2 id="Scripts_That_Save_Tokens_and_Time">Scripts That Save Tokens and Time</h2>
 
       <p>The <code>scripts/</code> directory contains helper scripts. Some are general-purpose (test runners, git helpers), but the core ones are the <strong>AI workflow scripts</strong> that orchestrate the HITL process and track costs.</p>
 
-      <h3>workflow-notify.sh — The Orchestrator</h3>
+      <h3 id="workflow-notify.sh_The_Orchestrator">workflow-notify.sh — The Orchestrator</h3>
 
       <p>This is the central nervous system. When an agent completes a task, it calls:</p>
 
@@ -558,7 +558,7 @@ graph TD
 
       <p>Without this, I'd have to manually check which issue is being worked on, manually notify myself, and manually log costs. The script saves time per task boundary, and across many tasks per day, that adds up.</p>
 
-      <h3>watch-approval.sh — The Gatekeeper</h3>
+      <h3 id="watch-approval.sh_The_Gatekeeper">watch-approval.sh — The Gatekeeper</h3>
 
       <p>After the architect creates a plan, it needs my approval. Instead of me watching a screen, the architect calls:</p>
 
@@ -568,7 +568,7 @@ graph TD
 
       <p>This is a <strong>token-saving pattern</strong>: instead of the agent repeatedly asking "are you approved yet?" (which would consume tokens on each check), the script does the polling externally using <code>gh</code> CLI — zero tokens spent on the wait.</p>
 
-      <h3>commit-push.sh — The Enforcer</h3>
+      <h3 id="commit-push.sh_The_Enforcer">commit-push.sh — The Enforcer</h3>
 
       <p>Every commit must be GPG-signed (hardware token) and use conventional commit prefixes. The script handles this:</p>
 
@@ -576,7 +576,7 @@ graph TD
 
       <p>It checks GPG card status, stages all changes, creates a signed commit, and pushes. If GPG signing fails (hardware token timeout), it reports the error instead of falling back to unsigned commits. This prevents the "I'll just skip the signature this one time" anti-pattern.</p>
 
-      <h3>create-issue.sh and pr-create.sh — The Communicators</h3>
+      <h3 id="create-issue.sh_and_pr-create.sh_The_Communicators">create-issue.sh and pr-create.sh — The Communicators</h3>
 
       <p>Issues and PRs use the same <strong>WHY/WHAT/HOW</strong> template. The scripts generate this format automatically:</p>
 
@@ -589,7 +589,7 @@ graph TD
 
       <p>This ensures every issue and PR has the same structured format, making them scannable for humans and parseable for agents. The <code>--create-branch</code> flag automatically creates the <code>issue/{number}-{slug}</code> branch.</p>
 
-      <h3>log-usage.sh and usage-report.sh — The Accountants</h3>
+      <h3 id="log-usage.sh_and_usage-report.sh_The_Accountants">log-usage.sh and usage-report.sh — The Accountants</h3>
 
       <p>Every token is tracked. The flow:</p>
 
@@ -613,7 +613,7 @@ graph TD
 
       <div class="divider"></div>
 
-      <h2>Tracking Every Token</h2>
+      <h2 id="Tracking_Every_Token">Tracking Every Token</h2>
 
       <p>AI isn't free — but it can be cheap. The FinOps system tracks every token across every session, agent, and model. The data lives in <code>.aifinops/log.csv</code> (git-ignored, generated locally) and is surfaced via the <strong>AI Tokens badge</strong> in the README.</p>
 
@@ -623,7 +623,7 @@ graph TD
 
       <div class="divider"></div>
 
-      <h2>CI That Knows What Changed</h2>
+      <h2 id="CI_That_Knows_What_Changed">CI That Knows What Changed</h2>
 
       <p>The CI pipeline uses <strong>path-based filtering</strong> to skip jobs when their inputs haven't changed:</p>
 
@@ -644,7 +644,7 @@ graph LR
 
       <div class="divider"></div>
 
-      <h2>Structured Communication</h2>
+      <h2 id="Structured_Communication">Structured Communication</h2>
 
       <p>Every issue and PR uses the same <strong>WHY/WHAT/HOW</strong> template. This isn't just convention — it's enforced by the <code>create-issue.sh</code> and <code>pr-create.sh</code> scripts, and by the issue templates in <code>.github/</code>.</p>
 
@@ -671,23 +671,23 @@ Closes #<!-- issue number --></code></pre>
 
       <div class="divider"></div>
 
-      <h2>Lessons Learned</h2>
+      <h2 id="Lessons_Learned">Lessons Learned</h2>
 
       <p>AI OPS didn't emerge perfectly. It evolved through mistakes — each one teaching a rule that's now baked into the system.</p>
 
-      <h3>The Merge-Locally Disaster</h3>
+      <h3 id="The_Merge-Locally_Disaster">The Merge-Locally Disaster</h3>
 
       <p>Early on, I merged an issue branch locally into <code>development</code> and pushed. This created orphaned branches with no PR trail. There was no review record, no CI validation on the PR, and the branch list became a mess. The fix: <strong>never merge locally</strong>. Always push the branch, create a PR, and let GitHub handle the merge. This is now documented in <code>AGENTS.md</code> as a "LESSON LEARNED" with a prominent warning.</p>
 
-      <h3>Skipping the HITL Gate</h3>
+      <h3 id="Skipping_the_HITL_Gate">Skipping the HITL Gate</h3>
 
       <p>I once let the architect proceed without explicit approval on a "small" change — just renaming a variable. The rename broke three downstream references that the architect hadn't checked. The fix: <strong>the hard gate is non-negotiable</strong>. Even "obvious" changes need explicit approval. The memory aid in <code>AGENTS.md</code> now lists specific examples of what counts as a code change (adding tests, modifying source files, adding config files) and explicitly states: "But it's small!" is not an exemption.</p>
 
-      <h3>The Token Waste Problem</h3>
+      <h3 id="The_Token_Waste_Problem">The Token Waste Problem</h3>
 
       <p>Early sessions burned through tokens on context gathering — agents reading entire files to understand one function. Enabling LSP changed this dramatically. Instead of 500-line file reads, agents ask the language server for targeted answers. The result: same work, fraction of the tokens. This is now a default setting in <code>opencode.json</code>.</p>
 
-      <h3>The Notification Gap</h3>
+      <h3 id="The_Notification_Gap">The Notification Gap</h3>
 
       <p>Before <code>workflow-notify.sh</code>, I had to manually check which issue was being worked on, manually notify myself, and manually log costs. This created gaps — I'd miss notifications, forget to log usage, or lose track of which agent was doing what. Automating the notification + logging pipeline closed these gaps. Every task boundary now triggers a notification and a cost log entry automatically.</p>
 
