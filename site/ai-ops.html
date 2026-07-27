@@ -288,7 +288,7 @@
   <header class="hero">
     <div class="label">Work in Progress</div>
     <h1>How I Built <span>AI OPS</span> for subvocal</h1>
-    <p class="subtitle">A narrative about using AI agents as team members — the devcontainer, the workflow, the scripts, and the $0.21 that built a Flutter app.</p>
+    <p class="subtitle">A narrative about using AI agents as team members — the devcontainer, the workflow, the scripts, and the AI OPS system that built a Flutter app.</p>
     <div class="meta">
       <span>July 2026</span>
       <span>&middot;</span>
@@ -307,7 +307,7 @@
 
       <p><strong>AI OPS</strong> is the system I set up to use AI agents as team members. Not as code generators that I point at a problem and hope for the best — but as structured roles with clear responsibilities, approval gates, and engineering principles baked into their context.</p>
 
-      <p>The result: 116 commits, 132 tests, 5 AI agents, 6 reference books, 21 automation scripts, and a total API cost of <strong>$0.21</strong>.</p>
+      <p>The result: hundreds of commits, over a hundred tests, five AI agents, six reference books, and a growing collection of automation scripts — all for a fraction of the cost of a single developer hour.</p>
 
       <div class="divider"></div>
 
@@ -325,7 +325,7 @@
 
       <h3>API Key Isolation</h3>
 
-      <p>The clever part is <strong>API key forwarding</strong>. Seven API keys are passed from my host machine into the container as environment variables via <code>containerEnv</code>:</p>
+      <p>The clever part is <strong>API key forwarding</strong>. API keys are passed from my host machine into the container as environment variables via <code>containerEnv</code>:</p>
 
       <pre><code>"containerEnv": {
   "AI_FUN_TOKEN": "${localEnv:AI_FUN_TOKEN}",
@@ -377,9 +377,9 @@
 
       <p>This permission model is the foundation of the HITL workflow. The architect can't accidentally edit code while planning. The developer can't skip the approval gate. Every agent operates within its defined boundaries.</p>
 
-      <h3>Thirteen Extensions</h3>
+      <h3>VS Code Extensions</h3>
 
-      <p>Thirteen VS Code extensions install automatically — Dart, Flutter, SonarLint, GitLens, PlantUML, ESLint, Prettier, YAML, Markdown, EditorConfig, Spell Checker, Error Lens, and Git Graph. These aren't just developer conveniences — they provide the LSP infrastructure that makes token-efficient AI work possible. The Dart extension provides the language server. SonarLint provides static analysis. Error Lens surfaces issues inline. The environment is identical whether I'm working locally or an AI agent is working in a cloud session.</p>
+      <p>VS Code extensions install automatically — Dart, Flutter, SonarLint, GitLens, PlantUML, ESLint, Prettier, YAML, Markdown, EditorConfig, Spell Checker, Error Lens, and Git Graph. These aren't just developer conveniences — they provide the LSP infrastructure that makes token-efficient AI work possible. The Dart extension provides the language server. SonarLint provides static analysis. Error Lens surfaces issues inline. The environment is identical whether I'm working locally or an AI agent is working in a cloud session.</p>
 
       <div class="divider"></div>
 
@@ -402,7 +402,7 @@
 
       <p>The key design decision: <strong>the architect is the primary agent</strong> — the one I talk to directly. It cannot edit files or run commands. This forces it to plan rather than implement. The developer and tester are subagents that the architect delegates to. They have full access but work autonomously and return results for review.</p>
 
-      <p>Temperature is lower (0.2) for implementers who need precision, higher (0.4) for planners who need creativity. The tester gets the most steps (80) because writing tests is the most token-intensive task.</p>
+      <p>Temperature is lower (0.2) for implementers who need precision, higher (0.4) for planners who need creativity. The tester gets more steps than other agents because writing tests is the most token-intensive task.</p>
 
       <h3>How the Architect Plans</h3>
 
@@ -511,7 +511,7 @@ graph TD
 
       <p>The architect created PR #168 with the WHY/WHAT/HOW body matching the issue. CI ran — analyze-and-test passed, integration-test was skipped (no integration paths changed). I reviewed the PR and merged it to <code>development</code>.</p>
 
-      <p><strong>Total time</strong>: ~15 minutes of my time (reviewing plan + reviewing PR). The agents did the exploration, implementation, and testing autonomously.</p>
+      <p><strong>Total time</strong>: a few minutes of my time (reviewing plan + reviewing PR). The agents did the exploration, implementation, and testing autonomously.</p>
 
       <div class="divider"></div>
 
@@ -541,7 +541,7 @@ graph TD
 
       <h2>Scripts That Save Tokens and Time</h2>
 
-      <p>The <code>scripts/</code> directory contains 21 helper scripts. Some are general-purpose (test runners, git helpers), but the core ones are the <strong>AI workflow scripts</strong> that orchestrate the HITL process and track costs.</p>
+      <p>The <code>scripts/</code> directory contains helper scripts. Some are general-purpose (test runners, git helpers), but the core ones are the <strong>AI workflow scripts</strong> that orchestrate the HITL process and track costs.</p>
 
       <h3>workflow-notify.sh — The Orchestrator</h3>
 
@@ -556,7 +556,7 @@ graph TD
         <li>Calls <code>log-usage.sh</code> to record token usage for FinOps tracking</li>
       </ol>
 
-      <p>Without this, I'd have to manually check which issue is being worked on, manually notify myself, and manually log costs. The script saves ~2 minutes per task boundary, and across dozens of tasks per day, that adds up.</p>
+      <p>Without this, I'd have to manually check which issue is being worked on, manually notify myself, and manually log costs. The script saves time per task boundary, and across many tasks per day, that adds up.</p>
 
       <h3>watch-approval.sh — The Gatekeeper</h3>
 
@@ -600,10 +600,10 @@ graph TD
       <p><code>usage-report.sh</code> reads the CSV and generates reports:</p>
 
       <pre><code>./scripts/usage-report.sh --summary
-# Entries:     19
-# Input:       9.3M tokens
-# Output:      726.0k tokens
-# Cost:        $0.2075
+# Entries:     ...
+# Input:       ... tokens
+# Output:      ... tokens
+# Cost:        ...
 
 ./scripts/usage-report.sh --by-agent
 # Shows token usage per agent role
@@ -615,15 +615,11 @@ graph TD
 
       <h2>Tracking Every Token</h2>
 
-      <p>AI isn't free — but it can be cheap. The FinOps system tracks every token across every session, agent, and model. The data lives in <code>.aifinops/log.csv</code> (git-ignored, generated locally) and is surfaced via the <strong>AI Tokens badge</strong> in the README:</p>
+      <p>AI isn't free — but it can be cheap. The FinOps system tracks every token across every session, agent, and model. The data lives in <code>.aifinops/log.csv</code> (git-ignored, generated locally) and is surfaced via the <strong>AI Tokens badge</strong> in the README.</p>
 
-      <pre><code>![AI Tokens](https://img.shields.io/badge/AI%20Tokens-in%208.8M%20%7C%20out%20690k%20%7C%20reason%20307k-blue)</code></pre>
+      <p>The badge shows current totals: input tokens, output tokens, and reasoning tokens. The cost breakdown is available via <code>usage-report.sh</code>, which can filter by agent, model, or issue.</p>
 
-      <p>The numbers: <strong>8.8M input tokens</strong>, <strong>690k output tokens</strong>, <strong>307k reasoning tokens</strong>. Total cost across 19 tracked sessions: <strong>$0.21</strong>.</p>
-
-      <p>Most of the cost came from a single session ($0.21 for issue #155). The other 18 sessions were free — running on OpenCode's free tier via <code>big-pickle</code> model. The expensive session used NVIDIA's nemotron-3-ultra-550b model, which has higher quality but costs per token.</p>
-
-      <p>This visibility matters. Without it, I'd have no idea whether AI OPS is cost-effective. With it, I can see that the bulk of the work — 116 commits, 132 tests, 5 agents, 21 scripts — cost less than a cup of coffee.</p>
+      <p>This visibility matters. Without it, I'd have no idea whether AI OPS is cost-effective. With it, I can see exactly where tokens are being spent and optimize accordingly.</p>
 
       <div class="divider"></div>
 
