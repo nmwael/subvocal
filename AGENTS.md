@@ -184,6 +184,7 @@ All reference books sourced from https://github.com/ciembor/agent-rules-books/
 - If a plan would benefit from another agent's review, delegate via the Task tool
 - Never bypass the HITL approval gate by using a subagent to indirectly perform a denied action
 - Never develop directly on `main` or `development`. All work must be done in a dedicated feature branch
+- **Never merge issue branches locally into `development`** — always create a PR and let the human merge via GitHub (see "LESSON LEARNED" under Branching Strategy)
 - **All features must have tests before merging** — unit tests for domain/data logic, widget tests for UI components, integration tests for critical user flows
 
 ## Branching Strategy
@@ -207,6 +208,27 @@ graph LR
 - **Development builds must always work** — CI enforces this on every push/PR to `development`
 - **Issue branches** are created from GitHub issues: `issue/{number}-{slug}`
 - Use `./scripts/sync-main.sh` (defaults to `development`) to keep feature branches up to date
+
+### ⚠️ LESSON LEARNED: Never merge issue branches locally into development
+
+**The correct workflow is always:**
+
+```
+issue branch → implement → push branch → create PR → merge via GitHub
+```
+
+**The WRONG workflow (causes orphaned branches, missing PR trail):**
+
+```
+issue branch → implement → merge locally → push development
+```
+
+After implementing on an issue branch, you MUST:
+1. Push the issue branch: `git push -u origin <branch>`
+2. Create a PR from the issue branch targeting `development`: `./scripts/pr-create.sh`
+3. Let CI run and the human merge via GitHub
+
+**Never** `git merge <issue-branch>` locally into `development` and push. This creates orphaned branches with no PR trail and breaks the HITL review process.
 
 ### PRE-FLIGHT CHECK (MANDATORY BEFORE ANY CODE CHANGE)
 
