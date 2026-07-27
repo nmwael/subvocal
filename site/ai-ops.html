@@ -311,9 +311,29 @@
 
       <div class="divider"></div>
 
+      <nav style="margin: 32px 0; padding: 20px 24px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface);">
+        <p style="margin: 0 0 12px; font-weight: 600; color: var(--text); font-size: 0.9rem;">Contents</p>
+        <ul style="margin: 0; list-style: none; padding: 0; columns: 2; column-gap: 24px; font-size: 0.85rem;">
+          <li style="margin-bottom: 4px;"><a href="#Why_AI_OPS" style="color: var(--text-muted);">Why AI OPS?</a></li>
+          <li style="margin-bottom: 4px;"><a href="#The_Environment" style="color: var(--text-muted);">The Environment</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Building_the_AI_Team" style="color: var(--text-muted);">Building the AI Team</a></li>
+          <li style="margin-bottom: 4px;"><a href="#The_Workflow_That_Wont_Let_Me_Screw_Up" style="color: var(--text-muted);">The Workflow</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Case_Study_Wiring_Subtitle_Providers" style="color: var(--text-muted);">Case Study</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Giving_AI_Engineering_Principles" style="color: var(--text-muted);">Engineering Principles</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Scripts_That_Save_Tokens_and_Time" style="color: var(--text-muted);">Scripts</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Tracking_Every_Token" style="color: var(--text-muted);">Tracking Tokens</a></li>
+          <li style="margin-bottom: 4px;"><a href="#CI_That_Knows_What_Changed" style="color: var(--text-muted);">CI Filtering</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Structured_Communication" style="color: var(--text-muted);">Communication</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Challenges_and_Limitations" style="color: var(--text-muted);">Challenges</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Lessons_Learned" style="color: var(--text-muted);">Lessons Learned</a></li>
+        </ul>
+      </nav>
+
+      <div class="divider"></div>
+
       <h2 id="The_Environment">The Environment</h2>
 
-      <p>Everything starts with the devcontainer. When I open this project in VS Code (or when an AI agent starts working), it gets a reproducible environment with exactly the tools needed — and nothing more.</p>
+      <p>Everything runs <strong>locally</strong>. There is no cloud counterpart, no remote dev environment, no hosted CI runner I pay for. The devcontainer runs on my machine — the same machine where I type, where the hardware token is plugged in, and where the API keys live. When I open this project in VS Code (or when an AI agent starts working), it gets a reproducible container environment with exactly the tools needed — and nothing more.</p>
 
       <pre><code># devcontainer.json features
 "ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1"
@@ -509,7 +529,16 @@ graph TD
 
       <h3 id="Step_5_Tests">Step 5: Tests</h3>
 
-      <p>The architect reviewed the implementation, then delegated to the tester. The tester wrote unit tests for the new provider wiring, verified existing tests still passed, and called <code>workflow-notify.sh tests-done</code>.</p>
+      <p>The architect reviewed the implementation, then delegated to the tester. The tester follows a clear methodology:</p>
+      <ul>
+        <li><strong>Unit tests first</strong> — test individual functions and classes in isolation, mocking external dependencies</li>
+        <li><strong>Widget tests for UI</strong> — verify Flutter widgets render correctly and respond to interactions</li>
+        <li><strong>Integration tests for critical paths</strong> — run against the Android emulator for end-to-end flows</li>
+      </ul>
+
+      <p>The tester validates that the implementation matches the architect's plan by reading the issue's WHY/WHAT/HOW and checking each item. If the developer deviated from the plan, the tester flags it. Tests are run with <code>flutter test</code> (unit/widget) or <code>flutter test integration_test/</code> (integration). The tester also checks that existing tests still pass — no regressions.</p>
+
+      <p>When done, the tester calls <code>workflow-notify.sh tests-done</code> and returns results to the architect for review.</p>
 
       <h3 id="Step_6_PR_and_Merge">Step 6: PR and Merge</h3>
 
@@ -672,6 +701,32 @@ Closes #<!-- issue number --></code></pre>
       </ul>
 
       <p>Having the same format for issues AND PRs means the PR body is essentially a copy of the issue with the implementation details filled in. This creates a clean audit trail: issue → plan → implementation → PR → merge.</p>
+
+      <div class="divider"></div>
+
+      <h2 id="Challenges_and_Limitations">Challenges and Limitations</h2>
+
+      <p>AI OPS isn't perfect. Here's what's hard about it:</p>
+
+      <h3 id="Setup_Complexity">Setup Complexity</h3>
+
+      <p>The devcontainer requires Docker, VS Code, and the Remote Containers extension. For a new contributor, getting the environment running takes time — installing Docker, cloning the repo, waiting for container build, configuring API keys. This is the trade-off for reproducibility: the environment is identical for everyone, but the initial barrier is higher than "just install Flutter."</p>
+
+      <h3 id="Non-Determinism">Non-Determinism</h3>
+
+      <p>AI agents are non-deterministic. The same prompt can produce different code, different file structures, different naming choices. The HITL workflow catches most drift, but not all. Sometimes the developer implements something slightly different from what the architect planned — a different variable name, a different error handling approach. The architect's review step exists for exactly this reason, but it adds a round-trip to every task.</p>
+
+      <h3 id="Token_Cost_Reality">Token Cost Reality</h3>
+
+      <p>While the FinOps tracking shows low costs, tokens add up with larger codebases and more complex tasks. A single feature implementation can consume tens of thousands of tokens across the architect's planning, the developer's implementation, and the tester's validation. LSP optimization helps, but the fundamental cost is there.</p>
+
+      <h3 id="Model_Availability">Model Availability</h3>
+
+      <p>The agents are configured with specific models, but those models aren't always available. When a model goes down or hits rate limits, OpenCode falls back to the default model — which may produce different quality results. The article doesn't specify models in the agent table for this reason: the configuration is aspirational, not guaranteed.</p>
+
+      <h3 id="Local_Only">Local Only</h3>
+
+      <p>Everything runs locally. There's no cloud counterpart, no remote dev environment, no hosted CI runner. This means the system is limited by my machine's resources — Docker memory, disk space, CPU for running the Android emulator in CI. It also means the system isn't easily shareable: someone else can't just log in and start using AI OPS without setting up the full local environment.</p>
 
       <div class="divider"></div>
 
