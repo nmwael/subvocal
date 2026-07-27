@@ -47,8 +47,16 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
   }
 
   @override
-  Future<(Subtitle?, Failure?)> download(int fileId, {String? title}) async {
-    final (link, failure) = await api.download(fileId);
+  Future<(Subtitle?, Failure?)> download(
+    dynamic fileId, {
+    String? title,
+    String? providerSource,
+  }) async {
+    if (providerSource != null && providerSource != 'OpenSubtitles') {
+      return downloadFromProvider(fileId, providerSource, title: title);
+    }
+
+    final (link, failure) = await api.download(fileId as int);
     if (failure != null) return (null, failure);
     if (link == null) {
       return (null, const NetworkFailure('Empty download link'));

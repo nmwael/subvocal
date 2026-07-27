@@ -16,3 +16,5 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-07-26T16:21:12Z,ses_0621f2cf0ffe1ixkdjjAJMVCcd,154,build,big-pickle,874817,63397,22609,25816896,0,0.000000
 2026-07-26T16:37:32Z,ses_0621f2cf0ffe1ixkdjjAJMVCcd,155,build,big-pickle,997563,75576,24123,30773184,0,0.000000
 2026-07-26T16:51:22Z,ses_0621f2cf0ffe1ixkdjjAJMVCcd,155,build,nvidia/nemotron-3-ultra-550b-a55b,1187944,81727,24676,31786688,0,0.207502
+2026-07-27T11:26:59Z,ses_05cd943e0ffe9K27eg4Txc3uXJ,169,build,big-pickle,244143,17654,5707,4702720,0,0.000000
+2026-07-27T11:29:43Z,ses_05cd943e0ffe9K27eg4Txc3uXJ,169,build,big-pickle,250021,18799,6010,5526592,0,0.000000

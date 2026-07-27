@@ -51,7 +51,11 @@ class _MockRepository implements SubtitleRepository {
   }
 
   @override
-  Future<(Subtitle?, Failure?)> download(int fileId, {String? title}) async {
+  Future<(Subtitle?, Failure?)> download(
+    dynamic fileId, {
+    String? title,
+    String? providerSource,
+  }) async {
     return (null, null);
   }
 

@@ -295,7 +295,6 @@ Cross-platform Flutter app for picking subtitles from OpenSubtitles, SubDL, or P
 - **SRT-timed utterance scheduling**: Calculate delays between subtitle entries from timestamps
 
 ### Relevant Files
-- `PLAN.md`: Full architecture and implementation plan
 - `AGENTS.md`: This file — HITL workflow
 - `DEVELOPMENT.md`: Development setup guide
 - `docs/`: Reference books (clean-code, clean-architecture, etc.)
