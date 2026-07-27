@@ -7,13 +7,45 @@ on:
     branches: [main]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      integration: ${{ steps.filter.outputs.integration }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'lib/**'
+              - 'test/**'
+              - 'pubspec.yaml'
+              - 'pubspec.lock'
+              - 'analysis_options.yaml'
+              - 'android/**'
+              - 'ios/**'
+            integration:
+              - 'lib/**'
+              - 'test/**'
+              - 'integration_test/**'
+              - 'pubspec.yaml'
+              - 'pubspec.lock'
+              - 'android/**'
+              - 'ios/**'
+
   analyze-and-test:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       checks: write
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -46,12 +78,14 @@ jobs:
           fail-on-error: false
 
   integration-test:
-    needs: analyze-and-test
+    needs: [changes, analyze-and-test]
+    if: |
+      needs.changes.outputs.integration == 'true' &&
+      github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       checks: write
-    if: github.event_name == 'pull_request'
 
     steps:
       - uses: actions/checkout@v7
@@ -132,3 +166,22 @@ jobs:
           reporter: flutter-json
           use-actions-summary: false
           fail-on-error: false
+
+  ci-pass:
+    if: always()
+    needs: [analyze-and-test, integration-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          echo "analyze-and-test: ${{ needs.analyze-and-test.result }}"
+          echo "integration-test: ${{ needs.integration-test.result }}"
+          if [[ "${{ needs.analyze-and-test.result }}" == "failure" ]]; then
+            echo "analyze-and-test failed"
+            exit 1
+          fi
+          if [[ "${{ needs.integration-test.result }}" == "failure" ]]; then
+            echo "integration-test failed"
+            exit 1
+          fi
+          echo "All required checks passed"
