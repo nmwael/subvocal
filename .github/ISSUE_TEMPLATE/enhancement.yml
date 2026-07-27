@@ -1,0 +1,50 @@
+name: Enhancement Request
+description: Propose a new feature or improvement (used by architect for planning)
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: why
+    attributes:
+      label: WHY
+      description: Why is this change needed? What problem does it solve?
+      placeholder: Describe the business need or user problem...
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: WHAT
+      description: What was changed? Briefly list the major changes.
+      placeholder: List the key changes or features being added...
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: HOW
+      description: How does the implementation work? Key design decisions and architecture notes.
+      placeholder: Describe the technical approach, key design decisions, and architecture...
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What conditions must be met for this to be considered complete?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: false
