@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How I Built AI OPS for subvocal</title>
+  <meta name="description" content="A narrative about building AI operations for a Flutter app — devcontainer setup, agent teams, HITL workflows, FinOps tracking, and automation scripts.">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #1e1e2e;
+      --text: #e4e4ef;
+      --text-muted: #8888a0;
+      --accent: #7c6aef;
+      --accent-glow: rgba(124, 106, 239, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background: rgba(10, 10, 15, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover { color: var(--accent); }
+
+    .nav .back { display: flex; align-items: center; gap: 6px; }
+
+    /* Hero */
+    .hero {
+      padding: 120px 24px 64px;
+      text-align: center;
+    }
+
+    .hero .label {
+      display: inline-block;
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 32px;
+    }
+
+    .hero .meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero .meta span { opacity: 0.6; }
+
+    /* Article content */
+    article {
+      padding: 48px 24px 96px;
+    }
+
+    article .container {
+      max-width: 720px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 64px 0 16px;
+      padding-top: 32px;
+    }
+
+    h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 32px 0 8px;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    p strong { color: var(--text); }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Code blocks */
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 16px 0 24px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      color: var(--text);
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.9em;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td { color: var(--text-muted); }
+
+    /* Callout boxes */
+    .callout {
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      margin: 24px 0;
+    }
+
+    .callout p { margin: 0; font-size: 0.95rem; }
+    .callout strong { color: var(--text); }
+
+    .callout.warning {
+      border-color: rgba(255, 183, 77, 0.3);
+      background: rgba(255, 183, 77, 0.05);
+    }
+
+    .callout.warning strong { color: #ffb74d; }
+
+    /* Lists */
+    ul, ol {
+      color: var(--text-muted);
+      margin: 0 0 16px 20px;
+      font-size: 1rem;
+    }
+
+    li { margin-bottom: 6px; }
+    li strong { color: var(--text); }
+
+    /* Mermaid diagrams */
+    .mermaid {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 16px 0 24px;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .mermaid svg { max-width: 100%; }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* Footer */
+    footer {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--text-muted); }
+    footer a:hover { color: var(--accent); }
+
+    footer .links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .hero { padding: 100px 16px 48px; }
+      article { padding: 32px 16px 64px; }
+      h2 { font-size: 1.3rem; }
+      pre { font-size: 12px; padding: 12px; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Subvocal
+    </a>
+    <a href="https://github.com/nmwael/subvocal">GitHub</a>
+  </nav>
+
+  <header class="hero">
+    <div class="label">Work in Progress</div>
+    <h1>How I Built <span>AI OPS</span> for subvocal</h1>
+    <p class="subtitle">A narrative about using AI agents as team members — the devcontainer, the workflow, the scripts, and the $0.21 that built a Flutter app.</p>
+    <div class="meta">
+      <span>July 2026</span>
+      <span>&middot;</span>
+      <span>~15 min read</span>
+    </div>
+  </header>
+
+  <article>
+    <div class="container">
+
+      <h2>Why AI OPS?</h2>
+
+      <p>I'm building <strong>subvocal</strong> — a Flutter app that reads subtitles aloud in sync with streaming video. It's for people who can't read, and for language learners who want to hear pronunciation while reading along.</p>
+
+      <p>The problem: I'm a solo developer working on a project that needs clean architecture, multiple API integrations, TTS synchronization, translation services, and production-quality code. I don't have a team. So I built one.</p>
+
+      <p><strong>AI OPS</strong> is the system I set up to use AI agents as team members. Not as code generators that I point at a problem and hope for the best — but as structured roles with clear responsibilities, approval gates, and engineering principles baked into their context.</p>
+
+      <p>The result: 116 commits, 132 tests, 5 AI agents, 6 reference books, 21 automation scripts, and a total API cost of <strong>$0.21</strong>.</p>
+
+      <div class="divider"></div>
+
+      <h2>The Environment</h2>
+
+      <p>Everything starts with the devcontainer. When I open this project in VS Code (or when an AI agent starts working), it gets a reproducible environment with exactly the tools needed — and nothing more.</p>
+
+      <pre><code># devcontainer.json features
+"ghcr.io/devcontainer-community/devcontainer-features/opencode.ai:1"
+"ghcr.io/devcontainers/features/github-cli:1"
+"ghcr.io/awf-project/devcontainer-features/flutter:1"
+"ghcr.io/devcontainers/features/node:2"</code></pre>
+
+      <p>The base image is Debian Bullseye. On top of it, four features install OpenCode (the AI agent framework), Flutter SDK, GitHub CLI, and Node.js. No manual setup, no "works on my machine" — every agent gets the same environment.</p>
+
+      <h3>API Key Isolation</h3>
+
+      <p>The clever part is <strong>API key forwarding</strong>. Seven API keys are passed from my host machine into the container as environment variables via <code>containerEnv</code>:</p>
+
+      <pre><code>"containerEnv": {
+  "AI_FUN_TOKEN": "${localEnv:AI_FUN_TOKEN}",
+  "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",
+  "OPENCODE_ZEN_API_KEY": "${localEnv:OPENCODE_ZEN_API_KEY}",
+  "GOOGLE_GENERATIVE_AI_API_KEY": "${localEnv:GOOGLE_API_KEY}",
+  "OPENSUBTITLES_API_KEY": "${localEnv:OPENSUBTITLES_API_KEY}",
+  "NVIDIA_API_KEY": "${localEnv:NVIDIA_API_KEY}",
+  "omniroute_api_key": "${localEnv:omniroute_api_key}"
+}</code></pre>
+
+      <p>None are stored in the repository or the container image. The agents can use them (for OpenSubtitles, translation services, AI providers), but they never touch disk. If the container is destroyed, the keys vanish. This is <strong>AI isolation</strong> — the agents have access to the APIs they need, but the keys stay on my machine.</p>
+
+      <h3>GPG Signing as a Hard Gate</h3>
+
+      <p>Every git commit must be <strong>GPG-signed</strong> using a hardware token (YubiKey). The devcontainer forwards the GPG agent socket from the host machine, so signing works inside the container even though the hardware token is physically connected to the host.</p>
+
+      <p>This is a <strong>hard gate</strong>, not a suggestion. The <code>commit-push.sh</code> script enforces it: if GPG signing fails (hardware token timeout, PIN entry delayed), the commit is rejected. There's no fallback to unsigned commits. This prevents the "I'll just skip the signature this one time" anti-pattern that erodes security over time.</p>
+
+      <pre><code># commit-push.sh enforces GPG signing
+🔐 Checking GPG card status...
+✍️  Committing: feat: wire SubDL and Podnapisi providers
+# If GPG fails:
+❌ Commit failed. GPG signing required — cannot fall back to unsigned commits.</code></pre>
+
+      <p>The practical effect: every commit in the repository is cryptographically signed. You can verify any commit with <code>git log --show-signature</code>. This matters for a project that uses AI agents — signed commits prove which changes were made by a human (via hardware token) versus which were automated.</p>
+
+      <h3>LSP: Token Optimization for AI</h3>
+
+      <p>One of the most impactful settings in <code>opencode.json</code> is <strong>"lsp": true</strong>. This enables Language Server Protocol support, which gives AI agents access to the Dart language server.</p>
+
+      <p>Why does this matter for token usage? Without LSP, an AI agent that needs to understand a function must read the entire file where it's defined, plus every file it imports, to trace types and references. With LSP, the agent can ask the language server: "what is the type of this variable?", "where is this method defined?", "what are all the callers of this function?" — and get precise answers without reading entire files.</p>
+
+      <p>The result: <strong>fewer tokens spent on context gathering</strong>. Instead of loading 500 lines of code to understand one function, the agent loads 20 lines of targeted, LSP-provided context. Across hundreds of agent interactions per day, this adds up to significant token savings.</p>
+
+      <h3>Agent Permissions</h3>
+
+      <p>Each agent has explicit permission boundaries defined in <code>opencode.json</code>. The architect — the primary agent I interact with — is <strong>read-only</strong>:</p>
+
+      <pre><code>"architect": {
+  "permission": {
+    "*": "allow",
+    "edit": "deny",
+    "bash": "deny"
+  }
+}</code></pre>
+
+      <p>It can read files, search the codebase, and use LSP — but it cannot edit files or run commands. This forces it to <em>plan</em> rather than <em>implement</em>. The developer and tester subagents have full access (<code>"*": "allow"</code>), but they work autonomously and return results for review. The security auditor and UX reviewer are read-only — they can inspect but not modify.</p>
+
+      <p>This permission model is the foundation of the HITL workflow. The architect can't accidentally edit code while planning. The developer can't skip the approval gate. Every agent operates within its defined boundaries.</p>
+
+      <h3>Thirteen Extensions</h3>
+
+      <p>Thirteen VS Code extensions install automatically — Dart, Flutter, SonarLint, GitLens, PlantUML, ESLint, Prettier, YAML, Markdown, EditorConfig, Spell Checker, Error Lens, and Git Graph. These aren't just developer conveniences — they provide the LSP infrastructure that makes token-efficient AI work possible. The Dart extension provides the language server. SonarLint provides static analysis. Error Lens surfaces issues inline. The environment is identical whether I'm working locally or an AI agent is working in a cloud session.</p>
+
+      <div class="divider"></div>
+
+      <h2>Building the AI Team</h2>
+
+      <p>The core of AI OPS is the <strong>agent configuration</strong> in <code>opencode.json</code>. I defined five agents, each with a specific role, model, and permission set:</p>
+
+      <table>
+        <thead>
+          <tr><th>Agent</th><th>Role</th><th>Model</th><th>Permissions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>architect</strong></td><td>Plans, reviews, creates issues/PRs</td><td>nemotron-3-super-120b</td><td>Read-only (no edit, no bash)</td></tr>
+          <tr><td><strong>developer</strong></td><td>Implements code changes</td><td>kimi-k2.6</td><td>Full access</td></tr>
+          <tr><td><strong>tester</strong></td><td>Writes and runs tests</td><td>kimi-k2.6</td><td>Full access</td></tr>
+          <tr><td><strong>security-auditor</strong></td><td>Reviews for vulnerabilities</td><td>nemotron-nano-9b</td><td>Read-only</td></tr>
+          <tr><td><strong>ux-ui</strong></td><td>Reviews UI/accessibility</td><td>kimi-k2.6</td><td>Read-only</td></tr>
+        </tbody>
+      </table>
+
+      <p>The key design decision: <strong>the architect is the primary agent</strong> — the one I talk to directly. It cannot edit files or run commands. This forces it to plan rather than implement. The developer and tester are subagents that the architect delegates to. They have full access but work autonomously and return results for review.</p>
+
+      <p>Temperature is lower (0.2) for implementers who need precision, higher (0.4) for planners who need creativity. The tester gets the most steps (80) because writing tests is the most token-intensive task.</p>
+
+      <h3>How the Architect Plans</h3>
+
+      <p>When I ask the architect to do something, it doesn't start coding. It explores the codebase using LSP and search tools, understands the existing patterns, and produces a structured plan in the form of a GitHub issue. Here's a real example — issue #167, wiring SubDL and Podnapisi subtitle providers:</p>
+
+      <pre><code>## WHY
+SubDL and Podnapisi APIs are fully implemented but never wired
+into the dependency graph. The SubtitleProviderAggregator accepts
+them as optional params, but search_provider.dart only passes
+OpenSubtitlesApi. Users only get results from OpenSubtitles.
+
+## WHAT
+1. Add SubdlApi and PodnapisiApi Riverpod providers
+2. Pass them to SubtitleRepositoryImpl in subtitleRepositoryProvider
+3. Add providerSource param to DownloadSubtitle use case
+4. Update search_screen.dart to pass result.providerSource
+5. Log secondary provider failures in SubtitleProviderAggregator
+
+## HOW
+search_provider.dart: add _subdlProvider, _podnapisiProvider.
+subtitle_repository.dart: add providerSource to download().
+download_subtitle.dart: pass providerSource through.
+search_screen.dart: read result.providerSource.
+subtitle_provider_aggregator.dart: add appLogger.warning.</code></pre>
+
+      <p>Notice the structure: <strong>WHY</strong> explains the problem ( APIs implemented but not wired). <strong>WHAT</strong> lists the changes needed. <strong>HOW</strong> specifies the exact files and methods. This isn't vague — it's a precise implementation plan that the developer can follow without asking clarifying questions.</p>
+
+      <p>The architect then calls <code>create-issue.sh</code> to create the issue on GitHub, which automatically creates the <code>issue/{number}-{slug}</code> branch. Then it calls <code>watch-approval.sh</code> and waits for me to approve before any code is written.</p>
+
+      <div class="divider"></div>
+
+      <h2>The Workflow That Won't Let Me Screw Up</h2>
+
+      <p>The <strong>Human-in-the-Loop (HITL)</strong> workflow is the most important part of AI OPS. It's a pipeline with a hard gate that cannot be skipped:</p>
+
+      <div class="mermaid">
+graph TD
+    A[Architect Plans] --> B{Human Approves}
+    B -->|Approved| C[Developer Implements]
+    C --> D[Developer Returns to Architect]
+    D --> E{Architect Reviews}
+    E -->|Approved| F[Tester Writes Tests]
+    F --> G[Tester Returns to Architect]
+    G --> H{Architect Reviews Tests}
+    H -->|Approved| I[Security Auditor Reviews]
+    I --> J[Security Auditor Returns to Architect]
+    J --> K{Final Architect Review}
+    K -->|Approved| L[Architect Creates PR]
+    L --> M{Human Reviews PR}
+    M -->|Approved| N[Merge to Development]
+    K -->|Changes Needed| C
+    E -->|Changes Needed| C
+    H -->|Changes Needed| F
+      </div>
+
+      <p>The <strong>hard gate</strong> is step 2: human approval. I learned this the hard way. In early sessions, I let the architect proceed without explicit approval on "small" changes. Those changes introduced bugs, broke tests, and sometimes went in the wrong direction entirely.</p>
+
+      <p>Now the workflow is enforced in <code>AGENTS.md</code> with a prominent warning:</p>
+
+      <div class="callout warning">
+        <p><strong>You MUST NOT create, edit, or modify any code files until the human has explicitly approved an architect's plan.</strong> Operational tasks (starting services, running commands, reading files) are exempt. Everything else requires: architect plans → human approves → developer implements.</p>
+      </div>
+
+      <p>Another lesson learned the hard way: <strong>never merge issue branches locally into development</strong>. I once merged a branch locally and pushed, which created orphaned branches with no PR trail and broke the review process. Now the workflow is always:</p>
+
+      <pre><code>issue branch → implement → push branch → create PR → merge via GitHub</code></pre>
+
+      <div class="divider"></div>
+
+      <h2>Case Study: Wiring Subtitle Providers</h2>
+
+      <p>To show how this works in practice, here's the full journey of issue #167 — wiring SubDL and Podnapisi subtitle providers — from request to merge.</p>
+
+      <h3>Step 1: The Request</h3>
+
+      <p>I noticed that SubDL and Podnapisi APIs were fully implemented but never wired into the dependency graph. The app only used OpenSubtitles. I told the architect: "Wire SubDL and Podnapisi providers into the app."</p>
+
+      <h3>Step 2: The Plan</h3>
+
+      <p>The architect explored the codebase. It found that <code>search_provider.dart</code> only passed <code>OpenSubtitlesApi</code> to the repository, even though <code>SubtitleProviderAggregator</code> accepted optional params for SubDL and Podnapisi. It found that <code>downloadFromProvider</code> existed but was never called.</p>
+
+      <p>It produced the WHY/WHAT/HOW plan (shown earlier) and created issue #167 on GitHub with the <code>issue/167-wire-subdl-podnapisi</code> branch. Then it called <code>watch-approval.sh</code> and waited.</p>
+
+      <h3>Step 3: Human Approval</h3>
+
+      <p>I reviewed the plan. It was correct — the APIs were implemented but not wired. I commented "approved" on the issue. The watch-approval script detected the keyword and unblocked the architect.</p>
+
+      <h3>Step 4: Developer Implements</h3>
+
+      <p>The architect delegated to the developer subagent. The developer:</p>
+      <ul>
+        <li>Added <code>_subdlProvider</code> and <code>_podnapisiProvider</code> in <code>search_provider.dart</code></li>
+        <li>Wired them into <code>subtitleRepositoryProvider</code></li>
+        <li>Added <code>providerSource</code> parameter to <code>DownloadSubtitle</code> use case</li>
+        <li>Updated <code>search_screen.dart</code> to pass <code>result.providerSource</code></li>
+        <li>Added failure logging in <code>SubtitleProviderAggregator</code></li>
+      </ul>
+
+      <p>The developer committed each change with GPG-signed conventional commits, pushed the branch, and called <code>workflow-notify.sh impl-done</code>.</p>
+
+      <h3>Step 5: Tests</h3>
+
+      <p>The architect reviewed the implementation, then delegated to the tester. The tester wrote unit tests for the new provider wiring, verified existing tests still passed, and called <code>workflow-notify.sh tests-done</code>.</p>
+
+      <h3>Step 6: PR and Merge</h3>
+
+      <p>The architect created PR #168 with the WHY/WHAT/HOW body matching the issue. CI ran — analyze-and-test passed, integration-test was skipped (no integration paths changed). I reviewed the PR and merged it to <code>development</code>.</p>
+
+      <p><strong>Total time</strong>: ~15 minutes of my time (reviewing plan + reviewing PR). The agents did the exploration, implementation, and testing autonomously.</p>
+
+      <div class="divider"></div>
+
+      <h2>Giving AI Engineering Principles</h2>
+
+      <p>Raw AI models know how to write code, but they don't know <em>your</em> standards. I solved this by injecting <strong>six reference books</strong> into every agent's context via the <code>instructions</code> field in <code>opencode.json</code>:</p>
+
+      <table>
+        <thead>
+          <tr><th>Book</th><th>Author</th><th>Gives Agents</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><em>Clean Code</em></td><td>Robert C. Martin</td><td>Readability, naming, function design</td></tr>
+          <tr><td><em>Clean Architecture</em></td><td>Robert C. Martin</td><td>Dependency rules, boundary management</td></tr>
+          <tr><td><em>Refactoring</em></td><td>Martin Fowler</td><td>Behavior-preserving improvements</td></tr>
+          <tr><td><em>Patterns of Enterprise Application Architecture</em></td><td>Martin Fowler</td><td>Layering, transactions, concurrency</td></tr>
+          <tr><td><em>Domain-Driven Design Distilled</em></td><td>Vaughn Vernon</td><td>Bounded contexts, aggregates, ubiquitous language</td></tr>
+          <tr><td><em>Release It!</em></td><td>Michael T. Nygard</td><td>Production readiness, failure modes, stability patterns</td></tr>
+        </tbody>
+      </table>
+
+      <p>These aren't full books — they're condensed <a href="https://github.com/ciembor/agent-rules-books/">mini versions</a> by ciembor, reformatted as structured instruction sets. Each follows a consistent format: "When to use", "Primary bias to correct", "Decision rules", "Trigger rules", "Final checklist".</p>
+
+      <p>The result is that every agent — whether it's the architect planning a feature or the developer implementing it — operates with the same engineering principles. They know what Clean Architecture means, they know when to refactor, they know what production readiness looks like.</p>
+
+      <div class="divider"></div>
+
+      <h2>Scripts That Save Tokens and Time</h2>
+
+      <p>The <code>scripts/</code> directory contains 21 helper scripts. Some are general-purpose (test runners, git helpers), but the core ones are the <strong>AI workflow scripts</strong> that orchestrate the HITL process and track costs.</p>
+
+      <h3>workflow-notify.sh — The Orchestrator</h3>
+
+      <p>This is the central nervous system. When an agent completes a task, it calls:</p>
+
+      <pre><code>./scripts/workflow-notify.sh impl-done "issue #167: SubDL/Podnapisi wired"</code></pre>
+
+      <p>This script does three things automatically:</p>
+      <ol>
+        <li>Looks up the latest open enhancement issue</li>
+        <li>Sends a push notification via ntfy.sh to my phone</li>
+        <li>Calls <code>log-usage.sh</code> to record token usage for FinOps tracking</li>
+      </ol>
+
+      <p>Without this, I'd have to manually check which issue is being worked on, manually notify myself, and manually log costs. The script saves ~2 minutes per task boundary, and across dozens of tasks per day, that adds up.</p>
+
+      <h3>watch-approval.sh — The Gatekeeper</h3>
+
+      <p>After the architect creates a plan, it needs my approval. Instead of me watching a screen, the architect calls:</p>
+
+      <pre><code>./scripts/watch-approval.sh</code></pre>
+
+      <p>This polls the GitHub issue comments every 10 seconds, looking for keywords like "approved", "lgtm", "looks good", or "go ahead". When it detects approval, it sends a notification and exits. The architect can then proceed to implementation.</p>
+
+      <p>This is a <strong>token-saving pattern</strong>: instead of the agent repeatedly asking "are you approved yet?" (which would consume tokens on each check), the script does the polling externally using <code>gh</code> CLI — zero tokens spent on the wait.</p>
+
+      <h3>commit-push.sh — The Enforcer</h3>
+
+      <p>Every commit must be GPG-signed (hardware token) and use conventional commit prefixes. The script handles this:</p>
+
+      <pre><code>./scripts/commit-push.sh --all -m "feat: wire SubDL and Podnapisi providers"</code></pre>
+
+      <p>It checks GPG card status, stages all changes, creates a signed commit, and pushes. If GPG signing fails (hardware token timeout), it reports the error instead of falling back to unsigned commits. This prevents the "I'll just skip the signature this one time" anti-pattern.</p>
+
+      <h3>create-issue.sh and pr-create.sh — The Communicators</h3>
+
+      <p>Issues and PRs use the same <strong>WHY/WHAT/HOW</strong> template. The scripts generate this format automatically:</p>
+
+      <pre><code>./scripts/create-issue.sh \
+  --title "feat: Wire SubDL and Podnapisi" \
+  --why "SubDL and Podnapisi were implemented but never wired" \
+  --what "Add providers, wire into repository, route downloads" \
+  --how "search_provider.dart: add providers. repository: add providerSource" \
+  --create-branch</code></pre>
+
+      <p>This ensures every issue and PR has the same structured format, making them scannable for humans and parseable for agents. The <code>--create-branch</code> flag automatically creates the <code>issue/{number}-{slug}</code> branch.</p>
+
+      <h3>log-usage.sh and usage-report.sh — The Accountants</h3>
+
+      <p>Every token is tracked. The flow:</p>
+
+      <pre><code>OpenCode SQLite DB → log-usage.sh → .aifinops/log.csv → usage-report.sh</code></pre>
+
+      <p><code>log-usage.sh</code> reads the OpenCode database, extracts token counts and costs, and appends a CSV row. It's called automatically by <code>workflow-notify.sh</code> at task boundaries — I never have to invoke it manually.</p>
+
+      <p><code>usage-report.sh</code> reads the CSV and generates reports:</p>
+
+      <pre><code>./scripts/usage-report.sh --summary
+# Entries:     19
+# Input:       9.3M tokens
+# Output:      726.0k tokens
+# Cost:        $0.2075
+
+./scripts/usage-report.sh --by-agent
+# Shows token usage per agent role
+
+./scripts/usage-report.sh --by-model
+# Shows token usage per AI model</code></pre>
+
+      <div class="divider"></div>
+
+      <h2>Tracking Every Token</h2>
+
+      <p>AI isn't free — but it can be cheap. The FinOps system tracks every token across every session, agent, and model. The data lives in <code>.aifinops/log.csv</code> (git-ignored, generated locally) and is surfaced via the <strong>AI Tokens badge</strong> in the README:</p>
+
+      <pre><code>![AI Tokens](https://img.shields.io/badge/AI%20Tokens-in%208.8M%20%7C%20out%20690k%20%7C%20reason%20307k-blue)</code></pre>
+
+      <p>The numbers: <strong>8.8M input tokens</strong>, <strong>690k output tokens</strong>, <strong>307k reasoning tokens</strong>. Total cost across 19 tracked sessions: <strong>$0.21</strong>.</p>
+
+      <p>Most of the cost came from a single session ($0.21 for issue #155). The other 18 sessions were free — running on OpenCode's free tier via <code>big-pickle</code> model. The expensive session used NVIDIA's nemotron-3-ultra-550b model, which has higher quality but costs per token.</p>
+
+      <p>This visibility matters. Without it, I'd have no idea whether AI OPS is cost-effective. With it, I can see that the bulk of the work — 116 commits, 132 tests, 5 agents, 21 scripts — cost less than a cup of coffee.</p>
+
+      <div class="divider"></div>
+
+      <h2>CI That Knows What Changed</h2>
+
+      <p>The CI pipeline uses <strong>path-based filtering</strong> to skip jobs when their inputs haven't changed:</p>
+
+      <div class="mermaid">
+graph LR
+    A[PR Created] --> B{paths-filter}
+    B -->|lib/test changed| C[analyze-and-test]
+    B -->|docs only| D[Skip CI]
+    C -->|integration paths| E[integration-test]
+    C --> F[ci-pass]
+    E --> F
+    F -->|required check| G[Ready to Merge]
+      </div>
+
+      <p>If I only edit documentation (<code>*.md</code>, <code>docs/</code>, <code>site/</code>), the entire CI workflow is skipped — no Flutter setup, no dependency install, no analysis. If I edit code but not integration tests, only <code>analyze-and-test</code> runs — skipping the Android emulator boot, KVM setup, Gradle caching, and the integration test suite entirely.</p>
+
+      <p>The <code>ci-pass</code> job is the unified required status check. It always runs and aggregates results from both jobs. This way, required checks never block PRs when jobs are legitimately skipped.</p>
+
+      <div class="divider"></div>
+
+      <h2>Structured Communication</h2>
+
+      <p>Every issue and PR uses the same <strong>WHY/WHAT/HOW</strong> template. This isn't just convention — it's enforced by the <code>create-issue.sh</code> and <code>pr-create.sh</code> scripts, and by the issue templates in <code>.github/</code>.</p>
+
+      <p>The structure:</p>
+
+      <pre><code>## WHY
+Why is this change needed? What problem does it solve?
+
+## WHAT
+What was changed? Briefly list the major changes.
+
+## HOW
+How does the implementation work? Key design decisions.
+
+Closes #<!-- issue number --></code></pre>
+
+      <p>This format serves two purposes:</p>
+      <ul>
+        <li><strong>For humans</strong>: scannable in 10 seconds. WHY tells me if the work matters. WHAT tells me the scope. HOW tells me the approach.</li>
+        <li><strong>For agents</strong>: parseable context. The architect reads this when picking up work. The developer reads it when implementing. The tester reads it when writing tests.</li>
+      </ul>
+
+      <p>Having the same format for issues AND PRs means the PR body is essentially a copy of the issue with the implementation details filled in. This creates a clean audit trail: issue → plan → implementation → PR → merge.</p>
+
+      <div class="divider"></div>
+
+      <h2>Lessons Learned</h2>
+
+      <p>AI OPS didn't emerge perfectly. It evolved through mistakes — each one teaching a rule that's now baked into the system.</p>
+
+      <h3>The Merge-Locally Disaster</h3>
+
+      <p>Early on, I merged an issue branch locally into <code>development</code> and pushed. This created orphaned branches with no PR trail. There was no review record, no CI validation on the PR, and the branch list became a mess. The fix: <strong>never merge locally</strong>. Always push the branch, create a PR, and let GitHub handle the merge. This is now documented in <code>AGENTS.md</code> as a "LESSON LEARNED" with a prominent warning.</p>
+
+      <h3>Skipping the HITL Gate</h3>
+
+      <p>I once let the architect proceed without explicit approval on a "small" change — just renaming a variable. The rename broke three downstream references that the architect hadn't checked. The fix: <strong>the hard gate is non-negotiable</strong>. Even "obvious" changes need explicit approval. The memory aid in <code>AGENTS.md</code> now lists specific examples of what counts as a code change (adding tests, modifying source files, adding config files) and explicitly states: "But it's small!" is not an exemption.</p>
+
+      <h3>The Token Waste Problem</h3>
+
+      <p>Early sessions burned through tokens on context gathering — agents reading entire files to understand one function. Enabling LSP changed this dramatically. Instead of 500-line file reads, agents ask the language server for targeted answers. The result: same work, fraction of the tokens. This is now a default setting in <code>opencode.json</code>.</p>
+
+      <h3>The Notification Gap</h3>
+
+      <p>Before <code>workflow-notify.sh</code>, I had to manually check which issue was being worked on, manually notify myself, and manually log costs. This created gaps — I'd miss notifications, forget to log usage, or lose track of which agent was doing what. Automating the notification + logging pipeline closed these gaps. Every task boundary now triggers a notification and a cost log entry automatically.</p>
+
+      <div class="divider"></div>
+
+      <footer>
+        <div class="links">
+          <a href="index.html">Subvocal</a>
+          <a href="https://github.com/nmwael/subvocal">GitHub</a>
+          <a href="https://github.com/nmwael/subvocal/issues">Issues</a>
+        </div>
+        <p>Built with Flutter. Powered by AI OPS.</p>
+      </footer>
+
+    </div>
+  </article>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#7c6aef',
+        primaryTextColor: '#e4e4ef',
+        primaryBorderColor: '#1e1e2e',
+        lineColor: '#8888a0',
+        secondaryColor: '#12121a',
+        tertiaryColor: '#0a0a0f',
+        fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif'
+      }
+    });
+  </script>
+
+</body>
+</html>
