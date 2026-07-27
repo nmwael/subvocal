@@ -438,6 +438,10 @@ Add unit tests with sample Latin-1 encoded SRT content.</code></pre>
 
       <p>The <strong>Human-in-the-Loop (HITL)</strong> workflow is the most important part of AI OPS. It's a pipeline with a hard gate that cannot be skipped:</p>
 
+      <div class="callout">
+        <p><strong>This is the golden path.</strong> AI agents are non-deterministic — they sometimes stray from the workflow, skip steps, or make unexpected decisions. The hard gates (human approval, GPG signing, architect review) exist precisely because of this unpredictability. GPG signing, enforced by hardware token, is the one thing that never strays.</p>
+      </div>
+
       <div class="mermaid">
 graph TD
     A[Architect Plans] --> B{Human Approves}
