@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/utils/welcome_helper.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
@@ -18,6 +19,10 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recentSubtitles = ref.watch(recentSubtitlesProvider);
     final theme = Theme.of(context);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WelcomeHelper.showIfFirstLaunch(context, ref);
+    });
 
     return Scaffold(
       appBar: AppBar(
