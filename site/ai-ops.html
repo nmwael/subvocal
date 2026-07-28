@@ -307,7 +307,9 @@
 
       <p><strong>AI OPS</strong> is the system I set up to use AI agents as team members. Not as code generators that I point at a problem and hope for the best — but as structured roles with clear responsibilities, approval gates, and engineering principles baked into their context.</p>
 
-      <p>The result: hundreds of commits, over a hundred tests, five AI agents, six reference books, and a growing collection of automation scripts — all for a fraction of the cost of a single developer hour.</p>
+      <p>It was DevOps. Then DevSecOps. Now it's DevSecComplianceAIFinOps. The acronym is growing faster than the codebase.</p>
+
+      <p>The result: hundreds of commits, over a hundred tests, six agents, eight reference books, and a growing collection of automation scripts — all for a fraction of the cost of a single developer hour.</p>
 
       <div class="divider"></div>
 
@@ -405,7 +407,7 @@
 
       <h2 id="Building_the_AI_Team">Building the AI Team</h2>
 
-      <p>The core of AI OPS is the <strong>agent configuration</strong> in <code>opencode.json</code>. I defined five agents, each with a specific role, model configuration, and permission set:</p>
+      <p>The core of AI OPS is the <strong>agent configuration</strong> in <code>opencode.json</code>. I defined six agents, each with a specific role, model configuration, and permission set:</p>
 
       <table>
         <thead>
@@ -550,25 +552,46 @@ graph TD
 
       <h2 id="Giving_AI_Engineering_Principles">Giving AI Engineering Principles</h2>
 
-      <p>Raw AI models know how to write code, but they don't know <em>your</em> standards. I solved this by injecting <strong>six reference books</strong> into every agent's context via the <code>instructions</code> field in <code>opencode.json</code>:</p>
+      <p>Raw AI models know how to write code, but they don't know <em>your</em> standards. I solved this by building a <strong>reference library</strong> of eight condensed books in <code>library/</code>, organized by agent role — not a flat list dumped into every agent's context.</p>
+
+      <pre><code>library/
+  release-it.mini.md                          # All agents
+  architect/
+    clean-architecture.mini.md                # @architect
+    patterns-of-enterprise-application-architecture.mini.md
+    domain-driven-design-distilled.mini.md
+  developer/
+    clean-code.mini.md                        # @developer, @tester
+    refactoring.mini.md
+  ux-ui/
+    material-design-3.mini.md                 # @ux-ui
+    ui-patterns.mini.md</code></pre>
+
+      <p>The books are split between two sources. Six come from <a href="https://github.com/ciembor/agent-rules-books/">ciembor's agent-rules-books</a> — condensed versions of Clean Code, Clean Architecture, Refactoring, Patterns of Enterprise Application Architecture, Domain-Driven Design Distilled, and Release It!. Each follows a consistent format: "When to use", "Primary bias to correct", "Decision rules", "Trigger rules", "Final checklist".</p>
+
+      <p>The other two — <strong>Material Design 3</strong> and <strong>UI Patterns</strong> — are original references I wrote specifically for the UX/UI agent. There's no suitable condensed reference for Flutter UI design systems and interaction patterns, so I created them.</p>
+
+      <h3 id="Role_Based_Assignments">Role-Based Assignments</h3>
+
+      <p>Not every agent needs every book. The architect needs architecture patterns but not Material Design. The UX/UI agent needs Material Design but not refactoring patterns. So the books are assigned per role:</p>
 
       <table>
         <thead>
-          <tr><th>Book</th><th>Author</th><th>Gives Agents</th></tr>
+          <tr><th>Role</th><th>Books</th><th>Why</th></tr>
         </thead>
         <tbody>
-          <tr><td><em>Clean Code</em></td><td>Robert C. Martin</td><td>Readability, naming, function design</td></tr>
-          <tr><td><em>Clean Architecture</em></td><td>Robert C. Martin</td><td>Dependency rules, boundary management</td></tr>
-          <tr><td><em>Refactoring</em></td><td>Martin Fowler</td><td>Behavior-preserving improvements</td></tr>
-          <tr><td><em>Patterns of Enterprise Application Architecture</em></td><td>Martin Fowler</td><td>Layering, transactions, concurrency</td></tr>
-          <tr><td><em>Domain-Driven Design Distilled</em></td><td>Vaughn Vernon</td><td>Bounded contexts, aggregates, ubiquitous language</td></tr>
-          <tr><td><em>Release It!</em></td><td>Michael T. Nygard</td><td>Production readiness, failure modes, stability patterns</td></tr>
+          <tr><td><strong>All agents</strong></td><td><em>Release It!</em></td><td>Production readiness is everyone's responsibility</td></tr>
+          <tr><td><strong>@architect</strong></td><td><em>Clean Architecture</em>, <em>Patterns of EA</em>, <em>DDD Distilled</em></td><td>Dependency rules, layering, bounded contexts</td></tr>
+          <tr><td><strong>@developer</strong></td><td><em>Clean Code</em>, <em>Refactoring</em></td><td>Readability, behavior-preserving improvements</td></tr>
+          <tr><td><strong>@tester</strong></td><td><em>Clean Code</em>, <em>Refactoring</em></td><td>Readable tests, safe refactoring</td></tr>
+          <tr><td><strong>@security-auditor</strong></td><td>All books</td><td>Security review benefits from full design context</td></tr>
+          <tr><td><strong>@ux-ui</strong></td><td><em>Material Design 3</em>, <em>UI Patterns</em></td><td>Flutter design systems and interaction patterns</td></tr>
         </tbody>
       </table>
 
-      <p>These aren't full books — they're condensed <a href="https://github.com/ciembor/agent-rules-books/">mini versions</a> by ciembor, reformatted as structured instruction sets. Each follows a consistent format: "When to use", "Primary bias to correct", "Decision rules", "Trigger rules", "Final checklist".</p>
+      <p>The implementation is in <code>opencode.json</code>: the global <code>instructions</code> array loads only the shared book (<em>Release It!</em>), while each agent's <code>prompt</code> field lists its role-specific books. This means the architect gets architecture context without wasting tokens on Material Design, and the UX/UI agent gets design context without loading refactoring patterns.</p>
 
-      <p>The result is that every agent — whether it's the architect planning a feature or the developer implementing it — operates with the same engineering principles. They know what Clean Architecture means, they know when to refactor, they know what production readiness looks like.</p>
+      <p>The result is that every agent operates with the engineering principles relevant to its role — and only those principles. No token waste, no irrelevant context.</p>
 
       <div class="divider"></div>
 

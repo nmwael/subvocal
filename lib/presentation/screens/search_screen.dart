@@ -57,6 +57,8 @@ class SearchScreen extends ConsumerWidget {
     final query = ref.watch(searchQueryProvider);
     final contentType = ref.watch(searchContentTypeProvider);
     final streamingFilter = ref.watch(searchStreamingProvider);
+    final isLoggedIn = ref.watch(authProvider).valueOrNull?.status ==
+        AuthStatus.authenticated;
     final resultsAsync = query.isNotEmpty
         ? ref.watch(searchResultsProvider((query, contentType)))
         : const AsyncData<List<SearchResult>>([]);
@@ -130,6 +132,11 @@ class SearchScreen extends ConsumerWidget {
           Expanded(
             child: resultsAsync.when(
               data: (results) {
+                final visibleResults = isLoggedIn
+                    ? results
+                    : results
+                        .where((r) => r.providerSource != 'OpenSubtitles')
+                        .toList();
                 if (query.isEmpty) {
                   return Center(
                     child: Text(
@@ -142,10 +149,13 @@ class SearchScreen extends ConsumerWidget {
                     ),
                   );
                 }
-                if (results.isEmpty) {
+                if (visibleResults.isEmpty) {
                   return Center(
                     child: Text(
-                      'No results found for "$query"',
+                      results.isEmpty
+                          ? 'No results found for "$query"'
+                          : 'No downloadable results found. '
+                              'Log in to OpenSubtitles to see more options.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(
                           context,
@@ -155,17 +165,19 @@ class SearchScreen extends ConsumerWidget {
                   );
                 }
                 return ListView.separated(
-                  itemCount: results.length,
+                  itemCount: visibleResults.length,
                   separatorBuilder: (_, _) => const Divider(height: 1),
                   itemBuilder: (context, index) {
-                    final result = results[index];
+                    final result = visibleResults[index];
                     return SubtitleListTile(
                       result: result,
                       onTap: () async {
-                        final auth = ref.read(authProvider).valueOrNull;
-                        if (auth?.status != AuthStatus.authenticated) {
-                          if (context.mounted) _showLoginPrompt(context);
-                          return;
+                        if (result.providerSource == 'OpenSubtitles') {
+                          final auth = ref.read(authProvider).valueOrNull;
+                          if (auth?.status != AuthStatus.authenticated) {
+                            if (context.mounted) _showLoginPrompt(context);
+                            return;
+                          }
                         }
 
                         final download = ref.read(downloadSubtitleProvider);
