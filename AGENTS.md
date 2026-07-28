@@ -155,12 +155,12 @@ Read-only reviewer. Reviews Flutter widget trees, screen layouts, navigation flo
 
 All reference books sourced from https://github.com/ciembor/agent-rules-books/
 
-- **All agents**: docs/release-it.mini.md — Release It! patterns for production-ready systems
-- **@architect**: docs/clean-architecture.mini.md, docs/patterns-of-enterprise-application-architecture.mini.md — architecture and design patterns
-- **@developer**: docs/clean-code.mini.md, docs/refactoring.mini.md — code quality and refactoring
-- **@tester**: docs/clean-code.mini.md, docs/refactoring.mini.md — readable tests and safe refactoring
-- **@security-auditor**: all docs — security review benefits from understanding the full design intent
-- **@ux-ui**: all docs — UX/UI review benefits from understanding the full design intent
+- **All agents**: library/release-it.mini.md — Release It! patterns for production-ready systems
+- **@architect**: library/architect/clean-architecture.mini.md, library/architect/patterns-of-enterprise-application-architecture.mini.md, library/architect/domain-driven-design-distilled.mini.md — architecture and design patterns
+- **@developer**: library/developer/clean-code.mini.md, library/developer/refactoring.mini.md — code quality and refactoring
+- **@tester**: library/developer/clean-code.mini.md, library/developer/refactoring.mini.md — readable tests and safe refactoring
+- **@security-auditor**: all library — security review benefits from understanding the full design intent
+- **@ux-ui**: library/ux-ui/material-design-3.mini.md, library/ux-ui/ui-patterns.mini.md — UI design systems and interaction patterns
 
 ## Commit Rules
 
@@ -319,7 +319,7 @@ Cross-platform Flutter app for picking subtitles from OpenSubtitles, SubDL, or P
 ### Relevant Files
 - `AGENTS.md`: This file — HITL workflow
 - `DEVELOPMENT.md`: Development setup guide
-- `docs/`: Reference books (clean-code, clean-architecture, etc.)
+- `library/`: Reference books organized by role (architect/, developer/, ux-ui/, shared)
 
 ## Tooling Preferences
 
