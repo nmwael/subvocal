@@ -58,7 +58,11 @@ ${WHAT}
 ## HOW
 ${HOW}"
 
-ISSUE_URL=$(gh issue create --title "$TITLE" --body "$BODY" --label "$LABEL")
+BODY_FILE=$(mktemp)
+trap 'rm -f "$BODY_FILE"' EXIT
+printf '%s\n' "$BODY" > "$BODY_FILE"
+
+ISSUE_URL=$(gh issue create --title "$TITLE" --body-file "$BODY_FILE" --label "$LABEL")
 ISSUE_NUMBER=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
 echo "$ISSUE_URL"
 

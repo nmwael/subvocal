@@ -5,6 +5,7 @@ import '../../domain/entities/search_result.dart';
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/subtitle_entry.dart';
 import '../../domain/entities/translation_progress.dart';
+import '../../domain/repositories/subtitle_provider.dart';
 import '../../domain/repositories/subtitle_repository.dart';
 import '../datasources/local_file_source.dart';
 import '../datasources/opensubtitles_api.dart';
@@ -30,11 +31,10 @@ class SubtitleRepositoryImpl implements SubtitleRepository {
     required this.srtParser,
     required this.translateService,
   }) {
-    _aggregator = SubtitleProviderAggregator(
-      opensubtitles: api,
-      subdl: subdlApi,
-      podnapisi: podnapisiApi,
-    );
+    final providers = <SubtitleProvider>[api];
+    if (subdlApi != null) providers.add(subdlApi!);
+    if (podnapisiApi != null) providers.add(podnapisiApi!);
+    _aggregator = SubtitleProviderAggregator(providers: providers);
   }
 
   @override

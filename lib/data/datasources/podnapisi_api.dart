@@ -102,27 +102,34 @@ class PodnapisiApi implements SubtitleProvider {
   @override
   Future<(String?, Failure?)> fetchContent(String url) async {
     try {
-      final response = await _client.get(Uri.parse(url));
-
-      if (response.statusCode == 429) {
-        return (
-          null,
-          const NetworkFailure(
-            'Rate limit exceeded. Please wait before trying again.',
-          ),
-        );
-      }
-
-      if (response.statusCode != 200) {
-        return (null, NetworkFailure('Fetch failed: ${response.statusCode}'));
-      }
-
-      final bytes = response.bodyBytes;
       String content;
       try {
-        content = utf8.decode(bytes);
+        content = utf8.decode(base64Decode(url));
       } on FormatException {
-        content = latin1.decode(bytes);
+        final response = await _client.get(Uri.parse(url));
+
+        if (response.statusCode == 429) {
+          return (
+            null,
+            const NetworkFailure(
+              'Rate limit exceeded. Please wait before trying again.',
+            ),
+          );
+        }
+
+        if (response.statusCode != 200) {
+          return (
+            null,
+            NetworkFailure('Fetch failed: ${response.statusCode}'),
+          );
+        }
+
+        final bytes = response.bodyBytes;
+        try {
+          content = utf8.decode(bytes);
+        } on FormatException {
+          content = latin1.decode(bytes);
+        }
       }
 
       return (content, null);
