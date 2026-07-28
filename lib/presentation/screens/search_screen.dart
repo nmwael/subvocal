@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../utils/help_reader.dart';
 import '../../domain/errors/failures.dart';
 import '../../domain/entities/search_result.dart';
 import '../providers/auth_provider.dart';
@@ -8,6 +10,8 @@ import '../providers/search_provider.dart';
 import '../widgets/subtitle_list_tile.dart';
 import 'player_screen.dart';
 import 'settings_screen.dart';
+
+const _openSubtitlesSignupUrl = 'https://www.opensubtitles.com/en/signup';
 
 const _streamingServices = [
   ('', 'All'),
@@ -24,19 +28,49 @@ const _streamingServices = [
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
 
-  void _showLoginPrompt(BuildContext context) {
+  void _showLoginPrompt(BuildContext context, WidgetRef ref) {
+    const helpText = 'You need a free OpenSubtitles account to download subtitles.\n\n'
+        'Free accounts get 5 downloads per day.\n\n'
+        'You can also use SubDL or Podnapisi subtitles without logging in.';
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Login Required'),
-        content: const Text(
-          'You need to log in to download subtitles.\n\n'
-          'Free accounts get 5 downloads per day.',
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(helpText),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Semantics(
+                  label: 'Read help aloud',
+                  button: true,
+                  child: IconButton(
+                    icon: const Icon(Icons.hearing, size: 20),
+                    tooltip: 'Read aloud',
+                    onPressed: () => HelpReader.from(ref).read(helpText),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final url = Uri.parse(_openSubtitlesSignupUrl);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: const Text('Create Free Account'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -46,6 +80,57 @@ class SearchScreen extends ConsumerWidget {
               ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
             child: const Text('Login'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHelpDialog(BuildContext context, WidgetRef ref) {
+    const helpContent = 'Search for movie and TV subtitles by name.\n\n'
+        'Results from SubDL and Podnapisi are always shown. '
+        'OpenSubtitles results appear only when you are logged in.\n\n'
+        'Free OpenSubtitles accounts get 5 downloads per day.';
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Search Tips'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(helpContent),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Semantics(
+                  label: 'Read help aloud',
+                  button: true,
+                  child: IconButton(
+                    icon: const Icon(Icons.hearing, size: 20),
+                    tooltip: 'Read aloud',
+                    onPressed: () => HelpReader.from(ref).read(helpContent),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              final url = Uri.parse(_openSubtitlesSignupUrl);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+              if (ctx.mounted) Navigator.of(ctx).pop();
+            },
+            child: const Text('Create Free Account'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Got it'),
           ),
         ],
       ),
@@ -64,7 +149,16 @@ class SearchScreen extends ConsumerWidget {
         : const AsyncData<List<SearchResult>>([]);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Search Subtitles')),
+      appBar: AppBar(
+        title: const Text('Search Subtitles'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline),
+            tooltip: 'Help',
+            onPressed: () => _showHelpDialog(context, ref),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -151,16 +245,51 @@ class SearchScreen extends ConsumerWidget {
                 }
                 if (visibleResults.isEmpty) {
                   return Center(
-                    child: Text(
-                      results.isEmpty
-                          ? 'No results found for "$query"'
-                          : 'No downloadable results found. '
-                              'Log in to OpenSubtitles to see more options.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.5),
-                      ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          results.isEmpty
+                              ? 'No results found for "$query"'
+                              : 'No downloadable results found.',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.5),
+                          ),
+                        ),
+                        if (results.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: () async {
+                              final url = Uri.parse(_openSubtitlesSignupUrl);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url, mode: LaunchMode.externalApplication);
+                              }
+                            },
+                            child: Text(
+                              'Create a free OpenSubtitles account to unlock more results.',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Semantics(
+                            label: 'Read help aloud',
+                            button: true,
+                            child: IconButton(
+                              icon: const Icon(Icons.hearing, size: 18),
+                              tooltip: 'Read aloud',
+                              onPressed: () => HelpReader.from(ref).read(
+                                'No downloadable results found. '
+                                'Create a free OpenSubtitles account to unlock more results.',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   );
                 }
@@ -175,7 +304,7 @@ class SearchScreen extends ConsumerWidget {
                         if (result.providerSource == 'OpenSubtitles') {
                           final auth = ref.read(authProvider).valueOrNull;
                           if (auth?.status != AuthStatus.authenticated) {
-                            if (context.mounted) _showLoginPrompt(context);
+                            if (context.mounted) _showLoginPrompt(context, ref);
                             return;
                           }
                         }

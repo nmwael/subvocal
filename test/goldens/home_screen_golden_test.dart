@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:subvocal/data/datasources/recent_subtitles_local_source.dart';
 import 'package:subvocal/domain/entities/recent_subtitle_info.dart';
 import 'package:subvocal/presentation/providers/recent_subtitles_provider.dart';
@@ -22,6 +23,12 @@ class _FakeLocalSource extends RecentSubtitlesLocalSource {
 
 void main() {
   group('HomeScreen', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({
+        'welcome_dialog_seen': true,
+      });
+    });
+
     testWidgets('empty recent list', (tester) async {
       await screenMatchesGolden(
         tester,

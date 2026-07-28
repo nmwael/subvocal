@@ -10,16 +10,33 @@ import '../../domain/errors/failures.dart';
 import '../../domain/repositories/subtitle_provider.dart';
 import '../models/search_result_model.dart';
 
+class UserAccountInfo {
+  final String level;
+  final int remainingDownloads;
+  final int allowedDownloads;
+
+  const UserAccountInfo({
+    required this.level,
+    required this.remainingDownloads,
+    required this.allowedDownloads,
+  });
+
+  String get summary => '$level — $remainingDownloads/$allowedDownloads downloads remaining today';
+}
+
 class OpenSubtitlesApi implements SubtitleProvider {
   static const _baseUrl = 'https://api.opensubtitles.com/api/v1';
   final http.Client _client;
   final String _apiKey;
   String? _token;
+  UserAccountInfo? _accountInfo;
 
   OpenSubtitlesApi(this._client, this._apiKey);
 
   @override
   String get name => 'OpenSubtitles';
+
+  UserAccountInfo? get accountInfo => _accountInfo;
 
   Map<String, String> get _baseHeaders => {
     'Api-Key': _apiKey,
@@ -43,6 +60,16 @@ class OpenSubtitlesApi implements SubtitleProvider {
       if (response.statusCode != 200) return null;
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       _token = body['token'] as String?;
+
+      final user = body['user'] as Map<String, dynamic>?;
+      if (user != null) {
+        _accountInfo = UserAccountInfo(
+          level: user['level'] as String? ?? 'free',
+          remainingDownloads: user['remaining_downloads'] as int? ?? 0,
+          allowedDownloads: user['allowed_downloads'] as int? ?? 5,
+        );
+      }
+
       return _token;
     } catch (e) {
       appLogger.error('Login failed', source: 'OpenSubtitlesApi', error: e);
@@ -52,6 +79,7 @@ class OpenSubtitlesApi implements SubtitleProvider {
 
   void logout() {
     _token = null;
+    _accountInfo = null;
   }
 
   void setToken(String token) {
@@ -69,7 +97,18 @@ class OpenSubtitlesApi implements SubtitleProvider {
         Uri.parse('$_baseUrl/infos/user'),
         headers: headers,
       );
-      return response.statusCode == 200;
+      if (response.statusCode != 200) return false;
+
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final data = body['data'] as Map<String, dynamic>?;
+      if (data != null) {
+        _accountInfo = UserAccountInfo(
+          level: data['level'] as String? ?? 'free',
+          remainingDownloads: data['remaining_downloads'] as int? ?? 0,
+          allowedDownloads: data['allowed_downloads'] as int? ?? 5,
+        );
+      }
+      return true;
     } catch (e) {
       appLogger.error(
         'Token validation failed',

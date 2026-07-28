@@ -205,6 +205,7 @@ graph LR
 
 - **PRs always target `development`**, never `main` directly
 - **`main` is production** — only merged from `development` when ready to release
+- **After a PR from `development` → `main` is merged**, sync `development` back to `main` to keep branches in sync: `git checkout development && git merge origin/main && git push`
 - **Development builds must always work** — CI enforces this on every push/PR to `development`
 - **Issue branches** are created from GitHub issues: `issue/{number}-{slug}`
 - Use `./scripts/sync-main.sh` (defaults to `development`) to keep feature branches up to date
