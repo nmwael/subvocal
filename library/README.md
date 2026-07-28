@@ -1,6 +1,8 @@
 # Reference Books
 
-Condensed reference books organized by agent role. Sourced from https://github.com/ciembor/agent-rules-books/
+Condensed reference books organized by agent role.
+
+Books in `architect/`, `developer/`, and `release-it.mini.md` are sourced from https://github.com/ciembor/agent-rules-books/. Books in `ux-ui/` are original condensed references.
 
 ## Structure
 

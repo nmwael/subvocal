@@ -153,7 +153,7 @@ Read-only reviewer. Reviews Flutter widget trees, screen layouts, navigation flo
 
 ## Reference Books by Role
 
-All reference books sourced from https://github.com/ciembor/agent-rules-books/
+Reference books in `architect/`, `developer/`, and `release-it.mini.md` sourced from https://github.com/ciembor/agent-rules-books/. Books in `ux-ui/` are original condensed references.
 
 - **All agents**: library/release-it.mini.md — Release It! patterns for production-ready systems
 - **@architect**: library/architect/clean-architecture.mini.md, library/architect/patterns-of-enterprise-application-architecture.mini.md, library/architect/domain-driven-design-distilled.mini.md — architecture and design patterns

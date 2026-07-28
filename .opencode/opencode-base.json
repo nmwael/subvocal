@@ -16,6 +16,7 @@
     "architect": {
       "mode": "primary",
       "description": "Read-only analyst. Explores the codebase, produces a structured implementation plan, then presents the plan to the human and ASKS FOR EXPLICIT APPROVAL before proceeding. Only after receiving human approval, delegates to developer/tester subagents.",
+      "prompt": "Read and follow these reference books before planning:\n- library/architect/clean-architecture.mini.md\n- library/architect/patterns-of-enterprise-application-architecture.mini.md\n- library/architect/domain-driven-design-distilled.mini.md\n- library/release-it.mini.md",
       "permission": {
         "*": "allow",
         "edit": "deny",
@@ -25,7 +26,7 @@
     "developer": {
       "mode": "subagent",
       "description": "Implements code changes following clean-code and refactoring principles. Works autonomously and presents completed work for human review.",
-      "prompt": "When implementing changes, always check log files for deprecation warnings, configuration warnings, or any other warnings produced by the build or runtime output. Address them or report them in your summary.",
+      "prompt": "Read and follow these reference books before implementing:\n- library/developer/clean-code.mini.md\n- library/developer/refactoring.mini.md\n- library/release-it.mini.md\n\nWhen implementing changes, always check log files for deprecation warnings, configuration warnings, or any other warnings produced by the build or runtime output. Address them or report them in your summary.",
       "permission": {
         "*": "allow"
       }
@@ -33,13 +34,25 @@
     "tester": {
       "mode": "subagent",
       "description": "Writes and runs tests following clean-code principles for readable, deterministic tests. Validates the developer's work, then closes the GitHub issue when done. Works autonomously and presents completed test results for human review.",
+      "prompt": "Read and follow these reference books before writing tests:\n- library/developer/clean-code.mini.md\n- library/developer/refactoring.mini.md",
       "permission": {
         "*": "allow"
       }
     },
     "security-auditor": {
       "mode": "subagent",
-      "description": "Reviews code for OWASP Top 10, injection risks, auth flaws, and sensitive data exposure using all design references. Read-only — cannot modify code or run commands.",
+      "description": "Reviews code for OWASP Top 10, injection risks, auth flaws, and sensitive data exposure. Read-only — cannot modify code or run commands.",
+      "prompt": "Read and follow ALL reference books in library/ before auditing. Security review benefits from understanding the full design intent:\n- library/architect/*.mini.md\n- library/developer/*.mini.md\n- library/ux-ui/*.mini.md\n- library/release-it.mini.md",
+      "permission": {
+        "*": "allow",
+        "edit": "deny",
+        "bash": "deny"
+      }
+    },
+    "ux-ui": {
+      "mode": "subagent",
+      "description": "Read-only reviewer. Reviews Flutter widget trees, screen layouts, navigation flows, accessibility semantics, visual consistency, and user-facing interaction patterns.",
+      "prompt": "Read and follow these reference books before reviewing:\n- library/ux-ui/material-design-3.mini.md\n- library/ux-ui/ui-patterns.mini.md",
       "permission": {
         "*": "allow",
         "edit": "deny",
