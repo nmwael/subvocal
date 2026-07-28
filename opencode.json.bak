@@ -2,15 +2,8 @@
   "$schema": "https://opencode.ai/config.json",
   "lsp": true,
   "instructions": [
-    "library/developer/clean-code.mini.md",
-    "library/developer/refactoring.mini.md",
-    "library/architect/clean-architecture.mini.md",
-    "library/architect/patterns-of-enterprise-application-architecture.mini.md",
-    "library/architect/domain-driven-design-distilled.mini.md",
-    "library/release-it.mini.md",
-    "library/ux-ui/material-design-3.mini.md",
-    "library/ux-ui/ui-patterns.mini.md",
-    "AGENTS.md"
+    "AGENTS.md",
+    "library/release-it.mini.md"
   ],
   "agent": {
     "architect": {
