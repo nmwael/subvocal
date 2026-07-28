@@ -242,16 +242,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: authState.accountInfo!.level == 'vip'
                                         ? Colors.amber
-                                        : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.hearing, size: 18),
-                                tooltip: 'Read aloud',
-                                onPressed: () => HelpReader.from(ref).read(
-                                  'Logged in as ${authState.username ?? "user"}. '
-                                  '${authState.accountInfo!.summary}',
+                              Semantics(
+                                label: 'Read account info aloud',
+                                button: true,
+                                child: IconButton(
+                                  icon: const Icon(Icons.hearing, size: 18),
+                                  tooltip: 'Read aloud',
+                                  onPressed: () => HelpReader.from(ref).read(
+                                    'Logged in as ${authState.username ?? "user"}. '
+                                    '${authState.accountInfo!.summary}',
+                                  ),
                                 ),
                               ),
                             ],
@@ -592,16 +596,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.hearing, size: 18),
-                        tooltip: 'Read aloud',
-                        onPressed: () => HelpReader.from(ref).read(
+                      Semantics(
+                        label: 'Read subtitle providers help aloud',
+                        button: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.hearing, size: 18),
+                          tooltip: 'Read aloud',
+                          onPressed: () => HelpReader.from(ref).read(
                           'This app searches three subtitle providers. '
                           'OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. '
                           'SubDL gives 2,000 searches per day with a free API key. '
                           'Podnapisi has no authentication required and no daily limit.',
                         ),
                       ),
+                    ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -622,14 +630,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.hearing, size: 18),
-                        tooltip: 'Read aloud',
-                        onPressed: () => HelpReader.from(ref).read(
-                          'When you search, all providers are queried in parallel. '
-                          'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
-                          'Tap a result to download and play. '
-                          'OpenSubtitles downloads require a free login.',
+                      Semantics(
+                        label: 'Read how downloads work aloud',
+                        button: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.hearing, size: 18),
+                          tooltip: 'Read aloud',
+                          onPressed: () => HelpReader.from(ref).read(
+                            'When you search, all providers are queried in parallel. '
+                            'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
+                            'Tap a result to download and play. '
+                            'OpenSubtitles downloads require a free login.',
+                          ),
                         ),
                       ),
                     ],
@@ -651,12 +663,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.hearing, size: 18),
-                        tooltip: 'Read aloud',
-                        onPressed: () => HelpReader.from(ref).read(
-                          'Create a free OpenSubtitles account to get 5 downloads per day. '
-                          'Open the signup page in your browser.',
+                      Semantics(
+                        label: 'Read account creation help aloud',
+                        button: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.hearing, size: 18),
+                          tooltip: 'Read aloud',
+                          onPressed: () => HelpReader.from(ref).read(
+                            'Create a free OpenSubtitles account to get 5 downloads per day. '
+                            'Open the signup page in your browser.',
+                          ),
                         ),
                       ),
                     ],

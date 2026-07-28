@@ -36,21 +36,27 @@ class SearchScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Login Required'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(helpText),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(Icons.hearing, size: 20),
-                tooltip: 'Read aloud',
-                onPressed: () => HelpReader.from(ref).read(helpText),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(helpText),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Semantics(
+                  label: 'Read help aloud',
+                  button: true,
+                  child: IconButton(
+                    icon: const Icon(Icons.hearing, size: 20),
+                    tooltip: 'Read aloud',
+                    onPressed: () => HelpReader.from(ref).read(helpText),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -89,23 +95,39 @@ class SearchScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Search Tips'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(helpContent),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(Icons.hearing, size: 20),
-                tooltip: 'Read aloud',
-                onPressed: () => HelpReader.from(ref).read(helpContent),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(helpContent),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Semantics(
+                  label: 'Read help aloud',
+                  button: true,
+                  child: IconButton(
+                    icon: const Icon(Icons.hearing, size: 20),
+                    tooltip: 'Read aloud',
+                    onPressed: () => HelpReader.from(ref).read(helpContent),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
+          TextButton(
+            onPressed: () async {
+              final url = Uri.parse(_openSubtitlesSignupUrl);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+              if (ctx.mounted) Navigator.of(ctx).pop();
+            },
+            child: const Text('Create Free Account'),
+          ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
             child: const Text('Got it'),
@@ -254,12 +276,16 @@ class SearchScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          IconButton(
-                            icon: const Icon(Icons.hearing, size: 18),
-                            tooltip: 'Read aloud',
-                            onPressed: () => HelpReader.from(ref).read(
-                              'No downloadable results found. '
-                              'Create a free OpenSubtitles account to unlock more results.',
+                          Semantics(
+                            label: 'Read help aloud',
+                            button: true,
+                            child: IconButton(
+                              icon: const Icon(Icons.hearing, size: 18),
+                              tooltip: 'Read aloud',
+                              onPressed: () => HelpReader.from(ref).read(
+                                'No downloadable results found. '
+                                'Create a free OpenSubtitles account to unlock more results.',
+                              ),
                             ),
                           ),
                         ],

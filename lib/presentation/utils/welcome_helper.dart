@@ -35,21 +35,37 @@ class WelcomeHelper {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Welcome to subvocal'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(helpContent),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(Icons.hearing, size: 20),
-                tooltip: 'Read aloud',
-                onPressed: () => HelpReader.from(ref).read(helpContent),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('This app reads subtitles aloud in sync with your video.'),
+              const SizedBox(height: 16),
+              const Text('To get started:', style: TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              const Text('1. Search for a movie or show on the Search tab.'),
+              const Text('2. Tap a result to download subtitles.'),
+              const Text('3. Playback starts automatically.'),
+              const SizedBox(height: 16),
+              const Text('You can also log in to OpenSubtitles in Settings for more results.'),
+              const SizedBox(height: 16),
+              const Text('Need help? Check the Help section in Settings.'),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Semantics(
+                  label: 'Read welcome message aloud',
+                  button: true,
+                  child: IconButton(
+                    icon: const Icon(Icons.hearing, size: 20),
+                    tooltip: 'Read aloud',
+                    onPressed: () => HelpReader.from(ref).read(helpContent),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -58,6 +74,13 @@ class WelcomeHelper {
               markSeen();
             },
             child: const Text('Get Started'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              markSeen();
+            },
+            child: const Text('Skip'),
           ),
         ],
       ),
