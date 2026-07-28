@@ -9,6 +9,8 @@
     "ghcr.io/devcontainers/features/node:2": {}
   },
 
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y shellcheck",
+
   "containerEnv": {
     "AI_FUN_TOKEN": "${localEnv:AI_FUN_TOKEN}",
     "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",

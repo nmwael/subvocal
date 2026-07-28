@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:subvocal/domain/entities/search_result.dart';
 import 'package:subvocal/domain/errors/failures.dart';
 import 'package:subvocal/domain/services/srt_parser.dart';
 import 'package:subvocal/data/datasources/local_file_source.dart';
@@ -21,7 +22,7 @@ class _MockApi extends OpenSubtitlesApi {
   _MockApi() : super(_MockHttpClient(), '');
 
   @override
-  Future<(List<Map<String, dynamic>>?, Failure?)> search(
+  Future<(List<SearchResult>?, Failure?)> search(
     String query, {
     String? language,
     String? type,
@@ -30,7 +31,7 @@ class _MockApi extends OpenSubtitlesApi {
   }
 
   @override
-  Future<(String?, Failure?)> download(int fileId) async {
+  Future<(String?, Failure?)> download(dynamic fileId) async {
     return (null, null);
   }
 

@@ -40,15 +40,11 @@ void main() {
 
         print('✅ Found ${searchResults.length} results');
 
-        // Find first English subtitle
-        final englishSub = searchResults.firstWhere(
-          (r) => (r['attributes'] as Map?)?['language'] == 'en',
-          orElse: () => searchResults.first,
-        );
+        // Pick the first result
+        final englishSub = searchResults.first;
 
-        final fileId = int.parse(englishSub['id'].toString());
-        final title =
-            (englishSub['attributes'] as Map?)?['feature_name'] ?? 'Unknown';
+        final fileId = englishSub.fileId;
+        final title = englishSub.title;
         print('📥 Downloading: $title (file_id: $fileId)');
 
         // Step 2: Download subtitle

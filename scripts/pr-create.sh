@@ -53,4 +53,8 @@ ${WHAT}
 ## HOW
 ${HOW}"
 
-gh pr create --title "$TITLE" --body "$BODY" --base "$BASE" --label "$LABEL"
+BODY_FILE=$(mktemp)
+trap 'rm -f "$BODY_FILE"' EXIT
+printf '%s\n' "$BODY" > "$BODY_FILE"
+
+gh pr create --title "$TITLE" --body-file "$BODY_FILE" --base "$BASE" --label "$LABEL"

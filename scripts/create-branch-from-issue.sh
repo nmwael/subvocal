@@ -2,10 +2,6 @@
 set -euo pipefail
 
 # create-branch-from-issue.sh
-# Creates a git branch from a GitHub issue number
-# Usage: ./scripts/create-branch-from-issue.sh --issue NUMBER [--title SLUG] [--base BRANCH]
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 usage() {
     cat <<EOF
@@ -74,11 +70,16 @@ if ! [[ "$ISSUE_NUMBER" =~ ^[0-9]+$ ]]; then
 fi
 
 if [[ -z "$BASE_BRANCH" ]]; then
-    BASE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    BASE_BRANCH="development"
+    if ! git show-ref --verify --quiet "refs/heads/$BASE_BRANCH" 2>/dev/null; then
+        BASE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    fi
 fi
 
 if [[ -z "$TITLE_SLUG" ]]; then
     TITLE_SLUG=$(gh issue view "$ISSUE_NUMBER" --json title --jq '.title' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-50)
+else
+    TITLE_SLUG=$(echo "$TITLE_SLUG" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-50)
 fi
 
 BRANCH_NAME="issue/${ISSUE_NUMBER}-${TITLE_SLUG}"

@@ -5,15 +5,21 @@ import 'package:http/http.dart' as http;
 
 import '../../core/utils/api_error_parser.dart';
 import '../../core/utils/app_logger.dart';
+import '../../domain/entities/search_result.dart';
 import '../../domain/errors/failures.dart';
+import '../../domain/repositories/subtitle_provider.dart';
+import '../models/search_result_model.dart';
 
-class OpenSubtitlesApi {
+class OpenSubtitlesApi implements SubtitleProvider {
   static const _baseUrl = 'https://api.opensubtitles.com/api/v1';
   final http.Client _client;
   final String _apiKey;
   String? _token;
 
   OpenSubtitlesApi(this._client, this._apiKey);
+
+  @override
+  String get name => 'OpenSubtitles';
 
   Map<String, String> get _baseHeaders => {
     'Api-Key': _apiKey,
@@ -74,7 +80,8 @@ class OpenSubtitlesApi {
     }
   }
 
-  Future<(List<Map<String, dynamic>>?, Failure?)> search(
+  @override
+  Future<(List<SearchResult>?, Failure?)> search(
     String query, {
     String? language,
     String? type,
@@ -110,9 +117,13 @@ class OpenSubtitlesApi {
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final data = body['data'] as List<dynamic>?;
       if (data == null || data.isEmpty) {
-        return (<Map<String, dynamic>>[], null);
+        return (<SearchResult>[], null);
       }
-      return (data.cast<Map<String, dynamic>>(), null);
+      final results = data.cast<Map<String, dynamic>>().map((item) {
+        final model = SearchResultModel.fromJson(item);
+        return model.toEntity();
+      }).toList();
+      return (results, null);
     } on SocketException catch (e) {
       return (null, NetworkFailure('No internet connection: $e'));
     } catch (e) {
@@ -120,7 +131,8 @@ class OpenSubtitlesApi {
     }
   }
 
-  Future<(String?, Failure?)> download(int fileId) async {
+  @override
+  Future<(String?, Failure?)> download(dynamic fileId) async {
     try {
       final headers = <String, String>{..._baseHeaders};
       if (_token != null) headers['Authorization'] = 'Bearer $_token';
@@ -158,6 +170,7 @@ class OpenSubtitlesApi {
     }
   }
 
+  @override
   Future<(String?, Failure?)> fetchContent(String url) async {
     try {
       final response = await _client.get(Uri.parse(url));

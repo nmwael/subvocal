@@ -1,75 +1,55 @@
 import '../../core/utils/app_logger.dart';
 import '../../domain/entities/search_result.dart';
 import '../../domain/errors/failures.dart';
-import '../datasources/opensubtitles_api.dart';
-import '../datasources/podnapisi_api.dart';
-import '../datasources/subdl_api.dart';
-import '../models/search_result_model.dart';
+import '../../domain/repositories/subtitle_provider.dart';
 
 class SubtitleProviderAggregator {
-  final OpenSubtitlesApi opensubtitles;
-  final SubdlApi? subdl;
-  final PodnapisiApi? podnapisi;
+  final List<SubtitleProvider> providers;
 
-  SubtitleProviderAggregator({
-    required this.opensubtitles,
-    this.subdl,
-    this.podnapisi,
-  });
+  SubtitleProviderAggregator({required this.providers});
 
   Future<(List<SearchResult>?, Failure?)> search(
     String query, {
     String? language,
     String? type,
   }) async {
+    if (providers.isEmpty) return (<SearchResult>[], null);
+
+    final futures = providers.map((provider) async {
+      try {
+        return await provider.search(query, language: language, type: type);
+      } catch (e) {
+        appLogger.warning(
+          '${provider.name} search threw: $e',
+          source: 'SubtitleProviderAggregator',
+        );
+        return (<SearchResult>[], null);
+      }
+    }).toList();
+
+    final outcomes = await Future.wait(futures);
+
     final allResults = <SearchResult>[];
-
-    final (osResults, osFailure) = await opensubtitles.search(
-      query,
-      language: language,
-      type: type,
-    );
-    if (osResults != null) {
-      allResults.addAll(
-        osResults.map((r) {
-          final model = SearchResultModel.fromJson(r);
-          return model.toEntity();
-        }),
-      );
-    }
-
-    if (subdl != null) {
-      final (sdResults, sdFailure) = await subdl!.search(
-        query,
-        language: language,
-        type: type,
-      );
-      if (sdFailure != null) {
+    var failedCount = 0;
+    for (var i = 0; i < outcomes.length; i++) {
+      final (results, failure) = outcomes[i];
+      if (failure != null) {
+        failedCount++;
         appLogger.warning(
-          'SubDL search failed: ${sdFailure.message}',
+          '${providers[i].name} search failed: ${failure.message}',
           source: 'SubtitleProviderAggregator',
         );
       }
-      if (sdResults != null) {
-        allResults.addAll(sdResults);
+      if (results != null) {
+        allResults.addAll(results);
       }
     }
 
-    if (podnapisi != null) {
-      final (pnResults, pnFailure) = await podnapisi!.search(
-        query,
-        language: language,
-        type: type,
+    if (failedCount == providers.length) {
+      appLogger.warning(
+        'All ${providers.length} providers failed',
+        source: 'SubtitleProviderAggregator',
       );
-      if (pnFailure != null) {
-        appLogger.warning(
-          'Podnapisi search failed: ${pnFailure.message}',
-          source: 'SubtitleProviderAggregator',
-        );
-      }
-      if (pnResults != null) {
-        allResults.addAll(pnResults);
-      }
     }
 
     final deduplicated = _deduplicateResults(allResults);
