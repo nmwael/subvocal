@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/utils/help_reader.dart';
+import '../utils/help_reader.dart';
 import '../../domain/errors/failures.dart';
 import '../../domain/entities/search_result.dart';
 import '../providers/auth_provider.dart';
@@ -10,6 +10,8 @@ import '../providers/search_provider.dart';
 import '../widgets/subtitle_list_tile.dart';
 import 'player_screen.dart';
 import 'settings_screen.dart';
+
+const _openSubtitlesSignupUrl = 'https://www.opensubtitles.com/en/signup';
 
 const _streamingServices = [
   ('', 'All'),
@@ -57,7 +59,7 @@ class SearchScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () async {
-              final url = Uri.parse('https://www.opensubtitles.com/en/signup');
+              final url = Uri.parse(_openSubtitlesSignupUrl);
               if (await canLaunchUrl(url)) {
                 await launchUrl(url, mode: LaunchMode.externalApplication);
               }
@@ -238,7 +240,7 @@ class SearchScreen extends ConsumerWidget {
                           const SizedBox(height: 8),
                           GestureDetector(
                             onTap: () async {
-                              final url = Uri.parse('https://www.opensubtitles.com/en/signup');
+                              final url = Uri.parse(_openSubtitlesSignupUrl);
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url, mode: LaunchMode.externalApplication);
                               }

@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-import '../../presentation/providers/player_provider.dart';
-import '../../presentation/providers/settings_provider.dart';
+import '../../core/utils/app_logger.dart';
+import '../providers/player_provider.dart';
+import '../providers/settings_provider.dart';
 
 class HelpReader {
   final FlutterTts _tts;
@@ -25,7 +25,7 @@ class HelpReader {
       await _tts.setSpeechRate(_rate);
       await _tts.speak(text);
     } catch (e) {
-      debugPrint('HelpReader TTS error: $e');
+      appLogger.error('HelpReader TTS error', source: 'HelpReader', error: e);
     }
   }
 }

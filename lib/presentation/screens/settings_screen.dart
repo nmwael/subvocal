@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/bug_report_helper.dart';
-import '../../core/utils/help_reader.dart';
+import '../utils/help_reader.dart';
 import '../providers/auth_provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
+
+const _openSubtitlesSignupUrl = 'https://www.opensubtitles.com/en/signup';
 
 const _iso6392To6391 = {
   'afr': 'af',
@@ -307,7 +309,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: () async {
-                          final url = Uri.parse('https://www.opensubtitles.com/en/signup');
+                          final url = Uri.parse(_openSubtitlesSignupUrl);
                           if (await canLaunchUrl(url)) {
                             await launchUrl(url, mode: LaunchMode.externalApplication);
                           }
@@ -662,7 +664,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   const SizedBox(height: 4),
                   TextButton.icon(
                     onPressed: () async {
-                      final url = Uri.parse('https://www.opensubtitles.com/en/signup');
+                      final url = Uri.parse(_openSubtitlesSignupUrl);
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url, mode: LaunchMode.externalApplication);
                       }

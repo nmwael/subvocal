@@ -97,7 +97,18 @@ class OpenSubtitlesApi implements SubtitleProvider {
         Uri.parse('$_baseUrl/infos/user'),
         headers: headers,
       );
-      return response.statusCode == 200;
+      if (response.statusCode != 200) return false;
+
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final data = body['data'] as Map<String, dynamic>?;
+      if (data != null) {
+        _accountInfo = UserAccountInfo(
+          level: data['level'] as String? ?? 'free',
+          remainingDownloads: data['remaining_downloads'] as int? ?? 0,
+          allowedDownloads: data['allowed_downloads'] as int? ?? 5,
+        );
+      }
+      return true;
     } catch (e) {
       appLogger.error(
         'Token validation failed',

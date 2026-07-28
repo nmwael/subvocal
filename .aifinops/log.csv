@@ -19,3 +19,4 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-07-27T11:26:59Z,ses_05cd943e0ffe9K27eg4Txc3uXJ,169,build,big-pickle,244143,17654,5707,4702720,0,0.000000
 2026-07-27T11:29:43Z,ses_05cd943e0ffe9K27eg4Txc3uXJ,169,build,big-pickle,250021,18799,6010,5526592,0,0.000000
 2026-07-28T10:33:39Z,ses_057c7e358ffeisBw9u1TyH2JLj,188,build,big-pickle,100905,20507,4369,4482944,0,0.000000
+2026-07-28T17:16:29Z,ses_057c7e358ffeisBw9u1TyH2JLj,198,build,big-pickle,994534,88127,31646,37235264,0,0.000000
