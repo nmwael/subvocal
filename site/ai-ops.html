@@ -671,7 +671,7 @@ graph LR
     F -->|required check| G[Ready to Merge]
       </div>
 
-      <p>If I only edit documentation (<code>*.md</code>, <code>docs/</code>, <code>site/</code>), the entire CI workflow is skipped — no Flutter setup, no dependency install, no analysis. If I edit code but not integration tests, only <code>analyze-and-test</code> runs — skipping the Android emulator boot, KVM setup, Gradle caching, and the integration test suite entirely.</p>
+      <p>If I only edit documentation (<code>*.md</code>, <code>library/</code>, <code>site/</code>), the entire CI workflow is skipped — no Flutter setup, no dependency install, no analysis. If I edit code but not integration tests, only <code>analyze-and-test</code> runs — skipping the Android emulator boot, KVM setup, Gradle caching, and the integration test suite entirely.</p>
 
       <p>The <code>ci-pass</code> job is the unified required status check. It always runs and aggregates results from both jobs. This way, required checks never block PRs when jobs are legitimately skipped.</p>
 
