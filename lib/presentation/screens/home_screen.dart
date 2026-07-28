@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../utils/welcome_helper.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 import '../providers/recent_subtitles_provider.dart';
 import '../providers/search_provider.dart';
@@ -11,11 +12,24 @@ import 'saved_translations_screen.dart';
 import 'search_screen.dart';
 import 'settings_screen.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WelcomeHelper.showIfFirstLaunch(context, ref);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final recentSubtitles = ref.watch(recentSubtitlesProvider);
     final theme = Theme.of(context);
 

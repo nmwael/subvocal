@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/bug_report_helper.dart';
+import '../utils/help_reader.dart';
 import '../providers/auth_provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
+
+const _openSubtitlesSignupUrl = 'https://www.opensubtitles.com/en/signup';
 
 const _iso6392To6391 = {
   'afr': 'af',
@@ -205,24 +209,58 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 error: (_, _) => const Text('Error checking auth status'),
                 data: (authState) {
                   if (authState.status == AuthStatus.authenticated) {
-                    return Row(
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.check_circle, color: Colors.green),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Logged in as ${authState.username ?? "user"}',
-                            style: theme.textTheme.bodyLarge,
-                          ),
+                        Row(
+                          children: [
+                            const Icon(Icons.check_circle, color: Colors.green),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Logged in as ${authState.username ?? "user"}',
+                                style: theme.textTheme.bodyLarge,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  ref.read(authProvider.notifier).logout(),
+                              child: const Text(
+                                'Logout',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
                         ),
-                        TextButton(
-                          onPressed: () =>
-                              ref.read(authProvider.notifier).logout(),
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(color: Colors.red),
+                        if (authState.accountInfo != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  authState.accountInfo!.summary,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: authState.accountInfo!.level == 'vip'
+                                        ? Colors.amber
+: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                              ),
+                              Semantics(
+                                label: 'Read account info aloud',
+                                button: true,
+                                child: IconButton(
+                                  icon: const Icon(Icons.hearing, size: 18),
+                                  tooltip: 'Read aloud',
+                                  onPressed: () => HelpReader.from(ref).read(
+                                    'Logged in as ${authState.username ?? "user"}. '
+                                    '${authState.accountInfo!.summary}',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                        ],
                       ],
                     );
                   }
@@ -271,6 +309,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ElevatedButton(
                         onPressed: _login,
                         child: const Text('Login'),
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () async {
+                          final url = Uri.parse(_openSubtitlesSignupUrl);
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url, mode: LaunchMode.externalApplication);
+                          }
+                        },
+                        child: const Text("Don't have an account? Create one"),
                       ),
                     ],
                   );
@@ -521,6 +569,127 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   );
                 }
               },
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // --- Help ---
+          Text(
+            'Help',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Subtitle Providers',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Semantics(
+                        label: 'Read subtitle providers help aloud',
+                        button: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.hearing, size: 18),
+                          tooltip: 'Read aloud',
+                          onPressed: () => HelpReader.from(ref).read(
+                          'This app searches three subtitle providers. '
+                          'OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. '
+                          'SubDL gives 2,000 searches per day with a free API key. '
+                          'Podnapisi has no authentication required and no daily limit.',
+                        ),
+                      ),
+                    ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'OpenSubtitles — free account: 5 downloads/day, VIP: unlimited.\n'
+                    'SubDL — 2,000 searches/day with free API key.\n'
+                    'Podnapisi — no auth needed, no daily limit.',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const Divider(height: 24),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'How Downloads Work',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Semantics(
+                        label: 'Read how downloads work aloud',
+                        button: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.hearing, size: 18),
+                          tooltip: 'Read aloud',
+                          onPressed: () => HelpReader.from(ref).read(
+                            'When you search, all providers are queried in parallel. '
+                            'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
+                            'Tap a result to download and play. '
+                            'OpenSubtitles downloads require a free login.',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'All providers searched in parallel. OpenSubtitles results require login. '
+                    'Tap a result to download and start playback.',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const Divider(height: 24),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Create OpenSubtitles Account',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Semantics(
+                        label: 'Read account creation help aloud',
+                        button: true,
+                        child: IconButton(
+                          icon: const Icon(Icons.hearing, size: 18),
+                          tooltip: 'Read aloud',
+                          onPressed: () => HelpReader.from(ref).read(
+                            'Create a free OpenSubtitles account to get 5 downloads per day. '
+                            'Open the signup page in your browser.',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  TextButton.icon(
+                    onPressed: () async {
+                      final url = Uri.parse(_openSubtitlesSignupUrl);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    icon: const Icon(Icons.open_in_new, size: 16),
+                    label: const Text('Open signup page'),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
