@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:subvocal/core/theme/app_theme.dart';
+import 'package:subvocal/generated/app_localizations.dart';
 
 Widget buildGoldenApp({
   required Widget child,
@@ -10,7 +12,17 @@ Widget buildGoldenApp({
 }) {
   return ProviderScope(
     overrides: overrides,
-    child: MaterialApp(theme: AppTheme.darkTheme, home: child),
+    child: MaterialApp(
+      theme: AppTheme.darkTheme,
+      home: child,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+    ),
   );
 }
 

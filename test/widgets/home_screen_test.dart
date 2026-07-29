@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:subvocal/data/datasources/recent_subtitles_local_source.dart';
 import 'package:subvocal/domain/entities/recent_subtitle_info.dart';
+import 'package:subvocal/generated/app_localizations.dart';
 import 'package:subvocal/presentation/providers/recent_subtitles_provider.dart';
 import 'package:subvocal/presentation/screens/home_screen.dart';
 
@@ -24,7 +26,16 @@ Widget _createTestApp() {
         (ref) => _FakeRecentSubtitlesNotifier(),
       ),
     ],
-    child: const MaterialApp(home: HomeScreen()),
+    child: const MaterialApp(
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: HomeScreen(),
+    ),
   );
 }
 

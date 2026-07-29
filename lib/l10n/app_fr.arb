@@ -1,0 +1,236 @@
+{
+  "@@locale": "fr",
+  "all": "Tout",
+  "alphaBadge": "ALPHA",
+  "alphaBanner": "Cette application est en alpha. Les fonctionnalités peuvent changer et des bugs sont attendus.",
+  "apertium": "Apertium",
+  "autoTryAll": "Auto (essayer tout)",
+  "azure": "Azure",
+  "cancel": "Annuler",
+  "couldNotLoadVoices": "Impossible de charger les voix : {error}",
+  "@couldNotLoadVoices": {
+    "description": "",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error placeholder"
+      }
+    }
+  },
+  "couldNotOpenBugReport": "Impossible d'ouvrir le rapport de bug",
+  "createAccountForMore": "Créez un compte gratuit OpenSubtitles pour débloquer plus de résultats.",
+  "createFreeAccount": "Créer un compte gratuit",
+  "createOsAccount": "Créer un compte OpenSubtitles",
+  "defaultLanguageLabel": "Langue par défaut",
+  "defaultTargetLanguage": "Langue cible par défaut",
+  "delete": "Supprimer",
+  "deleteTranslation": "Supprimer la traduction ?",
+  "dismiss": "Ignorer",
+  "dontHaveAccount": "Vous n'avez pas de compte ? Créez-en un",
+  "emailHelper": "Augmente la limite quotidienne de MyMemory de 5 000 à 50 000 caractères",
+  "emailHint": "votre@email.com",
+  "emailOptional": "Email (facultatif)",
+  "enterSearchQuery": "Entrez une requête de recherche",
+  "errorCheckingAuth": "Erreur lors de la vérification de l'authentification",
+  "failedToLoad": "Échec du chargement",
+  "getStarted": "Commencer",
+  "gotIt": "Compris",
+  "help": "Aide",
+  "helpCreateAccountFull": "Créez un compte gratuit OpenSubtitles pour obtenir 5 téléchargements par jour. Ouvrez la page d'inscription dans votre navigateur.",
+  "helpDownloadsDesc": "Tous les fournisseurs sont interrogés en parallèle. Les résultats OpenSubtitles nécessitent une connexion. Appuyez sur un résultat pour télécharger et démarrer la lecture.",
+  "helpDownloadsFull": "Lorsque vous recherchez, tous les fournisseurs sont interrogés en parallèle. Si vous n'êtes pas connecté à OpenSubtitles, seuls les résultats SubDL et Podnapisi sont affichés. Appuyez sur un résultat pour télécharger et lire. Les téléchargements OpenSubtitles nécessitent une connexion gratuite.",
+  "helpProvidersAppDesc": "Cette application recherche trois fournisseurs de sous-titres. OpenSubtitles est gratuit avec 5 téléchargements par jour, ou illimité avec un abonnement VIP. SubDL offre 2 000 recherches par jour avec une clé API gratuite. Podnapisi ne nécessite aucune authentification et n'a pas de limite quotidienne.",
+  "helpProvidersDescription": "OpenSubtitles — compte gratuit : 5 téléchargements/jour, VIP : illimité.\nSubDL — 2 000 recherches/jour avec clé API gratuite.\nPodnapisi — aucune authentification, pas de limite quotidienne.",
+  "homeTagline": "Choisissez des sous-titres et lisez-les à voix haute",
+  "howDownloadsWork": "Comment fonctionnent les téléchargements",
+  "language": "Langue",
+  "libreTranslate": "LibreTranslate",
+  "loadingSaved": "Chargement des traductions sauvegardées…",
+  "loggedInAs": "Connecté en tant que {username}",
+  "@loggedInAs": {
+    "description": "",
+    "placeholders": {
+      "username": {
+        "type": "String",
+        "description": "The username placeholder"
+      }
+    }
+  },
+  "login": "Connexion",
+  "loginFailed": "Échec de la connexion. Vérifiez vos identifiants.",
+  "loginRequired": "Connexion requise",
+  "loginRequiredHelp": "Vous avez besoin d'un compte gratuit OpenSubtitles pour télécharger des sous-titres.\n\nLes comptes gratuits obtiennent 5 téléchargements par jour.\n\nVous pouvez également utiliser les sous-titres SubDL ou Podnapisi sans vous connecter.",
+  "logout": "Déconnexion",
+  "movies": "Films",
+  "myMemory": "MyMemory",
+  "newestFirst": "Plus récents d'abord",
+  "next": "Suivant",
+  "noDownloadableResults": "Aucun résultat téléchargeable trouvé. Créez un compte gratuit OpenSubtitles pour obtenir plus de résultats.",
+  "noResultsFound": "Aucun résultat trouvé pour \"{query}\".",
+  "@noResultsFound": {
+    "description": "",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "description": "The query placeholder"
+      }
+    }
+  },
+  "noSavedTranslations": "Aucune traduction sauvegardée pour le moment.",
+  "noTranslationsAvailable": "Aucune traduction disponible.",
+  "noVoicesAvailable": "Aucune voix disponible pour {language}",
+  "@noVoicesAvailable": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "ok": "OK",
+  "oldestFirst": "Plus anciens d'abord",
+  "openSignupPage": "Ouvrir la page d'inscription",
+  "openSubtitlesAccount": "Compte OpenSubtitles",
+  "password": "Mot de passe",
+  "pause": "Pause",
+  "play": "Lire",
+  "playSample": "Lire l'échantillon",
+  "playTranslatedSample": "Lire l'échantillon traduit",
+  "pleaseEnterBoth": "Veuillez entrer à la fois le nom d'utilisateur et le mot de passe",
+  "previous": "Précédent",
+  "readAccountHelpAloud": "Lire l'aide à la création de compte à voix haute",
+  "readAccountInfoAloud": "Lire les informations du compte à voix haute",
+  "readAloud": "Lire à voix haute",
+  "readHelpAloud": "Lire l'aide à voix haute",
+  "readHelpAloudNoResults": "Lire l'aide de recherche à voix haute",
+  "readHowDownloadsWorkAloud": "Lire comment fonctionnent les téléchargements à voix haute",
+  "readSubtitleProvidersAloud": "Lire l'aide sur les fournisseurs de sous-titres à voix haute",
+  "readWelcomeAloud": "Lire le message de bienvenue à voix haute",
+  "recent": "Récent",
+  "reportABug": "Signaler un bug",
+  "reportABugSubtitle": "Ouvrir un rapport de bug prérempli sur GitHub",
+  "savedTranslations": "Traductions sauvegardées",
+  "savedTranslationsTitle": "Traductions Sauvegardées",
+  "saveTranslation": "Sauvegarder la traduction",
+  "saveTranslationHint": "Sauvegarder la traduction pour une utilisation hors ligne",
+  "searchHelp": "Aide de recherche",
+  "searchHint": "Rechercher des films et émissions de TV…",
+  "searchSubtitles": "Rechercher des sous-titres",
+  "searchTips": "Conseils de recherche",
+  "searchTipsContent": "Recherchez des sous-titres de films et TV par nom.\n\nLes résultats de SubDL et Podnapisi sont toujours affichés. Les résultats OpenSubtitles apparaissent uniquement lorsque vous êtes connecté.\n\nLes comptes gratuits OpenSubtitles obtiennent 5 téléchargements par jour.",
+  "searchTitle": "Rechercher des Sous-titres",
+  "settingsTitle": "Paramètres",
+  "skip": "Passer",
+  "sortBy": "Trier par",
+  "speechConfiguration": "Configuration vocale",
+  "speechRate": "Vitesse de parole",
+  "speed": "Vitesse",
+  "stop": "Arrêter",
+  "stopSample": "Arrêter l'échantillon",
+  "stopTranslatedSample": "Arrêter l'échantillon traduit",
+  "subtitleProviders": "Fournisseurs de sous-titres",
+  "support": "Support",
+  "sync": "Synchronisation",
+  "testTranslatedVoice": "Tester la voix traduite",
+  "testTranslatedVoiceDescription": "Traduisez les 5 premières lignes en {language} et écoutez-les.",
+  "@testTranslatedVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "testVoice": "Tester la voix",
+  "testVoiceDescription": "Écoutez un échantillon à votre vitesse actuelle ({speed}x) et hauteur ({pitch}x).",
+  "@testVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "speed": {
+        "type": "String",
+        "description": "The speed placeholder"
+      },
+      "pitch": {
+        "type": "String",
+        "description": "The pitch placeholder"
+      }
+    }
+  },
+  "timeHint": "Format : HH:MM",
+  "titleAZ": "Titre (A-Z)",
+  "translatingEntries": "Traduction {current} sur {total}…",
+  "@translatingEntries": {
+    "description": "",
+    "placeholders": {
+      "current": {
+        "type": "String",
+        "description": "The current placeholder"
+      },
+      "total": {
+        "type": "String",
+        "description": "The total placeholder"
+      }
+    }
+  },
+  "translationAndLanguage": "Traduction et langue",
+  "translationError": "Erreur de traduction",
+  "translationFailedTap": "Traduction échouée : appuyez pour plus de détails",
+  "translationProvider": "Fournisseur de traduction",
+  "translationSaved": "Traduction sauvegardée",
+  "tvEpisodes": "Épisodes TV",
+  "unexpectedError": "Une erreur inattendue s'est produite.",
+  "unknownVoice": "Inconnue",
+  "username": "Nom d'utilisateur",
+  "voice": "Voix",
+  "voicePitch": "Hauteur de voix",
+  "welcomeFullText": "Bienvenue sur subvocal !\n\nCette application lit les sous-titres à voix haute en synchronisation avec votre vidéo.\n\nPour commencer :\n1. Recherchez un film ou une émission dans l'onglet Recherche.\n2. Appuyez sur un résultat pour télécharger les sous-titres.\n3. La lecture commence automatiquement.\n\nVous pouvez également vous connecter à OpenSubtitles dans les Paramètres pour plus de résultats.\n\nBesoin d'aide ? Consultez la section Aide dans Paramètres.",
+  "welcomeGettingStarted": "Pour commencer :",
+  "welcomeHelpHint": "Besoin d'aide ? Consultez la section Aide dans Paramètres.",
+  "welcomeIntro": "Cette application lit les sous-titres à voix haute en synchronisation avec votre vidéo.",
+  "welcomeLoginHint": "Vous pouvez également vous connecter à OpenSubtitles dans les Paramètres pour plus de résultats.",
+  "welcomeStep": "{number}. {description}",
+  "@welcomeStep": {
+    "description": "",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "description": "The number placeholder"
+      },
+      "description": {
+        "type": "String",
+        "description": "The description placeholder"
+      }
+    }
+  },
+  "welcomeTitle": "Bienvenue sur subvocal",
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{title}\" ({language}) ?",
+  "@deleteConfirm": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "description": "The title placeholder"
+      },
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "searchError": "Recherche échouée : {message}",
+  "@searchError": {
+    "description": "",
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "The error message placeholder"
+      }
+    }
+  },
+  "welcomeStep1": "1. Recherchez un film ou une émission dans l'onglet Recherche.",
+  "welcomeStep2": "2. Appuyez sur un résultat pour télécharger les sous-titres.",
+  "welcomeStep3": "3. La lecture commence automatiquement.",
+  "noSubtitleLoaded": "Aucun sous-titre chargé"
+}

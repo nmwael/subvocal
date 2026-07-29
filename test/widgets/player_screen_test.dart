@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:subvocal/data/repositories/tts_repository_impl.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
 import 'package:subvocal/domain/entities/subtitle_entry.dart';
+import 'package:subvocal/generated/app_localizations.dart';
 import 'package:subvocal/presentation/providers/player_provider.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
 
@@ -37,7 +39,16 @@ Widget _createTestApp(Subtitle subtitle) {
         return PlayerNotifier(repo);
       }),
     ],
-    child: MaterialApp(home: PlayerScreen(subtitle: subtitle)),
+    child: MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: PlayerScreen(subtitle: subtitle),
+    ),
   );
 }
 

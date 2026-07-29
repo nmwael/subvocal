@@ -1,0 +1,236 @@
+{
+  "@@locale": "es",
+  "all": "Todo",
+  "alphaBadge": "ALFA",
+  "alphaBanner": "Esta aplicación está en alfa. Las funciones pueden cambiar y se esperan errores.",
+  "apertium": "Apertium",
+  "autoTryAll": "Auto (probar todos)",
+  "azure": "Azure",
+  "cancel": "Cancelar",
+  "couldNotLoadVoices": "No se pudieron cargar las voces: {error}",
+  "@couldNotLoadVoices": {
+    "description": "",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error placeholder"
+      }
+    }
+  },
+  "couldNotOpenBugReport": "No se pudo abrir el informe de error",
+  "createAccountForMore": "Crea una cuenta gratuita de OpenSubtitles para obtener más resultados.",
+  "createFreeAccount": "Crear cuenta gratuita",
+  "createOsAccount": "Crear cuenta de OpenSubtitles",
+  "defaultLanguageLabel": "Idioma predeterminado",
+  "defaultTargetLanguage": "Idioma de destino predeterminado",
+  "delete": "Eliminar",
+  "deleteTranslation": "¿Eliminar traducción?",
+  "dismiss": "Descartar",
+  "dontHaveAccount": "¿No tienes cuenta? Crea una",
+  "emailHelper": "Aumenta el límite diario de MyMemory de 5.000 a 50.000 caracteres",
+  "emailHint": "tu@email.com",
+  "emailOptional": "Correo electrónico (opcional)",
+  "enterSearchQuery": "Introduce una consulta de búsqueda",
+  "errorCheckingAuth": "Error al verificar el estado de autenticación",
+  "failedToLoad": "Error al cargar",
+  "getStarted": "Comenzar",
+  "gotIt": "Entendido",
+  "help": "Ayuda",
+  "helpCreateAccountFull": "Crea una cuenta gratuita de OpenSubtitles para obtener 5 descargas al día. Abre la página de registro en tu navegador.",
+  "helpDownloadsDesc": "Todos los proveedores se buscan en paralelo. Los resultados de OpenSubtitles requieren inicio de sesión. Toca un resultado para descargar y comenzar la reproducción.",
+  "helpDownloadsFull": "Cuando buscas, todos los proveedores se consultan en paralelo. Si no has iniciado sesión en OpenSubtitles, solo se muestran resultados de SubDL y Podnapisi. Toca un resultado para descargar y reproducir. Las descargas de OpenSubtitles requieren un inicio de sesión gratuito.",
+  "helpProvidersAppDesc": "Esta aplicación busca en tres proveedores de subtítulos. OpenSubtitles es gratuito con 5 descargas al día o ilimitado con una suscripción VIP. SubDL ofrece 2.000 búsquedas al día con una clave API gratuita. Podnapisi no requiere autenticación ni tiene límite diario.",
+  "helpProvidersDescription": "OpenSubtitles — cuenta gratuita: 5 descargas/día, VIP: ilimitado.\nSubDL — 2.000 búsquedas/día con clave API gratuita.\nPodnapisi — sin autenticación, sin límite diario.",
+  "homeTagline": "Elige subtítulos y léelos en voz alta",
+  "howDownloadsWork": "Cómo funcionan las descargas",
+  "language": "Idioma",
+  "libreTranslate": "LibreTranslate",
+  "loadingSaved": "Cargando traducciones guardadas…",
+  "loggedInAs": "Iniciada sesión como {username}",
+  "@loggedInAs": {
+    "description": "",
+    "placeholders": {
+      "username": {
+        "type": "String",
+        "description": "The username placeholder"
+      }
+    }
+  },
+  "login": "Iniciar sesión",
+  "loginFailed": "Inicio de sesión fallido. Verifica tus credenciales.",
+  "loginRequired": "Inicio de sesión requerido",
+  "loginRequiredHelp": "Necesitas una cuenta gratuita de OpenSubtitles para descargar subtítulos.\n\nLas cuentas gratuitas obtienen 5 descargas al día.\n\nTambién puedes usar subtítulos de SubDL o Podnapisi sin iniciar sesión.",
+  "logout": "Cerrar sesión",
+  "movies": "Películas",
+  "myMemory": "MyMemory",
+  "newestFirst": "Más recientes primero",
+  "next": "Siguiente",
+  "noDownloadableResults": "No se encontraron resultados descargables. Crea una cuenta gratuita de OpenSubtitles para obtener más resultados.",
+  "noResultsFound": "No se encontraron resultados para \"{query}\".",
+  "@noResultsFound": {
+    "description": "",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "description": "The query placeholder"
+      }
+    }
+  },
+  "noSavedTranslations": "Aún no hay traducciones guardadas.",
+  "noTranslationsAvailable": "No hay traducciones disponibles.",
+  "noVoicesAvailable": "No hay voces disponibles para {language}",
+  "@noVoicesAvailable": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "ok": "OK",
+  "oldestFirst": "Más antiguos primero",
+  "openSignupPage": "Abrir página de registro",
+  "openSubtitlesAccount": "Cuenta de OpenSubtitles",
+  "password": "Contraseña",
+  "pause": "Pausa",
+  "play": "Reproducir",
+  "playSample": "Reproducir muestra",
+  "playTranslatedSample": "Reproducir muestra traducida",
+  "pleaseEnterBoth": "Introduce tanto el nombre de usuario como la contraseña",
+  "previous": "Anterior",
+  "readAccountHelpAloud": "Leer ayuda de creación de cuenta en voz alta",
+  "readAccountInfoAloud": "Leer información de la cuenta en voz alta",
+  "readAloud": "Leer en voz alta",
+  "readHelpAloud": "Leer ayuda en voz alta",
+  "readHelpAloudNoResults": "Leer ayuda de búsqueda en voz alta",
+  "readHowDownloadsWorkAloud": "Leer cómo funcionan las descargas en voz alta",
+  "readSubtitleProvidersAloud": "Leer ayuda de proveedores de subtítulos en voz alta",
+  "readWelcomeAloud": "Leer mensaje de bienvenida en voz alta",
+  "recent": "Reciente",
+  "reportABug": "Reportar un error",
+  "reportABugSubtitle": "Abrir un informe de error prellenado en GitHub",
+  "savedTranslations": "Traducciones guardadas",
+  "savedTranslationsTitle": "Traducciones Guardadas",
+  "saveTranslation": "Guardar traducción",
+  "saveTranslationHint": "Guardar traducción para uso sin conexión",
+  "searchHelp": "Ayuda de búsqueda",
+  "searchHint": "Buscar películas y programas de TV…",
+  "searchSubtitles": "Buscar subtítulos",
+  "searchTips": "Consejos de búsqueda",
+  "searchTipsContent": "Busca subtítulos de películas y TV por nombre.\n\nLos resultados de SubDL y Podnapisi siempre se muestran. Los resultados de OpenSubtitles aparecen solo cuando has iniciado sesión.\n\nLas cuentas gratuitas de OpenSubtitles obtienen 5 descargas al día.",
+  "searchTitle": "Buscar Subtítulos",
+  "settingsTitle": "Ajustes",
+  "skip": "Saltar",
+  "sortBy": "Ordenar por",
+  "speechConfiguration": "Configuración de voz",
+  "speechRate": "Velocidad de voz",
+  "speed": "Velocidad",
+  "stop": "Detener",
+  "stopSample": "Detener muestra",
+  "stopTranslatedSample": "Detener muestra traducida",
+  "subtitleProviders": "Proveedores de subtítulos",
+  "support": "Soporte",
+  "sync": "Sincronización",
+  "testTranslatedVoice": "Probar voz traducida",
+  "testTranslatedVoiceDescription": "Traduce las primeras 5 líneas a {language} y escúchalas.",
+  "@testTranslatedVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "testVoice": "Probar voz",
+  "testVoiceDescription": "Escucha una muestra a tu velocidad actual ({speed}x) y tono ({pitch}x).",
+  "@testVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "speed": {
+        "type": "String",
+        "description": "The speed placeholder"
+      },
+      "pitch": {
+        "type": "String",
+        "description": "The pitch placeholder"
+      }
+    }
+  },
+  "timeHint": "Formato: HH:MM",
+  "titleAZ": "Título (A-Z)",
+  "translatingEntries": "Traduciendo {current} de {total}…",
+  "@translatingEntries": {
+    "description": "",
+    "placeholders": {
+      "current": {
+        "type": "String",
+        "description": "The current placeholder"
+      },
+      "total": {
+        "type": "String",
+        "description": "The total placeholder"
+      }
+    }
+  },
+  "translationAndLanguage": "Traducción e idioma",
+  "translationError": "Error de traducción",
+  "translationFailedTap": "Traducción fallida: toca para detalles",
+  "translationProvider": "Proveedor de traducción",
+  "translationSaved": "Traducción guardada",
+  "tvEpisodes": "Episodios de TV",
+  "unexpectedError": "Ocurrió un error inesperado.",
+  "unknownVoice": "Desconocida",
+  "username": "Nombre de usuario",
+  "voice": "Voz",
+  "voicePitch": "Tono de voz",
+  "welcomeFullText": "¡Bienvenido a subvocal!\n\nEsta aplicación lee subtítulos en voz alta en sincronía con tu video.\n\nPara empezar:\n1. Busca una película o programa en la pestaña Buscar.\n2. Toca un resultado para descargar subtítulos.\n3. La reproducción comienza automáticamente.\n\nTambién puedes iniciar sesión en OpenSubtitles en Ajustes para obtener más resultados.\n\n¿Necesitas ayuda? Consulta la sección de Ayuda en Ajustes.",
+  "welcomeGettingStarted": "Para empezar:",
+  "welcomeHelpHint": "¿Necesitas ayuda? Consulta la sección de Ayuda en Ajustes.",
+  "welcomeIntro": "Esta aplicación lee subtítulos en voz alta en sincronía con tu video.",
+  "welcomeLoginHint": "También puedes iniciar sesión en OpenSubtitles en Ajustes para obtener más resultados.",
+  "welcomeStep": "{number}. {description}",
+  "@welcomeStep": {
+    "description": "",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "description": "The number placeholder"
+      },
+      "description": {
+        "type": "String",
+        "description": "The description placeholder"
+      }
+    }
+  },
+  "welcomeTitle": "Bienvenido a subvocal",
+  "deleteConfirm": "¿Estás seguro de que quieres eliminar \"{title}\" ({language})?",
+  "@deleteConfirm": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "description": "The title placeholder"
+      },
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "searchError": "Búsqueda fallida: {message}",
+  "@searchError": {
+    "description": "",
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "The error message placeholder"
+      }
+    }
+  },
+  "welcomeStep1": "1. Busca una película o programa en la pestaña Buscar.",
+  "welcomeStep2": "2. Toca un resultado para descargar subtítulos.",
+  "welcomeStep3": "3. La reproducción comienza automáticamente.",
+  "noSubtitleLoaded": "No hay subtítulos cargados"
+}
