@@ -79,6 +79,44 @@ flutter test integration_test/
 
 ---
 
+## Versioning
+
+This project follows [Semantic Versioning (SemVer)](https://semver.org/).
+
+### Format
+
+Versions are defined in `pubspec.yaml`:
+
+```yaml
+version: 1.0.0+1
+```
+
+- **Major** (1): Breaking changes
+- **Minor** (0): New features, backward compatible
+- **Patch** (0): Bug fixes, backward compatible
+- **Build** (+1): Auto-incremented by CI on production releases
+
+### Release Types
+
+| Type | Tag Format | Source | Frequency |
+|---|---|---|---|
+| Production | `v{major}.{minor}.{patch}+{build}` | `main` | On release |
+| Development | `dev-{run_number}` | `development` | Every push |
+
+### Development builds
+
+Every push to `development` triggers a dev build published as a GitHub prerelease at:
+https://github.com/nmwael/subvocal/releases
+
+Production releases from `main` use the pubspec.yaml version for tagging.
+
+### Bumping versions
+
+- **Production release**: Bump `version` in `pubspec.yaml` before merging to `main`
+- **Development builds**: Auto-tagged by CI, no manual version bump needed
+
+---
+
 ## Environment Variables
 
 | Variable | Required | Description |
