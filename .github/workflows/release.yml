@@ -29,8 +29,12 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION=$(grep '^version: ' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          FULL_VERSION=$(grep '^version: ' pubspec.yaml | sed 's/version: //')
+          SEMVER=$(echo "$FULL_VERSION" | sed 's/+.*//')
+          BUILD=$(echo "$FULL_VERSION" | sed 's/.*+//')
+          echo "VERSION=$SEMVER" >> $GITHUB_ENV
+          echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
+          echo "BUILD=$BUILD" >> $GITHUB_ENV
 
       - name: Build APK
         run: flutter build apk --release --dart-define=AZURE_TRANSLATION_KEY=${{ secrets.AZURE_TRANSLATION_KEY }} --dart-define=AZURE_TRANSLATION_REGION=${{ secrets.AZURE_TRANSLATION_REGION }}
@@ -50,8 +54,8 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: v${{ github.run_number }}
-          name: Release v${{ github.run_number }}
+          tag_name: v${{ env.VERSION }}+${{ env.BUILD }}
+          name: Release v${{ env.VERSION }}+${{ env.BUILD }}
           generate_release_notes: true
           fail_on_unmatched_files: true
           files: |

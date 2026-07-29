@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/bug_report_helper.dart';
@@ -698,7 +700,85 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 24),
+
+          // --- About ---
+          Text(
+            'About',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const _AppVersion(),
         ],
+      ),
+    );
+  }
+}
+
+class _AppVersion extends StatefulWidget {
+  const _AppVersion();
+
+  @override
+  State<_AppVersion> createState() => _AppVersionState();
+}
+
+class _AppVersionState extends State<_AppVersion> {
+  PackageInfo? _packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPackageInfo();
+  }
+
+  Future<void> _loadPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) setState(() => _packageInfo = info);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final info = _packageInfo;
+
+    if (info == null) {
+      return const Card(
+        child: ListTile(
+          leading: Icon(Icons.info_outline),
+          title: Text('Loading...'),
+          subtitle: Text('Fetching version info'),
+          trailing: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    final versionText = '${info.version}+${info.buildNumber}';
+    final subtitle = 'Build #${info.buildNumber} • ${info.packageName}';
+
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.info_outline),
+        title: Text('Version $versionText'),
+        subtitle: Text(subtitle),
+        trailing: IconButton(
+          icon: const Icon(Icons.copy, size: 18),
+          tooltip: 'Copy version info',
+          onPressed: () {
+            // ignore: deprecated_member_use
+            Clipboard.setData(ClipboardData(
+              text: '${info.packageName} v$versionText',
+            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Version copied to clipboard')),
+            );
+          },
+        ),
       ),
     );
   }
