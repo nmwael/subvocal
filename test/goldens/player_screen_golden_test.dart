@@ -91,15 +91,15 @@ Widget _buildPlayerScreen({
         return notifier;
       }),
     ],
-    child: MaterialApp(
-      localizationsDelegates: const [
+    child: const MaterialApp(
+      localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const PlayerScreen(subtitle: _testSubtitle),
+      home: PlayerScreen(subtitle: _testSubtitle),
     ),
   );
 }

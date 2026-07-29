@@ -16,15 +16,15 @@ void main() {
         translatedTestPlayingProvider.overrideWith((ref) => false),
         ...overrides,
       ],
-      child: MaterialApp(
-        localizationsDelegates: const [
+      child: const MaterialApp(
+        localizationsDelegates: [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const SettingsScreen(),
+        home: SettingsScreen(),
       ),
     );
   }

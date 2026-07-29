@@ -9,15 +9,15 @@ import 'package:subvocal/generated/app_localizations.dart';
 void main() {
   testWidgets('App renders home screen', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: const [
+      const MaterialApp(
+        localizationsDelegates: [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const ProviderScope(child: SubvocalApp()),
+        home: ProviderScope(child: SubvocalApp()),
       ),
     );
     await tester.pump();

@@ -26,15 +26,15 @@ Widget _createTestApp() {
         (ref) => _FakeRecentSubtitlesNotifier(),
       ),
     ],
-    child: MaterialApp(
-      localizationsDelegates: const [
+    child: const MaterialApp(
+      localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const HomeScreen(),
+      home: HomeScreen(),
     ),
   );
 }
