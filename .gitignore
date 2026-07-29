@@ -51,3 +51,6 @@ tmp/**
 .aifinops/*
 !.aifinops/.gitkeep
 !.aifinops/README.md
+
+# Golden test failure artifacts
+test/goldens/failures/
