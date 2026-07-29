@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/subtitle_entry.dart';
+import '../../generated/app_localizations.dart';
 
 class SubtitleDisplay extends StatelessWidget {
   final SubtitleEntry? currentEntry;
@@ -23,7 +24,7 @@ class SubtitleDisplay extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No subtitle loaded',
+              AppLocalizations.of(context)!.noSubtitleLoaded,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: Theme.of(
                   context,

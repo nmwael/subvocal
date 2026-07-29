@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/subtitle.dart';
 import '../../domain/entities/translation_progress.dart';
+import '../../generated/app_localizations.dart';
 import '../providers/player_provider.dart';
 import '../providers/saved_subtitles_provider.dart';
 import '../providers/settings_provider.dart';
@@ -60,6 +61,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final playerState = ref.watch(playerProvider);
     final playerNotifier = ref.read(playerProvider.notifier);
 
@@ -76,7 +78,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
           if (playerState.translatedSubtitle != null)
             IconButton(
               icon: const Icon(Icons.save),
-              tooltip: 'Save translation',
+              tooltip: l10n.saveTranslation,
               onPressed: () async {
                 final saved = ref.read(savedSubtitlesProvider.notifier);
                 await saved.save(
@@ -88,7 +90,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Translation saved')),
+                    SnackBar(content: Text(l10n.translationSaved)),
                   );
                 }
               },
@@ -96,7 +98,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
           if (playerState.isPlaying || playerState.isPaused)
             IconButton(
               icon: const Icon(Icons.stop),
-              tooltip: 'Stop',
+              tooltip: l10n.stop,
               onPressed: playerNotifier.stop,
             ),
         ],
@@ -108,14 +110,14 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
               onTap: () => showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: const Text('Translation Error'),
+                  title: Text(l10n.translationError),
                   content: SingleChildScrollView(
                     child: Text(playerState.error!),
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('OK'),
+                      child: Text(l10n.ok),
                     ),
                   ],
                 ),
@@ -189,6 +191,7 @@ class _TranslationProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final completed = progress?.completed ?? 0;
     final total = progress?.total ?? 0;
 
@@ -202,7 +205,7 @@ class _TranslationProgressIndicator extends StatelessWidget {
           LinearProgressIndicator(value: progress?.fraction ?? 0.0),
           const SizedBox(height: 8),
           Text(
-            'Translating $completed/$total entries...',
+            l10n.translatingEntries(completed.toString(), total.toString()),
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

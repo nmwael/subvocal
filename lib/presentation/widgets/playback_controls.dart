@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../generated/app_localizations.dart';
 import '../providers/player_provider.dart';
 
 class PlaybackControls extends StatefulWidget {
@@ -90,6 +91,7 @@ class _PlaybackControlsState extends State<PlaybackControls> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hasEntries = widget.playerState.entries.isNotEmpty;
 
     return Container(
@@ -109,7 +111,7 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                 _ControlButton(
                   icon: Icons.skip_previous,
                   onPressed: hasEntries ? widget.onPrevious : null,
-                  tooltip: 'Previous',
+                  tooltip: l10n.previous,
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
@@ -128,19 +130,19 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                           }
                         }
                       : null,
-                  tooltip: widget.playerState.isPlaying ? 'Pause' : 'Play',
+                  tooltip: widget.playerState.isPlaying ? l10n.pause : l10n.play,
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
                   icon: Icons.skip_next,
                   onPressed: hasEntries ? widget.onNext : null,
-                  tooltip: 'Next',
+                  tooltip: l10n.next,
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
                   icon: Icons.stop,
                   onPressed: hasEntries ? widget.onStop : null,
-                  tooltip: 'Stop',
+                  tooltip: l10n.stop,
                 ),
               ],
             ),
@@ -160,7 +162,7 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                             ),
                           ],
                           decoration: InputDecoration(
-                            hintText: 'e.g. 5:30 or 1:02:15',
+                            hintText: l10n.timeHint,
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -209,7 +211,7 @@ class _PlaybackControlsState extends State<PlaybackControls> {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Text('Sync'),
+                Text(l10n.sync),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Slider(
@@ -235,7 +237,7 @@ class _PlaybackControlsState extends State<PlaybackControls> {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Text('Speed'),
+                Text(l10n.speed),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Slider(

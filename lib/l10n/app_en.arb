@@ -1,0 +1,236 @@
+{
+  "@@locale": "en",
+  "all": "All",
+  "alphaBadge": "ALPHA",
+  "alphaBanner": "This app is in alpha. Features may change and bugs are expected.",
+  "apertium": "Apertium",
+  "autoTryAll": "Auto (try all)",
+  "azure": "Azure",
+  "cancel": "Cancel",
+  "couldNotLoadVoices": "Could not load voices: {error}",
+  "@couldNotLoadVoices": {
+    "description": "",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error placeholder"
+      }
+    }
+  },
+  "couldNotOpenBugReport": "Could not open bug report",
+  "createAccountForMore": "Create a free OpenSubtitles account to unlock more results.",
+  "createFreeAccount": "Create Free Account",
+  "createOsAccount": "Create OpenSubtitles Account",
+  "defaultLanguageLabel": "Default Language",
+  "defaultTargetLanguage": "Default Target Language",
+  "delete": "Delete",
+  "deleteTranslation": "Delete translation?",
+  "dismiss": "Dismiss",
+  "dontHaveAccount": "Don't have an account? Create one",
+  "emailHelper": "Raises MyMemory daily limit from 5,000 to 50,000 characters",
+  "emailHint": "your@email.com",
+  "emailOptional": "Email (optional)",
+  "enterSearchQuery": "Enter a search query",
+  "errorCheckingAuth": "Error checking auth status",
+  "failedToLoad": "Failed to load",
+  "getStarted": "Get Started",
+  "gotIt": "Got it",
+  "help": "Help",
+  "helpCreateAccountFull": "Create a free OpenSubtitles account to get 5 downloads per day. Open the signup page in your browser.",
+  "helpDownloadsDesc": "All providers searched in parallel. OpenSubtitles results require login. Tap a result to download and start playback.",
+  "helpDownloadsFull": "When you search, all providers are queried in parallel. If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. Tap a result to download and play. OpenSubtitles downloads require a free login.",
+  "helpProvidersAppDesc": "This app searches three subtitle providers. OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. SubDL gives 2,000 searches per day with a free API key. Podnapisi has no authentication required and no daily limit.",
+  "helpProvidersDescription": "OpenSubtitles — free account: 5 downloads/day, VIP: unlimited.\nSubDL — 2,000 searches/day with free API key.\nPodnapisi — no auth needed, no daily limit.",
+  "homeTagline": "Pick subtitles and read them aloud",
+  "howDownloadsWork": "How Downloads Work",
+  "language": "Language",
+  "libreTranslate": "LibreTranslate",
+  "loadingSaved": "Loading saved translations…",
+  "loggedInAs": "Logged in as {username}",
+  "@loggedInAs": {
+    "description": "",
+    "placeholders": {
+      "username": {
+        "type": "String",
+        "description": "The username placeholder"
+      }
+    }
+  },
+  "login": "Login",
+  "loginFailed": "Login failed. Check your credentials.",
+  "loginRequired": "Login Required",
+  "loginRequiredHelp": "You need a free OpenSubtitles account to download subtitles.\n\nFree accounts get 5 downloads per day.\n\nYou can also use SubDL or Podnapisi subtitles without logging in.",
+  "logout": "Logout",
+  "movies": "Movies",
+  "myMemory": "MyMemory",
+  "newestFirst": "Newest first",
+  "next": "Next",
+  "noDownloadableResults": "No downloadable results found. Create a free OpenSubtitles account to unlock more results.",
+  "noResultsFound": "No results found for \"{query}\".",
+  "@noResultsFound": {
+    "description": "",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "description": "The query placeholder"
+      }
+    }
+  },
+  "noSavedTranslations": "No saved translations yet.",
+  "noTranslationsAvailable": "No translations available.",
+  "noVoicesAvailable": "No voices available for {language}",
+  "@noVoicesAvailable": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "ok": "OK",
+  "oldestFirst": "Oldest first",
+  "openSignupPage": "Open signup page",
+  "openSubtitlesAccount": "OpenSubtitles Account",
+  "password": "Password",
+  "pause": "Pause",
+  "play": "Play",
+  "playSample": "Play Sample",
+  "playTranslatedSample": "Play Translated Sample",
+  "pleaseEnterBoth": "Please enter both username and password",
+  "previous": "Previous",
+  "readAccountHelpAloud": "Read account creation help aloud",
+  "readAccountInfoAloud": "Read account info aloud",
+  "readAloud": "Read aloud",
+  "readHelpAloud": "Read help aloud",
+  "readHelpAloudNoResults": "Read search help aloud",
+  "readHowDownloadsWorkAloud": "Read how downloads work aloud",
+  "readSubtitleProvidersAloud": "Read subtitle providers help aloud",
+  "readWelcomeAloud": "Read welcome message aloud",
+  "recent": "Recent",
+  "reportABug": "Report a Bug",
+  "reportABugSubtitle": "Open a pre-filled bug report on GitHub",
+  "savedTranslations": "Saved translations",
+  "savedTranslationsTitle": "Saved Translations",
+  "saveTranslation": "Save translation",
+  "saveTranslationHint": "Save translation for offline use",
+  "searchHelp": "Search Help",
+  "searchHint": "Search movies and TV shows…",
+  "searchSubtitles": "Search subtitles",
+  "searchTips": "Search Tips",
+  "searchTipsContent": "Search for movie and TV subtitles by name.\n\nResults from SubDL and Podnapisi are always shown. OpenSubtitles results appear only when you are logged in.\n\nFree OpenSubtitles accounts get 5 downloads per day.",
+  "searchTitle": "Search Subtitles",
+  "settingsTitle": "Readout Settings",
+  "skip": "Skip",
+  "sortBy": "Sort by",
+  "speechConfiguration": "Speech Configuration",
+  "speechRate": "Speech Rate",
+  "speed": "Speed",
+  "stop": "Stop",
+  "stopSample": "Stop Sample",
+  "stopTranslatedSample": "Stop Translated Sample",
+  "subtitleProviders": "Subtitle Providers",
+  "support": "Support",
+  "sync": "Sync",
+  "testTranslatedVoice": "Test Translated Voice",
+  "testTranslatedVoiceDescription": "Translate the first 5 lines to {language} and hear them spoken.",
+  "@testTranslatedVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "testVoice": "Test Voice",
+  "testVoiceDescription": "Hear a sample at your current speed ({speed}x) and pitch ({pitch}x).",
+  "@testVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "speed": {
+        "type": "String",
+        "description": "The speed placeholder"
+      },
+      "pitch": {
+        "type": "String",
+        "description": "The pitch placeholder"
+      }
+    }
+  },
+  "timeHint": "Format: HH:MM",
+  "titleAZ": "Title (A-Z)",
+  "translatingEntries": "Translating {current} of {total}…",
+  "@translatingEntries": {
+    "description": "",
+    "placeholders": {
+      "current": {
+        "type": "String",
+        "description": "The current placeholder"
+      },
+      "total": {
+        "type": "String",
+        "description": "The total placeholder"
+      }
+    }
+  },
+  "translationAndLanguage": "Translation & Language",
+  "translationError": "Translation Error",
+  "translationFailedTap": "Translation failed: tap for details",
+  "translationProvider": "Translation Provider",
+  "translationSaved": "Translation saved",
+  "tvEpisodes": "TV Episodes",
+  "unexpectedError": "An unexpected error occurred.",
+  "unknownVoice": "Unknown",
+  "username": "Username",
+  "voice": "Voice",
+  "voicePitch": "Voice Pitch",
+  "welcomeFullText": "Welcome to subvocal!\n\nThis app reads subtitles aloud in sync with your video.\n\nTo get started:\n1. Search for a movie or show on the Search tab.\n2. Tap a result to download subtitles.\n3. Playback starts automatically.\n\nYou can also log in to OpenSubtitles in Settings for more results.\n\nNeed help? Check the Help section in Settings.",
+  "welcomeGettingStarted": "To get started:",
+  "welcomeHelpHint": "Need help? Check the Help section in Settings.",
+  "welcomeIntro": "This app reads subtitles aloud in sync with your video.",
+  "welcomeLoginHint": "You can also log in to OpenSubtitles in Settings for more results.",
+  "welcomeStep": "{number}. {description}",
+  "@welcomeStep": {
+    "description": "",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "description": "The number placeholder"
+      },
+      "description": {
+        "type": "String",
+        "description": "The description placeholder"
+      }
+    }
+  },
+  "welcomeTitle": "Welcome to subvocal",
+  "deleteConfirm": "Are you sure you want to delete \"{title}\" ({language})?",
+  "@deleteConfirm": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "description": "The title placeholder"
+      },
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "searchError": "Search failed: {message}",
+  "@searchError": {
+    "description": "",
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "The error message placeholder"
+      }
+    }
+  },
+  "welcomeStep1": "1. Search for a movie or show on the Search tab.",
+  "welcomeStep2": "2. Tap a result to download subtitles.",
+  "welcomeStep3": "3. Playback starts automatically.",
+  "noSubtitleLoaded": "No subtitle loaded"
+}

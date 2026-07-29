@@ -1,0 +1,236 @@
+{
+  "@@locale": "da",
+  "all": "Alle",
+  "alphaBadge": "ALFA",
+  "alphaBanner": "Denne app er i alfa. Funktioner kan ændre sig, og fejl forventes.",
+  "apertium": "Apertium",
+  "autoTryAll": "Auto (prøv alle)",
+  "azure": "Azure",
+  "cancel": "Annuller",
+  "couldNotLoadVoices": "Kunne ikke indlæse stemmer: {error}",
+  "@couldNotLoadVoices": {
+    "description": "",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error placeholder"
+      }
+    }
+  },
+  "couldNotOpenBugReport": "Kunne ikke åbne fejlrapport",
+  "createAccountForMore": "Opret en gratis OpenSubtitles-konto for at få flere resultater.",
+  "createFreeAccount": "Opret gratis konto",
+  "createOsAccount": "Opret OpenSubtitles-konto",
+  "defaultLanguageLabel": "Standardsprog",
+  "defaultTargetLanguage": "Standard målsprog",
+  "delete": "Slet",
+  "deleteTranslation": "Slet oversættelse?",
+  "dismiss": "Afvis",
+  "dontHaveAccount": "Har du ikke en konto? Opret en",
+  "emailHelper": "Forøger MyMemorys daglige grænse fra 5.000 til 50.000 tegn",
+  "emailHint": "din@email.dk",
+  "emailOptional": "E-mail (valgfri)",
+  "enterSearchQuery": "Indtast en søgning",
+  "errorCheckingAuth": "Fejl ved kontrol af autentificering",
+  "failedToLoad": "Kunne ikke indlæse",
+  "getStarted": "Kom i gang",
+  "gotIt": "Forstået",
+  "help": "Hjælp",
+  "helpCreateAccountFull": "Opret en gratis OpenSubtitles-konto for at få 5 downloads om dagen. Åbn tilmeldingssiden i din browser.",
+  "helpDownloadsDesc": "Alle udbydere søges parallelt. OpenSubtitles-resultater kræver login. Tryk på et resultat for at downloade og starte afspilning.",
+  "helpDownloadsFull": "Når du søger, forespørges alle udbydere parallelt. Hvis du ikke er logget ind på OpenSubtitles, vises kun SubDL- og Podnapisi-resultater. Tryk på et resultat for at downloade og afspille. OpenSubtitles-downloads kræver et gratis login.",
+  "helpProvidersAppDesc": "Denne app søger i tre undertekstudbydere. OpenSubtitles er gratis med 5 downloads om dagen eller ubegrænset med et VIP-abonnement. SubDL giver 2.000 søgninger om dagen med en gratis API-nøgle. Podnapisi kræver ingen autentificering og har ingen daglig grænse.",
+  "helpProvidersDescription": "OpenSubtitles — gratis konto: 5 downloads/dag, VIP: ubegrænset.\nSubDL — 2.000 søgninger/dag med gratis API-nøgle.\nPodnapisi — ingen autentificering, ingen daglig grænse.",
+  "homeTagline": "Vælg undertekster og læs dem højt",
+  "howDownloadsWork": "Sådan fungerer downloads",
+  "language": "Sprog",
+  "libreTranslate": "LibreTranslate",
+  "loadingSaved": "Indlæser gemte oversættelser…",
+  "loggedInAs": "Logget ind som {username}",
+  "@loggedInAs": {
+    "description": "",
+    "placeholders": {
+      "username": {
+        "type": "String",
+        "description": "The username placeholder"
+      }
+    }
+  },
+  "login": "Log ind",
+  "loginFailed": "Login mislykkedes. Kontrollér dine legitimationsoplysninger.",
+  "loginRequired": "Login påkrævet",
+  "loginRequiredHelp": "Du skal bruge en gratis OpenSubtitles-konto for at downloade undertekster.\n\nGratis konti får 5 downloads om dagen.\n\nDu kan også bruge SubDL- eller Podnapisi-undertekster uden at logge ind.",
+  "logout": "Log ud",
+  "movies": "Film",
+  "myMemory": "MyMemory",
+  "newestFirst": "Nyeste først",
+  "next": "Næste",
+  "noDownloadableResults": "Ingen downloadbare resultater fundet. Opret en gratis OpenSubtitles-konto for at få flere resultater.",
+  "noResultsFound": "Ingen resultater fundet for \"{query}\".",
+  "@noResultsFound": {
+    "description": "",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "description": "The query placeholder"
+      }
+    }
+  },
+  "noSavedTranslations": "Ingen gemte oversættelser endnu.",
+  "noTranslationsAvailable": "Ingen oversættelser tilgængelige.",
+  "noVoicesAvailable": "Ingen stemmer tilgængelige for {language}",
+  "@noVoicesAvailable": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "ok": "OK",
+  "oldestFirst": "Ældste først",
+  "openSignupPage": "Åbn tilmeldingsside",
+  "openSubtitlesAccount": "OpenSubtitles-konto",
+  "password": "Adgangskode",
+  "pause": "Pause",
+  "play": "Afspil",
+  "playSample": "Afspil prøve",
+  "playTranslatedSample": "Afspil oversat prøve",
+  "pleaseEnterBoth": "Indtast både brugernavn og adgangskode",
+  "previous": "Forrige",
+  "readAccountHelpAloud": "Læs hjælp til kontoprettelse højt",
+  "readAccountInfoAloud": "Læs kontooplysninger højt",
+  "readAloud": "Læs højt",
+  "readHelpAloud": "Læs hjælp højt",
+  "readHelpAloudNoResults": "Læs søgehjælp højt",
+  "readHowDownloadsWorkAloud": "Læs hvordan downloads fungerer højt",
+  "readSubtitleProvidersAloud": "Læs hjælp til undertekstudbydere højt",
+  "readWelcomeAloud": "Læs velkomstbesked højt",
+  "recent": "Seneste",
+  "reportABug": "Rapporter en fejl",
+  "reportABugSubtitle": "Åbn en forudfyldt fejlrapport på GitHub",
+  "savedTranslations": "Gemte oversættelser",
+  "savedTranslationsTitle": "Gemte Oversættelser",
+  "saveTranslation": "Gem oversættelse",
+  "saveTranslationHint": "Gem oversættelse til offline brug",
+  "searchHelp": "Søgehjælp",
+  "searchHint": "Søg efter film og tv-serier…",
+  "searchSubtitles": "Søg efter undertekster",
+  "searchTips": "Søgetips",
+  "searchTipsContent": "Søg efter film- og tv-undertekster ved navn.\n\nResultater fra SubDL og Podnapisi vises altid. OpenSubtitles-resultater vises kun, når du er logget ind.\n\nGratis OpenSubtitles-konti får 5 downloads om dagen.",
+  "searchTitle": "Søg efter undertekster",
+  "settingsTitle": "Indstillinger",
+  "skip": "Spring over",
+  "sortBy": "Sorter efter",
+  "speechConfiguration": "Taleindstillinger",
+  "speechRate": "Talehastighed",
+  "speed": "Hastighed",
+  "stop": "Stop",
+  "stopSample": "Stop prøve",
+  "stopTranslatedSample": "Stop oversat prøve",
+  "subtitleProviders": "Undertekstudbydere",
+  "support": "Support",
+  "sync": "Synkronisering",
+  "testTranslatedVoice": "Test oversat stemme",
+  "testTranslatedVoiceDescription": "Oversæt de første 5 linjer til {language} og hør dem blive talt.",
+  "@testTranslatedVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "testVoice": "Test stemme",
+  "testVoiceDescription": "Hør en prøve ved din nuværende hastighed ({speed}x) og tonehøjde ({pitch}x).",
+  "@testVoiceDescription": {
+    "description": "",
+    "placeholders": {
+      "speed": {
+        "type": "String",
+        "description": "The speed placeholder"
+      },
+      "pitch": {
+        "type": "String",
+        "description": "The pitch placeholder"
+      }
+    }
+  },
+  "timeHint": "Format: TT:MM",
+  "titleAZ": "Titel (A-Å)",
+  "translatingEntries": "Oversætter {current} af {total}…",
+  "@translatingEntries": {
+    "description": "",
+    "placeholders": {
+      "current": {
+        "type": "String",
+        "description": "The current placeholder"
+      },
+      "total": {
+        "type": "String",
+        "description": "The total placeholder"
+      }
+    }
+  },
+  "translationAndLanguage": "Oversættelse og sprog",
+  "translationError": "Oversættelsesfejl",
+  "translationFailedTap": "Oversættelse mislykkedes: tryk for detaljer",
+  "translationProvider": "Oversættelsesudbyder",
+  "translationSaved": "Oversættelse gemt",
+  "tvEpisodes": "Tv-afsnit",
+  "unexpectedError": "Der opstod en uventet fejl.",
+  "unknownVoice": "Ukendt",
+  "username": "Brugernavn",
+  "voice": "Stemme",
+  "voicePitch": "Tonehøjde",
+  "welcomeFullText": "Velkommen til subvocal!\n\nDenne app læser undertekster højt i takt med din video.\n\nSådan kommer du i gang:\n1. Søg efter en film eller et program på fanen Søg.\n2. Tryk på et resultat for at downloade undertekster.\n3. Afspilning starter automatisk.\n\nDu kan også logge ind på OpenSubtitles i Indstillinger for flere resultater.\n\nBrug for hjælp? Tjek Hjælp-sektionen i Indstillinger.",
+  "welcomeGettingStarted": "Sådan kommer du i gang:",
+  "welcomeHelpHint": "Brug for hjælp? Tjek Hjælp-sektionen i Indstillinger.",
+  "welcomeIntro": "Denne app læser undertekster højt i takt med din video.",
+  "welcomeLoginHint": "Du kan også logge ind på OpenSubtitles i Indstillinger for flere resultater.",
+  "welcomeStep": "{number}. {description}",
+  "@welcomeStep": {
+    "description": "",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "description": "The number placeholder"
+      },
+      "description": {
+        "type": "String",
+        "description": "The description placeholder"
+      }
+    }
+  },
+  "welcomeTitle": "Velkommen til subvocal",
+  "deleteConfirm": "Er du sikker på, at du vil slette \"{title}\" ({language})?",
+  "@deleteConfirm": {
+    "description": "",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "description": "The title placeholder"
+      },
+      "language": {
+        "type": "String",
+        "description": "The language placeholder"
+      }
+    }
+  },
+  "searchError": "Søgning mislykkedes: {message}",
+  "@searchError": {
+    "description": "",
+    "placeholders": {
+      "message": {
+        "type": "String",
+        "description": "The error message placeholder"
+      }
+    }
+  },
+  "welcomeStep1": "1. Søg efter en film eller et program på fanen Søg.",
+  "welcomeStep2": "2. Tryk på et resultat for at downloade undertekster.",
+  "welcomeStep3": "3. Afspilning starter automatisk.",
+  "noSubtitleLoaded": "Ingen undertekster indlæst"
+}

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:subvocal/generated/app_localizations.dart';
 import 'package:subvocal/presentation/providers/auth_provider.dart';
 import 'package:subvocal/presentation/providers/test_voice_provider.dart';
 import 'package:subvocal/presentation/screens/settings_screen.dart';
@@ -14,7 +16,16 @@ void main() {
         translatedTestPlayingProvider.overrideWith((ref) => false),
         ...overrides,
       ],
-      child: const MaterialApp(home: SettingsScreen()),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const SettingsScreen(),
+      ),
     );
   }
 

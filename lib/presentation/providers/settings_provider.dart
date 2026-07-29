@@ -18,6 +18,7 @@ class SettingsState {
   final String? selectedVoice;
   final String myMemoryEmail;
   final TranslationProviderType selectedTranslationProvider;
+  final String appLocale;
 
   const SettingsState({
     this.speechRate = 0.5,
@@ -26,6 +27,7 @@ class SettingsState {
     this.selectedVoice,
     this.myMemoryEmail = '',
     this.selectedTranslationProvider = TranslationProviderType.auto,
+    this.appLocale = 'en',
   });
 
   SettingsState copyWith({
@@ -35,6 +37,7 @@ class SettingsState {
     String? selectedVoice,
     String? myMemoryEmail,
     TranslationProviderType? selectedTranslationProvider,
+    String? appLocale,
   }) {
     return SettingsState(
       speechRate: speechRate ?? this.speechRate,
@@ -44,6 +47,7 @@ class SettingsState {
       myMemoryEmail: myMemoryEmail ?? this.myMemoryEmail,
       selectedTranslationProvider:
           selectedTranslationProvider ?? this.selectedTranslationProvider,
+      appLocale: appLocale ?? this.appLocale,
     );
   }
 
@@ -57,6 +61,7 @@ class SettingsState {
       selectedTranslationProvider: translationProviderTypeFromString(
         json['selectedTranslationProvider'] as String? ?? 'auto',
       ),
+      appLocale: json['appLocale'] as String? ?? 'en',
     );
   }
 
@@ -68,6 +73,7 @@ class SettingsState {
       'selectedVoice': selectedVoice,
       'myMemoryEmail': myMemoryEmail,
       'selectedTranslationProvider': selectedTranslationProvider.name,
+      'appLocale': appLocale,
     };
   }
 }
@@ -117,6 +123,11 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   void setSelectedTranslationProvider(TranslationProviderType provider) {
     state = state.copyWith(selectedTranslationProvider: provider);
+    _persist();
+  }
+
+  void setAppLocale(String locale) {
+    state = state.copyWith(appLocale: locale);
     _persist();
   }
 }

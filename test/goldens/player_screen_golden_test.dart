@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:subvocal/domain/entities/subtitle.dart';
@@ -6,6 +7,7 @@ import 'package:subvocal/domain/entities/subtitle_entry.dart';
 import 'package:subvocal/domain/entities/translation_progress.dart';
 import 'package:subvocal/domain/errors/failures.dart';
 import 'package:subvocal/domain/repositories/tts_repository.dart';
+import 'package:subvocal/generated/app_localizations.dart';
 import 'package:subvocal/presentation/providers/player_provider.dart';
 import 'package:subvocal/presentation/screens/player_screen.dart';
 
@@ -89,7 +91,16 @@ Widget _buildPlayerScreen({
         return notifier;
       }),
     ],
-    child: const MaterialApp(home: PlayerScreen(subtitle: _testSubtitle)),
+    child: MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: const PlayerScreen(subtitle: _testSubtitle),
+    ),
   );
 }
 

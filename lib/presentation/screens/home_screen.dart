@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../generated/app_localizations.dart';
 import '../utils/welcome_helper.dart';
 import '../../domain/entities/recent_subtitle_info.dart';
 import '../providers/recent_subtitles_provider.dart';
@@ -30,6 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final recentSubtitles = ref.watch(recentSubtitlesProvider);
     final theme = Theme.of(context);
 
@@ -69,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Pick subtitles and read them aloud',
+                    l10n.homeTagline,
                     style: theme.textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -81,7 +83,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       );
                     },
                     icon: const Icon(Icons.search),
-                    label: const Text('Search subtitles'),
+                    label: Text(l10n.searchSubtitles),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(double.infinity, 56),
                     ),
@@ -96,7 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       );
                     },
                     icon: const Icon(Icons.bookmark),
-                    label: const Text('Saved translations'),
+                    label: Text(l10n.savedTranslations),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 56),
                     ),
@@ -108,7 +110,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
-                  'Recent',
+                  l10n.recent,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
@@ -128,7 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
-                      item.language ?? 'SRT',
+                      item.language ?? l10n.defaultLanguageLabel,
                       style: theme.textTheme.bodySmall,
                     ),
                     trailing: const Icon(Icons.play_arrow),
