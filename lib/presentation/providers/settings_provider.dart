@@ -127,6 +127,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   }
 
   void setAppLocale(String locale) {
+    const supported = ['en', 'da', 'es', 'fr'];
+    if (!supported.contains(locale)) return;
     state = state.copyWith(appLocale: locale);
     _persist();
   }
