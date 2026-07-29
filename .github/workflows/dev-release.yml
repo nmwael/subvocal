@@ -1,0 +1,63 @@
+name: Dev Release
+
+on:
+  push:
+    branches: [development]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(grep '^version: ' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+
+      - name: Build debug APK
+        run: flutter build apk --debug --dart-define=AZURE_TRANSLATION_KEY=${{ secrets.AZURE_TRANSLATION_KEY }} --dart-define=AZURE_TRANSLATION_REGION=${{ secrets.AZURE_TRANSLATION_REGION }}
+
+      - name: Rename APK
+        run: |
+          mv build/app/outputs/flutter-apk/app-debug.apk \
+             build/app/outputs/flutter-apk/subvocal-${{ env.VERSION }}-dev+${{ env.SHORT_SHA }}.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: subvocal-dev-apk
+          path: build/app/outputs/flutter-apk/subvocal-${{ env.VERSION }}-dev+${{ env.SHORT_SHA }}.apk
+          retention-days: 30
+
+      - name: Create dev release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: dev-${{ github.run_number }}
+          name: "Dev build #${{ github.run_number }} (${{ env.VERSION }}+${{ env.SHORT_SHA }})"
+          body: |
+            Development build from branch `${{ github.ref_name }}` at commit `${{ github.sha }}`.
+
+            Built at: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: |
+            build/app/outputs/flutter-apk/subvocal-${{ env.VERSION }}-dev+${{ env.SHORT_SHA }}.apk
