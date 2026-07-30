@@ -17,6 +17,7 @@ class SettingsState {
   final String selectedLanguage;
   final String? selectedVoice;
   final String myMemoryEmail;
+  final String subdlApiKey;
   final TranslationProviderType selectedTranslationProvider;
   final String appLocale;
 
@@ -26,6 +27,7 @@ class SettingsState {
     this.selectedLanguage = 'en',
     this.selectedVoice,
     this.myMemoryEmail = '',
+    this.subdlApiKey = '',
     this.selectedTranslationProvider = TranslationProviderType.auto,
     this.appLocale = 'en',
   });
@@ -36,6 +38,7 @@ class SettingsState {
     String? selectedLanguage,
     String? selectedVoice,
     String? myMemoryEmail,
+    String? subdlApiKey,
     TranslationProviderType? selectedTranslationProvider,
     String? appLocale,
   }) {
@@ -45,6 +48,7 @@ class SettingsState {
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       selectedVoice: selectedVoice ?? this.selectedVoice,
       myMemoryEmail: myMemoryEmail ?? this.myMemoryEmail,
+      subdlApiKey: subdlApiKey ?? this.subdlApiKey,
       selectedTranslationProvider:
           selectedTranslationProvider ?? this.selectedTranslationProvider,
       appLocale: appLocale ?? this.appLocale,
@@ -58,6 +62,7 @@ class SettingsState {
       selectedLanguage: json['selectedLanguage'] as String? ?? 'en',
       selectedVoice: json['selectedVoice'] as String?,
       myMemoryEmail: json['myMemoryEmail'] as String? ?? '',
+      subdlApiKey: json['subdlApiKey'] as String? ?? '',
       selectedTranslationProvider: translationProviderTypeFromString(
         json['selectedTranslationProvider'] as String? ?? 'auto',
       ),
@@ -72,6 +77,7 @@ class SettingsState {
       'selectedLanguage': selectedLanguage,
       'selectedVoice': selectedVoice,
       'myMemoryEmail': myMemoryEmail,
+      'subdlApiKey': subdlApiKey,
       'selectedTranslationProvider': selectedTranslationProvider.name,
       'appLocale': appLocale,
     };
@@ -118,6 +124,11 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   void setMyMemoryEmail(String email) {
     state = state.copyWith(myMemoryEmail: email);
+    _persist();
+  }
+
+  void setSubdlApiKey(String key) {
+    state = state.copyWith(subdlApiKey: key);
     _persist();
   }
 

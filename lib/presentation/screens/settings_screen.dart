@@ -5,15 +5,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/bug_report_helper.dart';
-import '../../generated/app_localizations.dart';
 import '../utils/help_reader.dart';
 import '../providers/auth_provider.dart';
 import '../providers/player_provider.dart';
 import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
-import '../widgets/locale_picker.dart';
 
 const _openSubtitlesSignupUrl = 'https://www.opensubtitles.com/en/signup';
+const _subdlSignupUrl = 'https://subdl.com/';
 
 const _iso6392To6391 = {
   'afr': 'af',
@@ -136,9 +135,7 @@ final availableVoicesProvider =
           )
           .toList();
       final filtered = allVoices.where((v) {
-        final voiceLang = _normalizeLangCode(
-          v['language'] ?? v['locale'] ?? '',
-        );
+        final voiceLang = _normalizeLangCode(v['language'] ?? '');
         return voiceLang == language.toLowerCase();
       }).toList();
       return filtered;
@@ -155,7 +152,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
+  final _subdlApiKeyController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureSubdlKey = true;
   String? _loginError;
 
   @override
@@ -163,6 +162,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _usernameController.dispose();
     _passwordController.dispose();
     _emailController.dispose();
+    _subdlApiKeyController.dispose();
     super.dispose();
   }
 
@@ -171,20 +171,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text;
     if (username.isEmpty || password.isEmpty) {
-      setState(() => _loginError = AppLocalizations.of(context)!.pleaseEnterBoth);
+      setState(() => _loginError = 'Please enter both username and password');
       return;
     }
     final success = await ref
         .read(authProvider.notifier)
         .login(username, password);
     if (!success && mounted) {
-      setState(() => _loginError = AppLocalizations.of(context)!.loginFailed);
+      setState(() => _loginError = 'Login failed. Check your credentials.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final settings = ref.watch(settingsProvider);
     final notifier = ref.read(settingsProvider.notifier);
     final auth = ref.watch(authProvider);
@@ -193,151 +192,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (_emailController.text != settings.myMemoryEmail) {
       _emailController.text = settings.myMemoryEmail;
     }
+    if (_subdlApiKeyController.text != settings.subdlApiKey) {
+      _subdlApiKeyController.text = settings.subdlApiKey;
+    }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle), centerTitle: true),
+      appBar: AppBar(title: const Text('Readout Settings'), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // --- OpenSubtitles Account ---
-          Text(
-            l10n.openSubtitlesAccount,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: auth.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, _) => Text(l10n.errorCheckingAuth),
-                data: (authState) {
-                  if (authState.status == AuthStatus.authenticated) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.check_circle, color: Colors.green),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                l10n.loggedInAs(authState.username ?? 'user'),
-                                style: theme.textTheme.bodyLarge,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  ref.read(authProvider.notifier).logout(),
-                              child: Text(
-                                l10n.logout,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (authState.accountInfo != null) ...[
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  authState.accountInfo!.summary,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: authState.accountInfo!.level == 'vip'
-                                        ? Colors.amber
-: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                              ),
-                              Semantics(
-                                label: l10n.readAccountInfoAloud,
-                                button: true,
-                                child: IconButton(
-                                  icon: const Icon(Icons.hearing, size: 18),
-                                  tooltip: l10n.readAloud,
-                                  onPressed: () => HelpReader.from(ref).read(
-                                    '${l10n.loggedInAs(authState.username ?? 'user')}. '
-                                    '${authState.accountInfo!.summary}',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
-                    );
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: l10n.username,
-                          border: const OutlineInputBorder(),
-                          prefixIcon: const Icon(Icons.person),
-                        ),
-                        textInputAction: TextInputAction.next,
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: l10n.password,
-                          border: const OutlineInputBorder(),
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () => setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            ),
-                          ),
-                        ),
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) => _login(),
-                      ),
-                      if (_loginError != null) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          _loginError!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ],
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: _login,
-                        child: Text(l10n.login),
-                      ),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () async {
-                          final url = Uri.parse(_openSubtitlesSignupUrl);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url, mode: LaunchMode.externalApplication);
-                          }
-                        },
-                        child: Text(l10n.dontHaveAccount),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
           // --- Speech Configuration ---
           Text(
-            l10n.speechConfiguration,
+            'Speech Configuration',
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.bold,
@@ -353,7 +219,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.speechRate),
+                      const Text('Speech Rate (Speed)'),
                       Text('${settings.speechRate.toStringAsFixed(2)}x'),
                     ],
                   ),
@@ -369,7 +235,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.voicePitch),
+                      const Text('Voice Pitch'),
                       Text('${settings.pitch.toStringAsFixed(1)}x'),
                     ],
                   ),
@@ -396,7 +262,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           // --- Test Voice ---
           Text(
-            l10n.testVoice,
+            'Test Voice',
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.bold,
@@ -410,10 +276,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    l10n.testVoiceDescription(
-                      settings.speechRate.toStringAsFixed(2),
-                      settings.pitch.toStringAsFixed(1),
-                    ),
+                    'Hear a sample at your current speed (${settings.speechRate.toStringAsFixed(2)}x) and pitch (${settings.pitch.toStringAsFixed(1)}x).',
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 12),
@@ -429,7 +292,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           // --- Test Translated Voice ---
           Text(
-            l10n.testTranslatedVoice,
+            'Test Translated Voice',
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.bold,
@@ -443,7 +306,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    l10n.testTranslatedVoiceDescription(settings.selectedLanguage.toUpperCase()),
+                    'Translate the first 5 lines to ${settings.selectedLanguage.toUpperCase()} and hear them spoken.',
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 12),
@@ -460,259 +323,652 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(height: 24),
 
-          // --- App Language ---
-          Text(
-            l10n.language,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
+          // --- Subtitle Providers ---
+          _SettingsAccordion(
+            title: 'Subtitle Providers',
+            subtitle: auth.when(
+              loading: () => '',
+              error: (_, _) => '',
+              data: (authState) => authState.status == AuthStatus.authenticated
+                  ? 'OpenSubtitles ✓  |  ${settings.subdlApiKey.isNotEmpty ? "SubDL ✓" : "SubDL ✗"}'
+                  : 'Not logged in  |  ${settings.subdlApiKey.isNotEmpty ? "SubDL ✓" : "SubDL ✗"}',
             ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
+            initiallyExpanded: true,
+            children: [
+              // --- OpenSubtitles Account ---
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'OpenSubtitles Account',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: auth.when(
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          error: (_, _) => const Text(
+                            'Error checking auth status',
+                          ),
+                          data: (authState) {
+                            if (authState.status ==
+                                AuthStatus.authenticated) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          'Logged in as ${authState.username ?? "user"}',
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            ref
+                                                .read(authProvider.notifier)
+                                                .logout(),
+                                        child: const Text(
+                                          'Logout',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (authState.accountInfo != null) ...[
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            authState.accountInfo!.summary,
+                                            style: theme.textTheme.bodySmall
+                                                ?.copyWith(
+                                              color: authState
+                                                          .accountInfo!
+                                                          .level ==
+                                                      'vip'
+                                                  ? Colors.amber
+                                                  : theme.colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ),
+                                        Semantics(
+                                          label: 'Read account info aloud',
+                                          button: true,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.hearing,
+                                              size: 18,
+                                            ),
+                                            tooltip: 'Read aloud',
+                                            onPressed: () =>
+                                                HelpReader.from(ref).read(
+                                              'Logged in as ${authState.username ?? "user"}. '
+                                              '${authState.accountInfo!.summary}',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ],
+                              );
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                TextField(
+                                  controller: _usernameController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Username',
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.person),
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                const SizedBox(height: 12),
+                                TextField(
+                                  controller: _passwordController,
+                                  obscureText: _obscurePassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    border: const OutlineInputBorder(),
+                                    prefixIcon: const Icon(Icons.lock),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () => setState(
+                                        () => _obscurePassword =
+                                            !_obscurePassword,
+                                      ),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                  onSubmitted: (_) => _login(),
+                                ),
+                                if (_loginError != null) ...[
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _loginError!,
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                                const SizedBox(height: 12),
+                                ElevatedButton(
+                                  onPressed: _login,
+                                  child: const Text('Login'),
+                                ),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  onPressed: () async {
+                                    final url = Uri.parse(
+                                      _openSubtitlesSignupUrl,
+                                    );
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(
+                                        url,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    "Don't have an account? Create one",
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // --- SubDL API Key ---
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.defaultLanguageLabel),
-                  const SizedBox(height: 8),
-                  LocalePicker(
-                    value: settings.appLocale,
-                    onChanged: (v) => notifier.setAppLocale(v),
-                    locales: appLocales,
+                  Text(
+                    'SubDL API Key',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (settings.subdlApiKey.isNotEmpty)
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'SubDL configured',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            )
+                          else
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: Colors.orange,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'SubDL not configured',
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _subdlApiKeyController,
+                            obscureText: _obscureSubdlKey,
+                            decoration: InputDecoration(
+                              labelText: 'API Key',
+                              hintText: 'Enter your SubDL API key',
+                              border: const OutlineInputBorder(),
+                              prefixIcon: const Icon(Icons.key),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureSubdlKey
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () => setState(
+                                  () =>
+                                      _obscureSubdlKey = !_obscureSubdlKey,
+                                ),
+                              ),
+                              helperText: 'Get a free key at subdl.com',
+                            ),
+                            onChanged: (value) =>
+                                notifier.setSubdlApiKey(value),
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () async {
+                              final url = Uri.parse(_subdlSignupUrl);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            },
+                            icon: const Icon(Icons.open_in_new, size: 16),
+                            label: const Text('Get a free API key'),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
 
           // --- Translation & Language ---
-          Text(
-            l10n.translationAndLanguage,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+          _SettingsAccordion(
+            title: 'Translation & Language',
+            subtitle: settings.selectedTranslationProvider.name,
+            initiallyExpanded: false,
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Default Target Language'),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        initialValue: settings.selectedLanguage,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'en',
+                            child: Text('English (en)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'es',
+                            child: Text('Spanish (es)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'da',
+                            child: Text('Danish (da)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'fr',
+                            child: Text('French (fr)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'de',
+                            child: Text('German (de)'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            notifier.setSelectedLanguage(value);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email (optional)',
+                          hintText: 'your@email.com',
+                          border: OutlineInputBorder(),
+                          helperText:
+                              'Raises MyMemory daily limit from 5,000 to 50,000 characters',
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) =>
+                            notifier.setMyMemoryEmail(value),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Translation Provider'),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<TranslationProviderType>(
+                        initialValue: settings.selectedTranslationProvider,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: TranslationProviderType.auto,
+                            child: Text('Auto (try all)'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.azure,
+                            child: Text('Azure'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.myMemory,
+                            child: Text('MyMemory'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.apertium,
+                            child: Text('Apertium'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.libreTranslate,
+                            child: Text('LibreTranslate'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            notifier.setSelectedTranslationProvider(value);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
+          const SizedBox(height: 8),
+
+          // --- Help & About ---
+          _SettingsAccordion(
+            title: 'Help & About',
+            subtitle: '',
+            initiallyExpanded: false,
+            children: [
+              // --- Support ---
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Support',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.bug_report),
+                        title: const Text('Report a Bug'),
+                        subtitle: const Text(
+                          'Open a pre-filled bug report on GitHub',
+                        ),
+                        trailing: const Icon(Icons.open_in_new),
+                        onTap: () async {
+                          final opened =
+                              await BugReportHelper().openBugReport();
+                          if (context.mounted && !opened) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Could not open bug report'),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // --- Help ---
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Help',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'Subtitle Providers',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Semantics(
+                                  label:
+                                      'Read subtitle providers help aloud',
+                                  button: true,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.hearing,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Read aloud',
+                                    onPressed: () =>
+                                        HelpReader.from(ref).read(
+                                      'This app searches three subtitle providers. '
+                                      'OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. '
+                                      'SubDL gives 2,000 searches per day with a free API key. '
+                                      'Enter your SubDL API key in the settings above to enable it. '
+                                      'Podnapisi has no authentication required and no daily limit.',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'OpenSubtitles — free account: 5 downloads/day, VIP: unlimited.\n'
+                              'SubDL — 2,000 searches/day with free API key (configure above).\n'
+                              'Podnapisi — no auth needed, no daily limit.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                            const Divider(height: 24),
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'How Downloads Work',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Semantics(
+                                  label:
+                                      'Read how downloads work aloud',
+                                  button: true,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.hearing,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Read aloud',
+                                    onPressed: () =>
+                                        HelpReader.from(ref).read(
+                                      'When you search, all providers are queried in parallel. '
+                                      'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
+                                      'Tap a result to download and play. '
+                                      'OpenSubtitles downloads require a free login.',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'All providers searched in parallel. OpenSubtitles results require login. '
+                              'Tap a result to download and start playback.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                            const Divider(height: 24),
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'Create OpenSubtitles Account',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Semantics(
+                                  label:
+                                      'Read account creation help aloud',
+                                  button: true,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.hearing,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Read aloud',
+                                    onPressed: () =>
+                                        HelpReader.from(ref).read(
+                                      'Create a free OpenSubtitles account to get 5 downloads per day. '
+                                      'Open the signup page in your browser.',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            TextButton.icon(
+                              onPressed: () async {
+                                final url = Uri.parse(
+                                  _openSubtitlesSignupUrl,
+                                );
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(
+                                    url,
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.open_in_new,
+                                size: 16,
+                              ),
+                              label: const Text('Open signup page'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // --- About ---
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.defaultTargetLanguage),
-                  const SizedBox(height: 8),
-                  LocalePicker(
-                    value: settings.selectedLanguage,
-                    onChanged: (v) => notifier.setSelectedLanguage(v),
-                    locales: targetLanguageLocales,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: l10n.emailOptional,
-                      hintText: l10n.emailHint,
-                      border: const OutlineInputBorder(),
-                      helperText: l10n.emailHelper,
+                  Text(
+                    'About',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) => notifier.setMyMemoryEmail(value),
                   ),
-                  const SizedBox(height: 16),
-                  Text(l10n.translationProvider),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<TranslationProviderType>(
-                    initialValue: settings.selectedTranslationProvider,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    items: [
-                      DropdownMenuItem(
-                        value: TranslationProviderType.auto,
-                        child: Text(l10n.autoTryAll),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.azure,
-                        child: Text(l10n.azure),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.myMemory,
-                        child: Text(l10n.myMemory),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.apertium,
-                        child: Text(l10n.apertium),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.libreTranslate,
-                        child: Text(l10n.libreTranslate),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        notifier.setSelectedTranslationProvider(value);
-                      }
-                    },
-                  ),
+                  const SizedBox(height: 12),
+                  const _AppVersion(),
                 ],
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 24),
-
-          // --- Support ---
-          Text(
-            l10n.support,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.bug_report),
-              title: Text(l10n.reportABug),
-              subtitle: Text(l10n.reportABugSubtitle),
-              trailing: const Icon(Icons.open_in_new),
-              onTap: () async {
-                final opened = await BugReportHelper().openBugReport();
-                if (context.mounted && !opened) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.couldNotOpenBugReport)),
-                  );
-                }
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // --- Help ---
-          Text(
-            l10n.help,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.subtitleProviders,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Semantics(
-                        label: l10n.readSubtitleProvidersAloud,
-                        button: true,
-                        child: IconButton(
-                          icon: const Icon(Icons.hearing, size: 18),
-                          tooltip: l10n.readAloud,
-                          onPressed: () => HelpReader.from(ref).read(
-                          l10n.helpProvidersAppDesc,
-                        ),
-                      ),
-                    ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.helpProvidersDescription,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  const Divider(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.howDownloadsWork,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Semantics(
-                        label: l10n.readHowDownloadsWorkAloud,
-                        button: true,
-                        child: IconButton(
-                          icon: const Icon(Icons.hearing, size: 18),
-                          tooltip: l10n.readAloud,
-                          onPressed: () => HelpReader.from(ref).read(
-                            l10n.helpDownloadsFull,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    l10n.helpDownloadsDesc,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  const Divider(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          l10n.createOsAccount,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Semantics(
-                        label: l10n.readAccountHelpAloud,
-                        button: true,
-                        child: IconButton(
-                          icon: const Icon(Icons.hearing, size: 18),
-                          tooltip: l10n.readAloud,
-                          onPressed: () => HelpReader.from(ref).read(
-                            l10n.helpCreateAccountFull,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  TextButton.icon(
-                    onPressed: () async {
-                      final url = Uri.parse(_openSubtitlesSignupUrl);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url, mode: LaunchMode.externalApplication);
-                      }
-                    },
-                    icon: const Icon(Icons.open_in_new, size: 16),
-                    label: Text(l10n.openSignupPage),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // --- About ---
-          Text(
-            'About',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const _AppVersion(),
         ],
+      ),
+    );
+  }
+}
+
+class _SettingsAccordion extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final bool initiallyExpanded;
+  final List<Widget> children;
+
+  const _SettingsAccordion({
+    required this.title,
+    required this.subtitle,
+    required this.initiallyExpanded,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      child: ExpansionTile(
+        title: Text(
+          title,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+        initiallyExpanded: initiallyExpanded,
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: children,
       ),
     );
   }
@@ -792,7 +1048,6 @@ class _TestVoiceButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final isPlaying = ref.watch(testVoicePlayingProvider);
     final voice = ref.watch(settingsProvider).selectedVoice;
 
@@ -800,14 +1055,14 @@ class _TestVoiceButton extends ConsumerWidget {
         ? OutlinedButton.icon(
             onPressed: () => ref.read(testVoiceControllerProvider).stop(),
             icon: const Icon(Icons.stop),
-            label: Text(l10n.stopSample),
+            label: const Text('Stop Sample'),
           )
         : ElevatedButton.icon(
             onPressed: () => ref
                 .read(testVoiceControllerProvider)
                 .playSample(rate, pitch, voice: voice),
             icon: const Icon(Icons.play_arrow),
-            label: Text(l10n.playSample),
+            label: const Text('Play Sample'),
           );
   }
 }
@@ -819,7 +1074,6 @@ class _TranslatedTestPreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final preview = ref.watch(translatedTestPreviewProvider(language));
     final theme = Theme.of(context);
 
@@ -829,25 +1083,25 @@ class _TranslatedTestPreview extends ConsumerWidget {
         onTap: () => showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: Text(l10n.translationError),
+            title: const Text('Translation Error'),
             content: SingleChildScrollView(child: Text(e.toString())),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(l10n.ok),
+                child: const Text('OK'),
               ),
             ],
           ),
         ),
         child: Text(
-          l10n.translationFailedTap,
+          'Translation failed: tap for details',
           style: theme.textTheme.bodySmall?.copyWith(color: Colors.orange),
         ),
       ),
       data: (lines) {
         if (lines.isEmpty) {
           return Text(
-            l10n.noTranslationsAvailable,
+            'No translations available.',
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -887,7 +1141,6 @@ class _TranslatedTestButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final isPlaying = ref.watch(translatedTestPlayingProvider);
     final voice = ref.watch(settingsProvider).selectedVoice;
 
@@ -895,14 +1148,14 @@ class _TranslatedTestButton extends ConsumerWidget {
         ? OutlinedButton.icon(
             onPressed: () => ref.read(testVoiceControllerProvider).stop(),
             icon: const Icon(Icons.stop),
-            label: Text(l10n.stopTranslatedSample),
+            label: const Text('Stop Translated Sample'),
           )
         : ElevatedButton.icon(
             onPressed: () => ref
                 .read(testVoiceControllerProvider)
                 .playTranslatedSample(rate, pitch, language, voice: voice),
             icon: const Icon(Icons.play_arrow),
-            label: Text(l10n.playTranslatedSample),
+            label: const Text('Play Translated Sample'),
           );
   }
 }
@@ -920,13 +1173,12 @@ class _VoiceSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
     final voicesAsync = ref.watch(availableVoicesProvider);
 
     return voicesAsync.when(
       loading: () => const LinearProgressIndicator(),
       error: (e, _) => Text(
-        l10n.couldNotLoadVoices(e.toString()),
+        'Could not load voices: $e',
         style: Theme.of(
           context,
         ).textTheme.bodySmall?.copyWith(color: Colors.orange),
@@ -934,7 +1186,7 @@ class _VoiceSelector extends ConsumerWidget {
       data: (voices) {
         if (voices.isEmpty) {
           return Text(
-            l10n.noVoicesAvailable(language.toUpperCase()),
+            'No voices available for ${language.toUpperCase()}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(
                 context,
@@ -948,7 +1200,7 @@ class _VoiceSelector extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l10n.voice),
+            const Text('Voice'),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               initialValue: validValue,
@@ -957,7 +1209,7 @@ class _VoiceSelector extends ConsumerWidget {
                   .map(
                     (v) => DropdownMenuItem(
                       value: v['name'],
-                      child: Text(v['name'] ?? l10n.unknownVoice),
+                      child: Text(v['name'] ?? 'Unknown'),
                     ),
                   )
                   .toList(),
