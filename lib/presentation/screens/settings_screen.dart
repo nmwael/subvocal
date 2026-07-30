@@ -135,7 +135,7 @@ final availableVoicesProvider =
           )
           .toList();
       final filtered = allVoices.where((v) {
-        final voiceLang = _normalizeLangCode(v['language'] ?? '');
+        final voiceLang = _normalizeLangCode(v['language'] ?? v['locale'] ?? '');
         return voiceLang == language.toLowerCase();
       }).toList();
       return filtered;
