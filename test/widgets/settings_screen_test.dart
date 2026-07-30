@@ -34,8 +34,13 @@ void main() {
     await tester.pump();
 
     expect(find.text('Readout Settings'), findsOneWidget);
-    expect(find.text('OpenSubtitles Account'), findsOneWidget);
     expect(find.text('Speech Configuration'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Subtitle Providers'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Subtitle Providers'), findsOneWidget);
   });
 
   testWidgets('Voice selector renders with available voices', (tester) async {
@@ -53,6 +58,11 @@ void main() {
     );
     await tester.pump();
 
+    await tester.scrollUntilVisible(
+      find.text('Voice'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Voice'), findsOneWidget);
     expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
   });
@@ -71,6 +81,11 @@ void main() {
     );
     await tester.pump();
 
+    await tester.scrollUntilVisible(
+      find.textContaining('No voices available'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.textContaining('No voices available'), findsOneWidget);
     expect(find.byType(DropdownButtonFormField<String>), findsNothing);
   });

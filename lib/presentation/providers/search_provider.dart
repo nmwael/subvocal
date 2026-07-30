@@ -39,7 +39,7 @@ final openSubtitlesApiProvider = Provider<OpenSubtitlesApi>((ref) {
 });
 
 final _subdlApiProvider = Provider<SubdlApi?>((ref) {
-  const apiKey = String.fromEnvironment('SUBDL_API_KEY', defaultValue: '');
+  final apiKey = ref.watch(settingsProvider.select((s) => s.subdlApiKey));
   if (apiKey.isEmpty) return null;
   return SubdlApi(ref.watch(_httpClientProvider), apiKey);
 });
