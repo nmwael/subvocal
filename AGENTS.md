@@ -365,7 +365,7 @@ All scripts are in `scripts/` and accept `--help` for usage. Use these instead o
 | `log-usage.sh` | Log token usage from OpenCode DB to `.aifinops/log.csv` (auto-called by `workflow-notify.sh` at task boundaries) |
 | `usage-report.sh` | Generate usage reports (`--by-agent`, `--by-model`, `--by-issue`, `--summary`, `--json`) |
 
-**How it works**: OpenCode tracks per-message `cost` and `tokens` (input/output/reasoning/cache) in its SQLite database (`~/.local/share/opencode/opencode.db`). The `session` table has pre-aggregated totals. `log-usage.sh` reads this data and appends a CSV row to `.aifinops/log.csv`.
+**How it works**: OpenCode tracks per-message `cost` and `tokens` (input/output/reasoning/cache) in its SQLite database (`~/.local/share/opencode/opencode.db`). The `session` table has pre-aggregated totals. `log-usage.sh` reads this data and appends **one CSV row per session** to `.aifinops/log.csv` — the latest top-level session plus each of its subagent (child) sessions, so usage from all roles (architect, developer, tester, security-auditor, ux-ui, explore, general) is accounted for with its own model. Rows are deduplicated by `session_id`, so re-running never re-appends already-logged sessions. The `parent_session_id` column links subagent rows to their parent.
 
 **Auto-logging**: `workflow-notify.sh` automatically calls `log-usage.sh` after `impl-done`, `tests-done`, `audit-done`, and `ux-done` notifications. No manual action needed.
 

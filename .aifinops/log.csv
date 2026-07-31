@@ -1,4 +1,4 @@
-timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoning,cache_read,cache_write,cost_usd
+timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoning,cache_read,cache_write,cost_usd,parent_session_id
 2026-07-23T12:00:41Z,ses_072114ab8ffez2vixkfI8NBS42,74,build,big-pickle,729733,57586,29576,22318016,0,0.000000
 2026-07-23T12:20:11Z,ses_072114ab8ffez2vixkfI8NBS42,86,build,big-pickle,767693,62482,38936,26958912,0,0.000000
 2026-07-23T12:28:30Z,ses_072114ab8ffez2vixkfI8NBS42,87,build,big-pickle,777638,65631,39470,28537728,0,0.000000
@@ -28,3 +28,5 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-07-30T15:08:42Z,ses_04c732b60ffeSw77J0sQgo5tPp,211,build,big-pickle,50545,8851,4006,1520000,0,0.000000
 2026-07-30T17:55:27Z,ses_04c732b60ffeSw77J0sQgo5tPp,215,build,big-pickle,355002,53332,40209,20919168,0,0.000000
 2026-07-30T18:35:10Z,ses_04c732b60ffeSw77J0sQgo5tPp,217,build,big-pickle,366467,56440,42179,21562496,0,0.000000
+2026-07-31T17:44:12Z,ses_047284e70ffezlWT5wz0B3JyDw,219,build,big-pickle,552043,37669,66788,11964800,0,0.000000,
+2026-07-31T17:44:12Z,ses_04726a083fferL07TVg2Y0Yp1V,219,developer,deepseek-ai/deepseek-v4-pro,347626,2506,0,168960,0,0.154010,ses_047284e70ffezlWT5wz0B3JyDw
