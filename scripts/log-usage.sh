@@ -65,9 +65,13 @@ if [[ ! -f "$LOG_FILE" ]]; then
 fi
 
 # Query the database: emits one CSV line per session (parent first, then children).
-ROWS=$(python3 -c "
-import sqlite3, json, sys
-conn = sqlite3.connect('$DB_PATH')
+# DB_PATH and SESSION_ID are passed via environment variables so no shell
+# values are interpolated into the Python source.
+ROWS=$(DB_PATH="$DB_PATH" SESSION_ID="$SESSION_ID" python3 -c "
+import sqlite3, json, sys, os
+db_path = os.environ['DB_PATH']
+session_id = os.environ.get('SESSION_ID', '')
+conn = sqlite3.connect(db_path)
 conn.row_factory = sqlite3.Row
 c = conn.cursor()
 
@@ -83,9 +87,12 @@ def model_name(raw):
         return raw
 
 def csv_safe(v):
-    return str(v).replace(',', ';')
+    s = str(v)
+    # Escape CSV formula injection (Excel: =,+,-,@ prefixes) in arbitrary text.
+    if s[:1] in ('=', '+', '-', '@'):
+        s = \"'\" + s
+    return s.replace(',', ';')
 
-session_id = '''$SESSION_ID'''
 if session_id:
     c.execute(f'SELECT {COLS} FROM session WHERE id = ?', (session_id,))
 else:
@@ -174,7 +181,7 @@ while IFS= read -r line; do
 
   CSV_ROW="${TIMESTAMP},${SESSION_ID_VAL},${ISSUE:-},${AGENT_VAL},${MODEL},${TOKENS_IN},${TOKENS_OUT},${TOKENS_REASON},${CACHE_R},${CACHE_W},${COST},${PARENT_ID_VAL}"
 
-  if grep -q ",${SESSION_ID_VAL}," "$LOG_FILE" 2>/dev/null; then
+  if grep -qF ",${SESSION_ID_VAL}," "$LOG_FILE" 2>/dev/null; then
     SKIPPED=$((SKIPPED + 1))
     if [[ "$DRY_RUN" == true ]]; then
       echo "  [skip, already logged] $CSV_ROW"
