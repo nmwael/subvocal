@@ -57,3 +57,6 @@ tmp/**
 
 # Golden test failure artifacts
 test/goldens/failures/
+
+# Generated BDD feature files (auto-exported by bdd_framework on every run)
+test/features/generated/
