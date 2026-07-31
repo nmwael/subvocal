@@ -53,6 +53,7 @@ dev_dependencies:
   integration_test:
     sdk: flutter
 
+  bdd_framework: ^4.0.7
   flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the

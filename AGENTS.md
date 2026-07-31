@@ -74,6 +74,20 @@ graph TD
    - If changes needed, returns to appropriate stage
    - **Human reviews and merges the PR to `development`**
 
+### TDD with BDD
+
+All feature work follows test-driven development (red–green–refactor) with a BDD layer for behavior:
+
+1. **Red** — Write a failing BDD scenario (Given/When/Then) or unit test describing the behavior
+2. **Green** — Implement the minimal code to make it pass
+3. **Refactor** — Clean up while keeping the suite green
+
+**BDD living template**: behavior is specified as Gherkin scenarios in `test/**/*_bdd_test.dart` using `bdd_framework`. Every test run auto-exports a plain-language `.feature` file to `test/features/generated/` (gitignored) for stakeholder review.
+
+**Decision — widget BDD deferred**: widget tests stay plain `testWidgets`. `bdd_framework` v4.0.7 has no widget support (its `bddWidgetTest`/`BddWidgetContext` exist only on the unreleased main branch), so BDD scenarios apply to unit tests only. Revisit when bdd_framework ships widget support.
+
+**Definition of Done**: code changes ship only after `dart analyze` is clean, `dart format` is applied, and all unit/widget/BDD tests pass (`./scripts/run-tests.sh --all`).
+
 ### Memory Aid: YOU ALWAYS FORGET THE HITL GATE
 
 You have a pattern of treating "small" or "obvious" code changes as exempt from the HITL workflow. **This is incorrect.** The following examples ARE code changes that require architect → issue → approval:
@@ -90,6 +104,8 @@ You have a pattern of treating "small" or "obvious" code changes as exempt from 
 - Starting/stopping services
 
 > **Rule of thumb:** If it touches a tracked or tracked-adjacent file, it needs an issue and approval. "But it's small!" is not an exemption — it's the exact rationalization that has caused every previous violation.
+
+> **TDD:** Behavior is specified in BDD scenarios first (`test/**/*_bdd_test.dart`), then implemented. A feature is not done until its Given/When/Then scenarios pass and export to `test/features/generated/`.
 
 ## Agent Roles
 
@@ -108,7 +124,7 @@ Read-only analyst. Explores the codebase, understands existing patterns, and pro
 > This polls the issue every 10s for `approved`/`lgtm`/`looks good`/`go ahead`. On detection, it notifies and exits 0. Only then may the developer begin implementation.
 
 ### `@developer`
-Implements code changes. Edits source files and runs build/compile commands autonomously. When work is complete, presents a summary of all changes and asks for human review. On failure, retries up to 3 times before escalating to the user.
+Implements code changes following **TDD (red–green–refactor)**: write the failing BDD scenario or unit test first, then the minimal code to make it pass. Edits source files and runs build/compile commands autonomously. When work is complete, presents a summary of all changes and asks for human review. On failure, retries up to 3 times before escalating to the user.
 
 > **Notification gate**: When implementation is done and review is requested, run:
 > ```bash
@@ -118,7 +134,7 @@ Implements code changes. Edits source files and runs build/compile commands auto
 > **IMPORTANT**: After notification, **do not proceed directly to testing**. Wait for the architect to review your work and either approve (pass to tester) or request changes (return to developer).
 
 ### `@tester`
-Writes and runs tests. Edits test files and executes test commands autonomously. When tests are complete, presents results and asks for human review. On failure, retries up to 3 times before escalating to the user.
+Writes and runs tests following clean-code principles for readable, deterministic tests. BDD scenarios (Given/When/Then in `test/**/*_bdd_test.dart`) are the living template — behavior is expressed in plain language and auto-exports to `test/features/generated/` for stakeholder review. Validates the developer's work, then closes the GitHub issue when done. Works autonomously and presents completed test results for human review. On failure, retries up to 3 times before escalating to the user.
 
 > **Notification gate**: When tests are done and results are presented, run:
 > ```bash

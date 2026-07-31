@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [--unit] [--widget] [--integration] [--golden] [--file <path>] [--coverage] [--all]
+Usage: $(basename "$0") [--unit] [--widget] [--integration] [--golden] [--features] [--file <path>] [--coverage] [--all]
 
 Run Flutter tests by category.
 
@@ -12,6 +12,7 @@ Options:
   --widget        Run only test/widgets/
   --integration   Run only integration_test/
   --golden        Run only test/goldens/
+  --features      Run only BDD test files (test/**/*_bdd_test.dart)
   --file <path>   Run a specific test file
   --coverage      Generate coverage report
   --all           Run all tests (default)
@@ -24,6 +25,7 @@ RUN_UNIT=false
 RUN_WIDGET=false
 RUN_INTEGRATION=false
 RUN_GOLDEN=false
+RUN_FEATURES=false
 RUN_FILE=""
 RUN_ALL=false
 COVERAGE=false
@@ -35,6 +37,7 @@ while [[ $# -gt 0 ]]; do
     --widget) RUN_WIDGET=true; ANY_FILTER=true; shift ;;
     --integration) RUN_INTEGRATION=true; ANY_FILTER=true; shift ;;
     --golden) RUN_GOLDEN=true; ANY_FILTER=true; shift ;;
+    --features) RUN_FEATURES=true; ANY_FILTER=true; shift ;;
     --file) RUN_FILE="$2"; ANY_FILTER=true; shift 2 ;;
     --coverage) COVERAGE=true; shift ;;
     --all) RUN_ALL=true; shift ;;
@@ -84,6 +87,16 @@ fi
 
 if [[ -n "$RUN_FILE" ]]; then
   run flutter test "$RUN_FILE" "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}"
+fi
+
+if [[ "$RUN_FEATURES" == true ]]; then
+  # shellcheck disable=SC2207
+  BDD_FILES=($(find test -name "*_bdd_test.dart" | sort))
+  if [[ ${#BDD_FILES[@]} -gt 0 ]]; then
+    run flutter test "${BDD_FILES[@]}" "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}"
+  else
+    echo "⚠ No BDD test files found (pattern: *_bdd_test.dart)"
+  fi
 fi
 
 if [[ "$COVERAGE" == true ]] && [[ -f coverage/lcov.info ]]; then
