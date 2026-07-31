@@ -328,6 +328,7 @@
           <li style="margin-bottom: 4px;"><a href="#Structured_Communication" style="color: var(--text-muted);">Communication</a></li>
           <li style="margin-bottom: 4px;"><a href="#Challenges_and_Limitations" style="color: var(--text-muted);">Challenges</a></li>
           <li style="margin-bottom: 4px;"><a href="#Lessons_Learned" style="color: var(--text-muted);">Lessons Learned</a></li>
+          <li style="margin-bottom: 4px;"><a href="#Journal" style="color: var(--text-muted);">Journal</a></li>
         </ul>
       </nav>
 
@@ -772,6 +773,20 @@ Closes #<!-- issue number --></code></pre>
       <h3 id="The_Notification_Gap">The Notification Gap</h3>
 
       <p>Before <code>workflow-notify.sh</code>, I had to manually check which issue was being worked on, manually notify myself, and manually log costs. This created gaps — I'd miss notifications, forget to log usage, or lose track of which agent was doing what. Automating the notification + logging pipeline closed these gaps. Every task boundary now triggers a notification and a cost log entry automatically.</p>
+
+      <div class="divider"></div>
+
+      <h2 id="Journal">Journal</h2>
+
+      <p>This is a running log of findings and corrections, dated as they happen. The article above is a snapshot; the journal captures how the system evolves.</p>
+
+      <h3 id="Journal-2026-07-31">2026-07-31 — Subagent token usage was invisible, and the system wrote its own reference book</h3>
+
+      <p>Two findings today, both discovered through the workflow itself.</p>
+
+      <p><strong>Finding 1: the FinOps ledger was under-reporting subagent usage.</strong> The first version of <code>log-usage.sh</code> logged only top-level sessions, silently skipping subagents. Every <code>@developer</code>, <code>@tester</code>, and <code>@security-auditor</code> run was invisible in <code>.aifinops/log.csv</code> — I only caught it by comparing the report output against reality. The fix kept the data model simple: one CSV row per session (parent and subagents alike), a <code>parent_session_id</code> column added last to link a subagent row back to its parent without breaking existing rows, and dedup by session ID so re-runs never double-count. Each subagent row carries its own model and cost — architect, developer, tester, and security auditor may run on different models, and aggregating them into the parent would have hidden exactly the signal I was trying to see. The security audit that followed also surfaced injection hardening for the script: DB paths and session IDs are passed via environment variables instead of interpolated into Python source, CSV formula injection is escaped, and dedup uses fixed-string matching.</p>
+
+      <p><strong>Finding 2: the system generated its own reference book.</strong> When we adopted a TDD/BDD development workflow (issue #219), the architect flagged that neither <em>Clean Code</em> nor <em>Refactoring</em> covered test-driven and behavior-driven development — and produced <code>library/developer/tdd-bdd.mini.md</code> in the same OBEY format as the other books, without me writing a line of it. The workflow didn't just follow my engineering principles; it extended them when it found a gap. The reference library grew from eight books to nine, and <code>@developer</code> and <code>@tester</code> now load it alongside their existing books.</p>
 
       <div class="divider"></div>
 
