@@ -3,6 +3,12 @@ set -euo pipefail
 
 BASE="development"
 
+if [[ ! -w "$PWD" ]]; then
+  echo "Error: workspace is not writable. Fix ownership first:" >&2
+  echo "  sudo chown -R \$(id -u):\$(id -g) ." >&2
+  exit 1
+fi
+
 BRANCH=$(git branch --show-current)
 echo "🌿 Branch: $BRANCH"
 echo ""

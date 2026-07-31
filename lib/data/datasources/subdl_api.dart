@@ -9,6 +9,7 @@ import '../../domain/repositories/subtitle_provider.dart';
 
 class SubdlApi implements SubtitleProvider {
   static const _baseUrl = 'https://api.subdl.com/api/v1';
+  static const _dlBaseUrl = 'https://dl.subdl.com';
   final http.Client _client;
   final String _apiKey;
 
@@ -18,8 +19,6 @@ class SubdlApi implements SubtitleProvider {
   String get name => 'SubDL';
 
   Map<String, String> get _baseHeaders => {
-    'Authorization': _apiKey,
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
   };
 
@@ -30,9 +29,13 @@ class SubdlApi implements SubtitleProvider {
     String? type,
   }) async {
     try {
-      final params = <String, String>{'query': query};
+      final params = <String, String>{
+        'api_key': _apiKey,
+        'film_name': query,
+        'unpack': '1',
+      };
       if (language != null && language.isNotEmpty) {
-        params['languages'] = language;
+        params['languages'] = language.toUpperCase();
       }
       if (type != null && type.isNotEmpty && type != 'all') {
         params['type'] = type;
@@ -56,6 +59,10 @@ class SubdlApi implements SubtitleProvider {
       }
 
       final body = jsonDecode(response.body) as Map<String, dynamic>;
+      if (body['status'] != true) {
+        return (null, NetworkFailure('Search failed: ${body['error']}'));
+      }
+
       final subtitles = body['subtitles'] as List<dynamic>?;
       if (subtitles == null || subtitles.isEmpty) {
         return (<SearchResult>[], null);
@@ -77,38 +84,12 @@ class SubdlApi implements SubtitleProvider {
   @override
   Future<(String?, Failure?)> download(dynamic fileId) async {
     try {
-      final response = await _client.post(
-        Uri.parse('$_baseUrl/download'),
-        headers: _baseHeaders,
-        body: jsonEncode({'subtitle_id': fileId}),
-      );
-
-      if (response.statusCode == 429) {
-        return (
-          null,
-          const NetworkFailure(
-            'Rate limit exceeded. Please wait before trying again.',
-          ),
-        );
+      final url = fileId as String;
+      if (url.isEmpty) {
+        return (null, const NetworkFailure('No download URL'));
       }
-
-      if (response.statusCode != 200) {
-        return (
-          null,
-          NetworkFailure('Download failed: ${response.statusCode}'),
-        );
-      }
-
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final url = body['url'] as String?;
-      if (url == null) {
-        return (null, const NetworkFailure('No download URL in response'));
-      }
-
-      final fullUrl = 'https://dl.subdl.com$url';
+      final fullUrl = '$_dlBaseUrl$url';
       return (fullUrl, null);
-    } on SocketException catch (e) {
-      return (null, NetworkFailure('No internet connection: $e'));
     } catch (e) {
       return (null, NetworkFailure('Download error: $e'));
     }
@@ -117,7 +98,7 @@ class SubdlApi implements SubtitleProvider {
   @override
   Future<(String?, Failure?)> fetchContent(String url) async {
     try {
-      final response = await _client.get(Uri.parse(url));
+      final response = await _client.get(Uri.parse(url), headers: _baseHeaders);
 
       if (response.statusCode == 429) {
         return (
@@ -150,50 +131,46 @@ class SubdlApi implements SubtitleProvider {
 }
 
 class SubdlSearchResultModel {
-  final String id;
+  final String fileId;
   final String name;
-  final String? year;
   final String? language;
   final String? releaseName;
   final int? season;
   final int? episode;
-  final String? episodeName;
 
   SubdlSearchResultModel({
-    required this.id,
+    required this.fileId,
     required this.name,
-    this.year,
     this.language,
     this.releaseName,
     this.season,
     this.episode,
-    this.episodeName,
   });
 
   factory SubdlSearchResultModel.fromJson(Map<String, dynamic> json) {
+    final unpackFiles = json['unpack_files'] as List<dynamic>?;
+    final fileId = (unpackFiles != null && unpackFiles.isNotEmpty)
+        ? (unpackFiles[0] as Map<String, dynamic>)['url'] as String?
+        : null;
     return SubdlSearchResultModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      year: json['year'] as String?,
+      fileId: fileId ?? json['url'] as String? ?? '',
+      name: json['name'] as String? ?? '',
       language: json['language'] as String?,
       releaseName: json['release_name'] as String?,
-      season: json['season_number'] as int?,
-      episode: json['episode_number'] as int?,
-      episodeName: json['episode_name'] as String?,
+      season: json['season'] as int?,
+      episode: json['episode'] as int?,
     );
   }
 
   SearchResult toEntity() {
     return SearchResult(
-      fileId: id,
+      fileId: fileId,
       title: name,
-      year: year,
       language: language,
       releaseName: releaseName,
       providerSource: 'SubDL',
       season: season,
       episode: episode,
-      episodeName: episodeName,
     );
   }
 }

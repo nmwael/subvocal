@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/utils/bug_report_helper.dart';
@@ -10,6 +12,7 @@ import '../providers/settings_provider.dart';
 import '../providers/test_voice_provider.dart';
 
 const _openSubtitlesSignupUrl = 'https://www.opensubtitles.com/en/signup';
+const _subdlSignupUrl = 'https://subdl.com/';
 
 const _iso6392To6391 = {
   'afr': 'af',
@@ -132,9 +135,7 @@ final availableVoicesProvider =
           )
           .toList();
       final filtered = allVoices.where((v) {
-        final voiceLang = _normalizeLangCode(
-          v['language'] ?? v['locale'] ?? '',
-        );
+        final voiceLang = _normalizeLangCode(v['language'] ?? v['locale'] ?? '');
         return voiceLang == language.toLowerCase();
       }).toList();
       return filtered;
@@ -151,7 +152,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
+  final _subdlApiKeyController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureSubdlKey = true;
   String? _loginError;
 
   @override
@@ -159,6 +162,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _usernameController.dispose();
     _passwordController.dispose();
     _emailController.dispose();
+    _subdlApiKeyController.dispose();
     super.dispose();
   }
 
@@ -188,148 +192,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (_emailController.text != settings.myMemoryEmail) {
       _emailController.text = settings.myMemoryEmail;
     }
+    if (_subdlApiKeyController.text != settings.subdlApiKey) {
+      _subdlApiKeyController.text = settings.subdlApiKey;
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Readout Settings'), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // --- OpenSubtitles Account ---
-          Text(
-            'OpenSubtitles Account',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: auth.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, _) => const Text('Error checking auth status'),
-                data: (authState) {
-                  if (authState.status == AuthStatus.authenticated) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.check_circle, color: Colors.green),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                'Logged in as ${authState.username ?? "user"}',
-                                style: theme.textTheme.bodyLarge,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  ref.read(authProvider.notifier).logout(),
-                              child: const Text(
-                                'Logout',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (authState.accountInfo != null) ...[
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  authState.accountInfo!.summary,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: authState.accountInfo!.level == 'vip'
-                                        ? Colors.amber
-: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                              ),
-                              Semantics(
-                                label: 'Read account info aloud',
-                                button: true,
-                                child: IconButton(
-                                  icon: const Icon(Icons.hearing, size: 18),
-                                  tooltip: 'Read aloud',
-                                  onPressed: () => HelpReader.from(ref).read(
-                                    'Logged in as ${authState.username ?? "user"}. '
-                                    '${authState.accountInfo!.summary}',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
-                    );
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextField(
-                        controller: _usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person),
-                        ),
-                        textInputAction: TextInputAction.next,
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          border: const OutlineInputBorder(),
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () => setState(
-                              () => _obscurePassword = !_obscurePassword,
-                            ),
-                          ),
-                        ),
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) => _login(),
-                      ),
-                      if (_loginError != null) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          _loginError!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ],
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: _login,
-                        child: const Text('Login'),
-                      ),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () async {
-                          final url = Uri.parse(_openSubtitlesSignupUrl);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url, mode: LaunchMode.externalApplication);
-                          }
-                        },
-                        child: const Text("Don't have an account? Create one"),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
           // --- Speech Configuration ---
           Text(
             'Speech Configuration',
@@ -452,249 +323,718 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const SizedBox(height: 24),
 
+          // --- Subtitle Providers ---
+          _SettingsAccordion(
+            title: 'Subtitle Providers',
+            subtitle: auth.when(
+              loading: () => '',
+              error: (_, _) => '',
+              data: (authState) => authState.status == AuthStatus.authenticated
+                  ? 'OpenSubtitles ✓  |  ${settings.subdlApiKey.isNotEmpty ? "SubDL ✓" : "SubDL ✗"}'
+                  : 'Not logged in  |  ${settings.subdlApiKey.isNotEmpty ? "SubDL ✓" : "SubDL ✗"}',
+            ),
+            initiallyExpanded: true,
+            children: [
+              // --- OpenSubtitles Account ---
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'OpenSubtitles Account',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: auth.when(
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          error: (_, _) => const Text(
+                            'Error checking auth status',
+                          ),
+                          data: (authState) {
+                            if (authState.status ==
+                                AuthStatus.authenticated) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Text(
+                                          'Logged in as ${authState.username ?? "user"}',
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            ref
+                                                .read(authProvider.notifier)
+                                                .logout(),
+                                        child: const Text(
+                                          'Logout',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (authState.accountInfo != null) ...[
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            authState.accountInfo!.summary,
+                                            style: theme.textTheme.bodySmall
+                                                ?.copyWith(
+                                              color: authState
+                                                          .accountInfo!
+                                                          .level ==
+                                                      'vip'
+                                                  ? Colors.amber
+                                                  : theme.colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ),
+                                        Semantics(
+                                          label: 'Read account info aloud',
+                                          button: true,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.hearing,
+                                              size: 18,
+                                            ),
+                                            tooltip: 'Read aloud',
+                                            onPressed: () =>
+                                                HelpReader.from(ref).read(
+                                              'Logged in as ${authState.username ?? "user"}. '
+                                              '${authState.accountInfo!.summary}',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ],
+                              );
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                TextField(
+                                  controller: _usernameController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Username',
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.person),
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                const SizedBox(height: 12),
+                                TextField(
+                                  controller: _passwordController,
+                                  obscureText: _obscurePassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    border: const OutlineInputBorder(),
+                                    prefixIcon: const Icon(Icons.lock),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () => setState(
+                                        () => _obscurePassword =
+                                            !_obscurePassword,
+                                      ),
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                  onSubmitted: (_) => _login(),
+                                ),
+                                if (_loginError != null) ...[
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _loginError!,
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                                const SizedBox(height: 12),
+                                ElevatedButton(
+                                  onPressed: _login,
+                                  child: const Text('Login'),
+                                ),
+                                const SizedBox(height: 8),
+                                TextButton(
+                                  onPressed: () async {
+                                    final url = Uri.parse(
+                                      _openSubtitlesSignupUrl,
+                                    );
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(
+                                        url,
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    "Don't have an account? Create one",
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // --- SubDL API Key ---
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SubDL API Key',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (settings.subdlApiKey.isNotEmpty)
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'SubDL configured',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            )
+                          else
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  color: Colors.orange,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'SubDL not configured',
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _subdlApiKeyController,
+                            obscureText: _obscureSubdlKey,
+                            decoration: InputDecoration(
+                              labelText: 'API Key',
+                              hintText: 'Enter your SubDL API key',
+                              border: const OutlineInputBorder(),
+                              prefixIcon: const Icon(Icons.key),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureSubdlKey
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () => setState(
+                                  () =>
+                                      _obscureSubdlKey = !_obscureSubdlKey,
+                                ),
+                              ),
+                              helperText: 'Get a free key at subdl.com',
+                            ),
+                            onChanged: (value) =>
+                                notifier.setSubdlApiKey(value),
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () async {
+                              final url = Uri.parse(_subdlSignupUrl);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            },
+                            icon: const Icon(Icons.open_in_new, size: 16),
+                            label: const Text('Get a free API key'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
           // --- Translation & Language ---
-          Text(
-            'Translation & Language',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+          _SettingsAccordion(
+            title: 'Translation & Language',
+            subtitle: settings.selectedTranslationProvider.name,
+            initiallyExpanded: false,
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Default Target Language'),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        initialValue: settings.selectedLanguage,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'en',
+                            child: Text('English (en)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'es',
+                            child: Text('Spanish (es)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'da',
+                            child: Text('Danish (da)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'fr',
+                            child: Text('French (fr)'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'de',
+                            child: Text('German (de)'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            notifier.setSelectedLanguage(value);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
+                          labelText: 'Email (optional)',
+                          hintText: 'your@email.com',
+                          border: OutlineInputBorder(),
+                          helperText:
+                              'Raises MyMemory daily limit from 5,000 to 50,000 characters',
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) =>
+                            notifier.setMyMemoryEmail(value),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Translation Provider'),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<TranslationProviderType>(
+                        initialValue: settings.selectedTranslationProvider,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items: const [
+                          DropdownMenuItem(
+                            value: TranslationProviderType.auto,
+                            child: Text('Auto (try all)'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.azure,
+                            child: Text('Azure'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.myMemory,
+                            child: Text('MyMemory'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.apertium,
+                            child: Text('Apertium'),
+                          ),
+                          DropdownMenuItem(
+                            value: TranslationProviderType.libreTranslate,
+                            child: Text('LibreTranslate'),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) {
+                            notifier.setSelectedTranslationProvider(value);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
+          const SizedBox(height: 8),
+
+          // --- Help & About ---
+          _SettingsAccordion(
+            title: 'Help & About',
+            subtitle: '',
+            initiallyExpanded: false,
+            children: [
+              // --- Support ---
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Support',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.bug_report),
+                        title: const Text('Report a Bug'),
+                        subtitle: const Text(
+                          'Open a pre-filled bug report on GitHub',
+                        ),
+                        trailing: const Icon(Icons.open_in_new),
+                        onTap: () async {
+                          final opened =
+                              await BugReportHelper().openBugReport();
+                          if (context.mounted && !opened) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Could not open bug report'),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // --- Help ---
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Help',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'Subtitle Providers',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Semantics(
+                                  label:
+                                      'Read subtitle providers help aloud',
+                                  button: true,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.hearing,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Read aloud',
+                                    onPressed: () =>
+                                        HelpReader.from(ref).read(
+                                      'This app searches three subtitle providers. '
+                                      'OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. '
+                                      'SubDL gives 2,000 searches per day with a free API key. '
+                                      'Enter your SubDL API key in the settings above to enable it. '
+                                      'Podnapisi has no authentication required and no daily limit.',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'OpenSubtitles — free account: 5 downloads/day, VIP: unlimited.\n'
+                              'SubDL — 2,000 searches/day with free API key (configure above).\n'
+                              'Podnapisi — no auth needed, no daily limit.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                            const Divider(height: 24),
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'How Downloads Work',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Semantics(
+                                  label:
+                                      'Read how downloads work aloud',
+                                  button: true,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.hearing,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Read aloud',
+                                    onPressed: () =>
+                                        HelpReader.from(ref).read(
+                                      'When you search, all providers are queried in parallel. '
+                                      'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
+                                      'Tap a result to download and play. '
+                                      'OpenSubtitles downloads require a free login.',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'All providers searched in parallel. OpenSubtitles results require login. '
+                              'Tap a result to download and start playback.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                            ),
+                            const Divider(height: 24),
+                            Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'Create OpenSubtitles Account',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Semantics(
+                                  label:
+                                      'Read account creation help aloud',
+                                  button: true,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.hearing,
+                                      size: 18,
+                                    ),
+                                    tooltip: 'Read aloud',
+                                    onPressed: () =>
+                                        HelpReader.from(ref).read(
+                                      'Create a free OpenSubtitles account to get 5 downloads per day. '
+                                      'Open the signup page in your browser.',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            TextButton.icon(
+                              onPressed: () async {
+                                final url = Uri.parse(
+                                  _openSubtitlesSignupUrl,
+                                );
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(
+                                    url,
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.open_in_new,
+                                size: 16,
+                              ),
+                              label: const Text('Open signup page'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // --- About ---
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Default Target Language'),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    initialValue: settings.selectedLanguage,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                  Text(
+                    'About',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
                     ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'en',
-                        child: Text('English (en)'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'es',
-                        child: Text('Spanish (es)'),
-                      ),
-                      DropdownMenuItem(value: 'da', child: Text('Danish (da)')),
-                      DropdownMenuItem(value: 'fr', child: Text('French (fr)')),
-                      DropdownMenuItem(value: 'de', child: Text('German (de)')),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        notifier.setSelectedLanguage(value);
-                      }
-                    },
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email (optional)',
-                      hintText: 'your@email.com',
-                      border: OutlineInputBorder(),
-                      helperText:
-                          'Raises MyMemory daily limit from 5,000 to 50,000 characters',
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) => notifier.setMyMemoryEmail(value),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Translation Provider'),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<TranslationProviderType>(
-                    initialValue: settings.selectedTranslationProvider,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: TranslationProviderType.auto,
-                        child: Text('Auto (try all)'),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.azure,
-                        child: Text('Azure'),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.myMemory,
-                        child: Text('MyMemory'),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.apertium,
-                        child: Text('Apertium'),
-                      ),
-                      DropdownMenuItem(
-                        value: TranslationProviderType.libreTranslate,
-                        child: Text('LibreTranslate'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        notifier.setSelectedTranslationProvider(value);
-                      }
-                    },
-                  ),
+                  const SizedBox(height: 12),
+                  const _AppVersion(),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // --- Support ---
-          Text(
-            'Support',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.bug_report),
-              title: const Text('Report a Bug'),
-              subtitle: const Text('Open a pre-filled bug report on GitHub'),
-              trailing: const Icon(Icons.open_in_new),
-              onTap: () async {
-                final opened = await BugReportHelper().openBugReport();
-                if (context.mounted && !opened) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Could not open bug report')),
-                  );
-                }
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // --- Help ---
-          Text(
-            'Help',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          'Subtitle Providers',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Semantics(
-                        label: 'Read subtitle providers help aloud',
-                        button: true,
-                        child: IconButton(
-                          icon: const Icon(Icons.hearing, size: 18),
-                          tooltip: 'Read aloud',
-                          onPressed: () => HelpReader.from(ref).read(
-                          'This app searches three subtitle providers. '
-                          'OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. '
-                          'SubDL gives 2,000 searches per day with a free API key. '
-                          'Podnapisi has no authentication required and no daily limit.',
-                        ),
-                      ),
-                    ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'OpenSubtitles — free account: 5 downloads/day, VIP: unlimited.\n'
-                    'SubDL — 2,000 searches/day with free API key.\n'
-                    'Podnapisi — no auth needed, no daily limit.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  const Divider(height: 24),
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          'How Downloads Work',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Semantics(
-                        label: 'Read how downloads work aloud',
-                        button: true,
-                        child: IconButton(
-                          icon: const Icon(Icons.hearing, size: 18),
-                          tooltip: 'Read aloud',
-                          onPressed: () => HelpReader.from(ref).read(
-                            'When you search, all providers are queried in parallel. '
-                            'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
-                            'Tap a result to download and play. '
-                            'OpenSubtitles downloads require a free login.',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'All providers searched in parallel. OpenSubtitles results require login. '
-                    'Tap a result to download and start playback.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                  const Divider(height: 24),
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          'Create OpenSubtitles Account',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Semantics(
-                        label: 'Read account creation help aloud',
-                        button: true,
-                        child: IconButton(
-                          icon: const Icon(Icons.hearing, size: 18),
-                          tooltip: 'Read aloud',
-                          onPressed: () => HelpReader.from(ref).read(
-                            'Create a free OpenSubtitles account to get 5 downloads per day. '
-                            'Open the signup page in your browser.',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  TextButton.icon(
-                    onPressed: () async {
-                      final url = Uri.parse(_openSubtitlesSignupUrl);
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(url, mode: LaunchMode.externalApplication);
-                      }
-                    },
-                    icon: const Icon(Icons.open_in_new, size: 16),
-                    label: const Text('Open signup page'),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SettingsAccordion extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final bool initiallyExpanded;
+  final List<Widget> children;
+
+  const _SettingsAccordion({
+    required this.title,
+    required this.subtitle,
+    required this.initiallyExpanded,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      child: ExpansionTile(
+        title: Text(
+          title,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
+        initiallyExpanded: initiallyExpanded,
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        children: children,
+      ),
+    );
+  }
+}
+
+class _AppVersion extends StatefulWidget {
+  const _AppVersion();
+
+  @override
+  State<_AppVersion> createState() => _AppVersionState();
+}
+
+class _AppVersionState extends State<_AppVersion> {
+  PackageInfo? _packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPackageInfo();
+  }
+
+  Future<void> _loadPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) setState(() => _packageInfo = info);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final info = _packageInfo;
+
+    if (info == null) {
+      return const Card(
+        child: ListTile(
+          leading: Icon(Icons.info_outline),
+          title: Text('Loading...'),
+          subtitle: Text('Fetching version info'),
+          trailing: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    final versionText = '${info.version}+${info.buildNumber}';
+    final subtitle = 'Build #${info.buildNumber} • ${info.packageName}';
+
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.info_outline),
+        title: Text('Version $versionText'),
+        subtitle: Text(subtitle),
+        trailing: IconButton(
+          icon: const Icon(Icons.copy, size: 18),
+          tooltip: 'Copy version info',
+          onPressed: () {
+            // ignore: deprecated_member_use
+            Clipboard.setData(ClipboardData(
+              text: '${info.packageName} v$versionText',
+            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Version copied to clipboard')),
+            );
+          },
+        ),
       ),
     );
   }

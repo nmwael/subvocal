@@ -3,6 +3,12 @@ set -euo pipefail
 
 # create-branch-from-issue.sh
 
+if [[ ! -w "$PWD" ]]; then
+  echo "Error: workspace is not writable. Fix ownership first:" >&2
+  echo "  sudo chown -R \$(id -u):\$(id -g) ." >&2
+  exit 1
+fi
+
 usage() {
     cat <<EOF
 Usage: $(basename "$0") [OPTIONS]

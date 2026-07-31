@@ -67,15 +67,107 @@ flutter build ios
 ## Testing
 
 ```bash
-# Run all tests
+# Run all tests (unit + widget + goldens)
 flutter test
 
-# Run specific test file
-flutter test test/unit/srt_parser_test.dart
+# Run unit tests (includes BDD scenarios)
+flutter test test/unit/
+
+# Run a specific test file
+flutter test test/unit/srt_parser_bdd_test.dart
+
+# Run only BDD test files (test/**/*_bdd_test.dart)
+./scripts/run-tests.sh --features
 
 # Integration tests (requires emulator/device)
 flutter test integration_test/
 ```
+
+### TDD / BDD
+
+This project uses test-driven development (red–green–refactor) with a BDD
+layer as the living behavior spec:
+
+1. **Red** — write a failing BDD scenario (Given/When/Then) or unit test
+2. **Green** — implement the minimal code to make it pass
+3. **Refactor** — clean up while keeping the suite green
+
+BDD scenarios live in `test/**/*_bdd_test.dart` and use `bdd_framework`:
+
+```dart
+import 'package:bdd_framework/bdd_framework.dart';
+import 'package:flutter_test/flutter_test.dart';
+import '../helpers/bdd_config.dart';
+
+void main() async {
+  configureBdd(clearOutput: true);
+
+  final feature = BddFeature('Feature Title', description: '...');
+
+  Bdd(feature)
+      .scenario('...')
+      .given('...')
+      .when('...')
+      .then('...')
+      .run((ctx) async {
+    // assertions
+  });
+
+  await BddReporter.reportAll();
+}
+```
+
+On every run, scenarios auto-export to plain-language `.feature` files under
+`test/features/generated/` (gitignored) for stakeholder review.
+
+**Notes:**
+- `main()` must be `void main() async { ... await BddReporter.reportAll(); }`.
+- Configure exactly ONE reporter via `configureBdd()` — `bdd_framework` 4.0.7
+  stores the same `BddFeature` in every reporter, so multiple reporters export
+  each scenario twice.
+
+**Decision — widget BDD deferred:** widget tests stay plain `testWidgets` —
+`bdd_framework` 4.0.7 has no widget support (its `bddWidgetTest`/
+`BddWidgetContext` exist only on the unreleased main branch), so BDD scenarios
+apply to unit tests only. Revisit when bdd_framework ships widget support.
+
+---
+
+## Versioning
+
+This project follows [Semantic Versioning (SemVer)](https://semver.org/).
+
+### Format
+
+Versions are defined in `pubspec.yaml`:
+
+```yaml
+version: 1.0.0+1
+```
+
+- **Major** (1): Breaking changes
+- **Minor** (0): New features, backward compatible
+- **Patch** (0): Bug fixes, backward compatible
+- **Build** (+1): Auto-incremented by CI on production releases
+
+### Release Types
+
+| Type | Tag Format | Source | Frequency |
+|---|---|---|---|
+| Production | `v{major}.{minor}.{patch}+{build}` | `main` | On release |
+| Development | `dev-{run_number}` | `development` | Every push |
+
+### Development builds
+
+Every push to `development` triggers a dev build published as a GitHub prerelease at:
+https://github.com/nmwael/subvocal/releases
+
+Production releases from `main` use the pubspec.yaml version for tagging.
+
+### Bumping versions
+
+- **Production release**: Bump `version` in `pubspec.yaml` before merging to `main`
+- **Development builds**: Auto-tagged by CI, no manual version bump needed
 
 ---
 

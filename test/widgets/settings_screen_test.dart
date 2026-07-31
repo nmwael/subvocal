@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:subvocal/generated/app_localizations.dart';
 import 'package:subvocal/presentation/providers/auth_provider.dart';
 import 'package:subvocal/presentation/providers/test_voice_provider.dart';
 import 'package:subvocal/presentation/screens/settings_screen.dart';
@@ -14,7 +16,16 @@ void main() {
         translatedTestPlayingProvider.overrideWith((ref) => false),
         ...overrides,
       ],
-      child: const MaterialApp(home: SettingsScreen()),
+      child: const MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: SettingsScreen(),
+      ),
     );
   }
 
@@ -23,8 +34,13 @@ void main() {
     await tester.pump();
 
     expect(find.text('Readout Settings'), findsOneWidget);
-    expect(find.text('OpenSubtitles Account'), findsOneWidget);
     expect(find.text('Speech Configuration'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Subtitle Providers'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Subtitle Providers'), findsOneWidget);
   });
 
   testWidgets('Voice selector renders with available voices', (tester) async {
@@ -42,6 +58,11 @@ void main() {
     );
     await tester.pump();
 
+    await tester.scrollUntilVisible(
+      find.text('Voice'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Voice'), findsOneWidget);
     expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
   });
@@ -60,6 +81,11 @@ void main() {
     );
     await tester.pump();
 
+    await tester.scrollUntilVisible(
+      find.textContaining('No voices available'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.textContaining('No voices available'), findsOneWidget);
     expect(find.byType(DropdownButtonFormField<String>), findsNothing);
   });

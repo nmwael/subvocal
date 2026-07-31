@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../generated/app_localizations.dart';
 import '../utils/help_reader.dart';
 import '../../domain/errors/failures.dart';
 import '../../domain/entities/search_result.dart';
@@ -29,28 +30,27 @@ class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
 
   void _showLoginPrompt(BuildContext context, WidgetRef ref) {
-    const helpText = 'You need a free OpenSubtitles account to download subtitles.\n\n'
-        'Free accounts get 5 downloads per day.\n\n'
-        'You can also use SubDL or Podnapisi subtitles without logging in.';
+    final l10n = AppLocalizations.of(context)!;
+    final helpText = l10n.loginRequiredHelp;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Login Required'),
+        title: Text(l10n.loginRequired),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(helpText),
+              Text(helpText),
               const SizedBox(height: 8),
               Align(
                 alignment: Alignment.centerRight,
                 child: Semantics(
-                  label: 'Read help aloud',
+                  label: l10n.readHelpAloud,
                   button: true,
                   child: IconButton(
                     icon: const Icon(Icons.hearing, size: 20),
-                    tooltip: 'Read aloud',
+                    tooltip: l10n.readAloud,
                     onPressed: () => HelpReader.from(ref).read(helpText),
                   ),
                 ),
@@ -61,7 +61,7 @@ class SearchScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -70,7 +70,7 @@ class SearchScreen extends ConsumerWidget {
                 await launchUrl(url, mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text('Create Free Account'),
+            child: Text(l10n.createFreeAccount),
           ),
           ElevatedButton(
             onPressed: () {
@@ -79,7 +79,7 @@ class SearchScreen extends ConsumerWidget {
                 context,
               ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
             },
-            child: const Text('Login'),
+            child: Text(l10n.login),
           ),
         ],
       ),
@@ -87,29 +87,27 @@ class SearchScreen extends ConsumerWidget {
   }
 
   void _showHelpDialog(BuildContext context, WidgetRef ref) {
-    const helpContent = 'Search for movie and TV subtitles by name.\n\n'
-        'Results from SubDL and Podnapisi are always shown. '
-        'OpenSubtitles results appear only when you are logged in.\n\n'
-        'Free OpenSubtitles accounts get 5 downloads per day.';
+    final l10n = AppLocalizations.of(context)!;
+    final helpContent = l10n.searchTipsContent;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Search Tips'),
+        title: Text(l10n.searchTips),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(helpContent),
+              Text(helpContent),
               const SizedBox(height: 8),
               Align(
                 alignment: Alignment.centerRight,
                 child: Semantics(
-                  label: 'Read help aloud',
+                  label: l10n.readHelpAloud,
                   button: true,
                   child: IconButton(
                     icon: const Icon(Icons.hearing, size: 20),
-                    tooltip: 'Read aloud',
+                    tooltip: l10n.readAloud,
                     onPressed: () => HelpReader.from(ref).read(helpContent),
                   ),
                 ),
@@ -126,11 +124,11 @@ class SearchScreen extends ConsumerWidget {
               }
               if (ctx.mounted) Navigator.of(ctx).pop();
             },
-            child: const Text('Create Free Account'),
+            child: Text(l10n.createFreeAccount),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Got it'),
+            child: Text(l10n.gotIt),
           ),
         ],
       ),
@@ -139,6 +137,7 @@ class SearchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final query = ref.watch(searchQueryProvider);
     final contentType = ref.watch(searchContentTypeProvider);
     final streamingFilter = ref.watch(searchStreamingProvider);
@@ -150,11 +149,11 @@ class SearchScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Subtitles'),
+        title: Text(l10n.searchTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
-            tooltip: 'Help',
+            tooltip: l10n.searchHelp,
             onPressed: () => _showHelpDialog(context, ref),
           ),
         ],
@@ -166,7 +165,7 @@ class SearchScreen extends ConsumerWidget {
             child: TextField(
               autofocus: true,
               decoration: InputDecoration(
-                hintText: 'Search by movie or show name...',
+                hintText: l10n.searchHint,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: query.isNotEmpty
                     ? IconButton(
@@ -187,10 +186,10 @@ class SearchScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'all', label: Text('All')),
-                ButtonSegment(value: 'movie', label: Text('Movies')),
-                ButtonSegment(value: 'episode', label: Text('TV Episodes')),
+              segments: [
+                ButtonSegment(value: 'all', label: Text(l10n.all)),
+                ButtonSegment(value: 'movie', label: Text(l10n.movies)),
+                ButtonSegment(value: 'episode', label: Text(l10n.tvEpisodes)),
               ],
               selected: {contentType},
               onSelectionChanged: (selected) {
@@ -210,8 +209,9 @@ class SearchScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final (tag, label) = _streamingServices[index];
                 final isSelected = streamingFilter == tag;
+                final chipLabel = tag.isEmpty ? l10n.all : label;
                 return FilterChip(
-                  label: Text(label, style: const TextStyle(fontSize: 12)),
+                  label: Text(chipLabel, style: const TextStyle(fontSize: 12)),
                   selected: isSelected,
                   onSelected: (_) {
                     ref.read(searchStreamingProvider.notifier).state = tag;
@@ -232,9 +232,9 @@ class SearchScreen extends ConsumerWidget {
                         .where((r) => r.providerSource != 'OpenSubtitles')
                         .toList();
                 if (query.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'Enter a movie or show name to search',
+                    return Center(
+                      child: Text(
+                        l10n.enterSearchQuery,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(
                           context,
@@ -248,10 +248,10 @@ class SearchScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          results.isEmpty
-                              ? 'No results found for "$query"'
-                              : 'No downloadable results found.',
+                          Text(
+                            results.isEmpty
+                                ? l10n.noResultsFound(query)
+                                : l10n.noDownloadableResults,
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(
                               context,
@@ -268,7 +268,7 @@ class SearchScreen extends ConsumerWidget {
                               }
                             },
                             child: Text(
-                              'Create a free OpenSubtitles account to unlock more results.',
+                              l10n.createAccountForMore,
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                                 decoration: TextDecoration.underline,
@@ -277,14 +277,13 @@ class SearchScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 4),
                           Semantics(
-                            label: 'Read help aloud',
+                            label: l10n.readHelpAloud,
                             button: true,
                             child: IconButton(
                               icon: const Icon(Icons.hearing, size: 18),
-                              tooltip: 'Read aloud',
+                              tooltip: l10n.readAloud,
                               onPressed: () => HelpReader.from(ref).read(
-                                'No downloadable results found. '
-                                'Create a free OpenSubtitles account to unlock more results.',
+                                l10n.readHelpAloudNoResults,
                               ),
                             ),
                           ),
@@ -357,7 +356,9 @@ class SearchScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Error: ${error is Failure ? error.message : 'An unexpected error occurred'}',
+                      error is Failure
+                          ? l10n.searchError(error.message)
+                          : l10n.unexpectedError,
                     ),
                   ],
                 ),

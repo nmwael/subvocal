@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/saved_subtitle.dart';
+import '../../generated/app_localizations.dart';
 import '../providers/saved_subtitles_provider.dart';
 import 'player_screen.dart';
 
@@ -16,17 +17,18 @@ class SavedTranslationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final savedAsync = ref.watch(savedSubtitlesProvider);
     final sortOption = ref.watch(sortOptionProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saved Translations'),
+        title: Text(l10n.savedTranslationsTitle),
         centerTitle: true,
         actions: [
           PopupMenuButton<SortOption>(
             icon: const Icon(Icons.sort),
-            tooltip: 'Sort by',
+            tooltip: l10n.sortBy,
             onSelected: (option) {
               ref.read(sortOptionProvider.notifier).state = option;
             },
@@ -34,25 +36,25 @@ class SavedTranslationsScreen extends ConsumerWidget {
               _buildSortMenuItem(
                 context,
                 SortOption.titleAsc,
-                'Title A-Z',
+                l10n.titleAZ,
                 sortOption == SortOption.titleAsc,
               ),
               _buildSortMenuItem(
                 context,
                 SortOption.dateNewest,
-                'Newest First',
+                l10n.newestFirst,
                 sortOption == SortOption.dateNewest,
               ),
               _buildSortMenuItem(
                 context,
                 SortOption.dateOldest,
-                'Oldest First',
+                l10n.oldestFirst,
                 sortOption == SortOption.dateOldest,
               ),
               _buildSortMenuItem(
                 context,
                 SortOption.language,
-                'Language',
+                l10n.language,
                 sortOption == SortOption.language,
               ),
             ],
@@ -61,7 +63,7 @@ class SavedTranslationsScreen extends ConsumerWidget {
       ),
       body: savedAsync.when(
         loading: () => Semantics(
-          label: 'Loading saved translations',
+          label: l10n.loadingSaved,
           child: const Center(child: CircularProgressIndicator()),
         ),
         error: (e, _) => _ErrorState(error: e.toString()),
@@ -127,6 +129,7 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -140,7 +143,7 @@ class _ErrorState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to load translations',
+              l10n.failedToLoad,
               style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
@@ -162,12 +165,13 @@ class _ErrorState extends StatelessWidget {
 class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Semantics(
-            label: 'No saved translations',
+            label: l10n.noSavedTranslations,
             child: const Icon(
               Icons.bookmark_border,
               size: 64,
@@ -175,14 +179,14 @@ class _EmptyState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'No saved translations',
-            style: TextStyle(color: Colors.grey),
+          Text(
+            l10n.noSavedTranslations,
+            style: const TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Save a translation from the player screen',
-            style: TextStyle(color: Colors.grey, fontSize: 12),
+          Text(
+            l10n.saveTranslationHint,
+            style: const TextStyle(color: Colors.grey, fontSize: 12),
           ),
         ],
       ),
@@ -201,6 +205,7 @@ class _SavedSubtitleTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final dateStr =
         '${item.savedAt.day}/${item.savedAt.month}/${item.savedAt.year}';
@@ -247,7 +252,7 @@ class _SavedSubtitleTile extends ConsumerWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.play_arrow),
-            tooltip: 'Play',
+            tooltip: l10n.play,
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -258,23 +263,23 @@ class _SavedSubtitleTile extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline),
-            tooltip: 'Delete',
+            tooltip: l10n.delete,
             onPressed: () async {
               final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: const Text('Delete translation?'),
+                  title: Text(l10n.deleteTranslation),
                   content: Text(
-                    'Delete "${item.title}" (${item.language.toUpperCase()})?',
+                    l10n.deleteConfirm(item.title, item.language.toUpperCase()),
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, false),
-                      child: const Text('Cancel'),
+                      child: Text(l10n.cancel),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, true),
-                      child: const Text('Delete'),
+                      child: Text(l10n.delete),
                     ),
                   ],
                 ),

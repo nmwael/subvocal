@@ -17,7 +17,9 @@ class SettingsState {
   final String selectedLanguage;
   final String? selectedVoice;
   final String myMemoryEmail;
+  final String subdlApiKey;
   final TranslationProviderType selectedTranslationProvider;
+  final String appLocale;
 
   const SettingsState({
     this.speechRate = 0.5,
@@ -25,7 +27,9 @@ class SettingsState {
     this.selectedLanguage = 'en',
     this.selectedVoice,
     this.myMemoryEmail = '',
+    this.subdlApiKey = '',
     this.selectedTranslationProvider = TranslationProviderType.auto,
+    this.appLocale = 'en',
   });
 
   SettingsState copyWith({
@@ -34,7 +38,9 @@ class SettingsState {
     String? selectedLanguage,
     String? selectedVoice,
     String? myMemoryEmail,
+    String? subdlApiKey,
     TranslationProviderType? selectedTranslationProvider,
+    String? appLocale,
   }) {
     return SettingsState(
       speechRate: speechRate ?? this.speechRate,
@@ -42,8 +48,10 @@ class SettingsState {
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       selectedVoice: selectedVoice ?? this.selectedVoice,
       myMemoryEmail: myMemoryEmail ?? this.myMemoryEmail,
+      subdlApiKey: subdlApiKey ?? this.subdlApiKey,
       selectedTranslationProvider:
           selectedTranslationProvider ?? this.selectedTranslationProvider,
+      appLocale: appLocale ?? this.appLocale,
     );
   }
 
@@ -54,9 +62,11 @@ class SettingsState {
       selectedLanguage: json['selectedLanguage'] as String? ?? 'en',
       selectedVoice: json['selectedVoice'] as String?,
       myMemoryEmail: json['myMemoryEmail'] as String? ?? '',
+      subdlApiKey: json['subdlApiKey'] as String? ?? '',
       selectedTranslationProvider: translationProviderTypeFromString(
         json['selectedTranslationProvider'] as String? ?? 'auto',
       ),
+      appLocale: json['appLocale'] as String? ?? 'en',
     );
   }
 
@@ -67,7 +77,9 @@ class SettingsState {
       'selectedLanguage': selectedLanguage,
       'selectedVoice': selectedVoice,
       'myMemoryEmail': myMemoryEmail,
+      'subdlApiKey': subdlApiKey,
       'selectedTranslationProvider': selectedTranslationProvider.name,
+      'appLocale': appLocale,
     };
   }
 }
@@ -115,8 +127,20 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     _persist();
   }
 
+  void setSubdlApiKey(String key) {
+    state = state.copyWith(subdlApiKey: key);
+    _persist();
+  }
+
   void setSelectedTranslationProvider(TranslationProviderType provider) {
     state = state.copyWith(selectedTranslationProvider: provider);
+    _persist();
+  }
+
+  void setAppLocale(String locale) {
+    const supported = ['en', 'da', 'es', 'fr'];
+    if (!supported.contains(locale)) return;
+    state = state.copyWith(appLocale: locale);
     _persist();
   }
 }

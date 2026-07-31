@@ -1,4 +1,4 @@
-timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoning,cache_read,cache_write,cost_usd
+timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoning,cache_read,cache_write,cost_usd,parent_session_id
 2026-07-23T12:00:41Z,ses_072114ab8ffez2vixkfI8NBS42,74,build,big-pickle,729733,57586,29576,22318016,0,0.000000
 2026-07-23T12:20:11Z,ses_072114ab8ffez2vixkfI8NBS42,86,build,big-pickle,767693,62482,38936,26958912,0,0.000000
 2026-07-23T12:28:30Z,ses_072114ab8ffez2vixkfI8NBS42,87,build,big-pickle,777638,65631,39470,28537728,0,0.000000
@@ -25,5 +25,10 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-07-28T17:48:59Z,ses_057c7e358ffeisBw9u1TyH2JLj,198,build,nvidia/nemotron-3-ultra-550b-a55b,2486195,112091,37910,46211264,0,1.682258
 2026-07-28T17:53:52Z,ses_057c7e358ffeisBw9u1TyH2JLj,198,build,nvidia/nemotron-3-ultra-550b-a55b,2617745,112975,37910,46463680,0,1.788106
 2026-07-28T17:56:07Z,ses_057c7e358ffeisBw9u1TyH2JLj,198,build,nvidia/nemotron-3-ultra-550b-a55b,2894139,114499,37910,47099072,0,2.025421
-2026-07-29T09:34:19Z,ses_052e63580ffexHiIueJz5QWVfv,202,build,big-pickle,222780,55942,26693,16272256,0,0.000000
-2026-07-29T09:34:26Z,ses_052e63580ffexHiIueJz5QWVfv,202,build,big-pickle,223045,56062,26822,16354048,0,0.000000
+2026-07-30T15:08:42Z,ses_04c732b60ffeSw77J0sQgo5tPp,211,build,big-pickle,50545,8851,4006,1520000,0,0.000000
+2026-07-30T17:55:27Z,ses_04c732b60ffeSw77J0sQgo5tPp,215,build,big-pickle,355002,53332,40209,20919168,0,0.000000
+2026-07-30T18:35:10Z,ses_04c732b60ffeSw77J0sQgo5tPp,217,build,big-pickle,366467,56440,42179,21562496,0,0.000000
+2026-07-31T17:44:12Z,ses_047284e70ffezlWT5wz0B3JyDw,219,build,big-pickle,552043,37669,66788,11964800,0,0.000000,
+2026-07-31T17:44:12Z,ses_04726a083fferL07TVg2Y0Yp1V,219,developer,deepseek-ai/deepseek-v4-pro,347626,2506,0,168960,0,0.154010,ses_047284e70ffezlWT5wz0B3JyDw
+2026-07-31T17:50:53Z,ses_046b75eceffed0A9CVMAkR9gqe,221,tester,deepseek-ai/deepseek-v4-pro,451247,3560,0,278784,0,0.200400,ses_047284e70ffezlWT5wz0B3JyDw
+2026-07-31T17:56:35Z,ses_046b265c6ffe1uRI2pFcwzzMuR,221,security-auditor,nvidia/nvidia-nemotron-nano-9b-v2,53401,4387,0,0,0,0.000000,ses_047284e70ffezlWT5wz0B3JyDw
