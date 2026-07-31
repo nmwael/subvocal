@@ -26,7 +26,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
       "temperature": 0.2,
       "steps": 60
     },
@@ -37,7 +37,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
       "temperature": 0.2,
       "steps": 80
     },
@@ -63,7 +63,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
       "temperature": 0.4,
       "steps": 30
     }
