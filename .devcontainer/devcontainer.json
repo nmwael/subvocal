@@ -18,6 +18,7 @@
     "GOOGLE_GENERATIVE_AI_API_KEY": "${localEnv:GOOGLE_API_KEY}",
     "OPENSUBTITLES_API_KEY": "${localEnv:OPENSUBTITLES_API_KEY}",
     "NVIDIA_API_KEY": "${localEnv:NVIDIA_API_KEY}",
+    "SUBVOCAL_GROQ_API_KEY": "${localEnv:SUBVOCAL_GROQ_API_KEY}",
     "omniroute_api_key": "${localEnv:omniroute_api_key}"
 
   },
