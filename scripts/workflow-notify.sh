@@ -12,7 +12,7 @@ Look up the latest open enhancement issue and send a workflow notification.
 Statuses:
   plan-ready    "Plan ready"
   approved      "Plan approved"
-  implementing  "Developer starting"
+  implementing  "Tester starting"
   impl-done     "Implementation done"
   tests-done    "Tests done"
   audit-done    "Security audit done"
@@ -66,7 +66,7 @@ ISSUE_URL="https://github.com/nmwael/subvocal/issues/$ISSUE_NUM"
 case "$STATUS" in
   plan-ready)    TITLE="Plan ready" ;;
   approved)      TITLE="Plan approved" ;;
-  implementing)  TITLE="Developer starting" ;;
+  implementing)  TITLE="Tester starting" ;;
   impl-done)     TITLE="Implementation done" ;;
   tests-done)    TITLE="Tests done" ;;
   audit-done)    TITLE="Security audit done" ;;
