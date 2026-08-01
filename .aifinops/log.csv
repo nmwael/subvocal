@@ -37,3 +37,14 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-08-01T10:26:34Z,ses_04348a7e5ffec2mnzIXCAin2BX,224,security-auditor,nvidia/nvidia-nemotron-nano-9b-v2,9715,1012,0,0,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
 2026-08-01T10:26:34Z,ses_04340be76ffecWmACEO6w1T5iC,224,explore,big-pickle,21531,2275,1585,54400,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
 2026-08-01T10:26:34Z,ses_04337a8c5ffeWQHCDpbCAOIrrw,224,tester,deepseek-v4-flash-free,22912,2297,5350,165120,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_04313631dffefjtUUsMdVy0rsq,227,tester,deepseek-v4-flash-free,33047,9745,10368,1186816,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_0430c5f64ffefaDuq5LfjRPRwi,227,developer,deepseek-ai/deepseek-v4-pro,12441,148,0,0,0,0.005541,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_043067e47ffe2fYwfukLBdVJ5U,227,developer,deepseek-ai/deepseek-v4-pro,12342,114,0,0,0,0.005468,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_04305ceaaffeGjKUC1mwJsQLEY,227,developer,deepseek-v4-flash-free,28239,4100,6506,563456,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_0430339f0ffeOyYEDFdQ5EeNmM,227,tester,deepseek-v4-flash-free,27624,2519,3841,274816,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_04300733cffeb81d3nZcuMBNBl,227,security-auditor,meta/llama-3.1-70b-instruct,31414,136,0,0,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_042ed5926ffeR0eGcHWtUio79x,227,security-auditor,deepseek-v4-flash-free,36508,3501,7356,248192,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_042eb5452ffe3wZJMk86JcUSvp,227,developer,deepseek-v4-flash-free,36159,8315,13723,935808,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_042e71344ffeRFzZsGmqckyFct,227,tester,deepseek-v4-flash-free,33663,3872,12118,657536,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_042e3dbfdffeNjtm2mZF85ScDv,227,developer,deepseek-v4-flash-free,33024,4472,11468,747776,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T12:51:48Z,ses_042a3290bffeDvcLNHA63nR7Og,227,architect,meta/llama-3.3-70b-instruct,20908,249,0,32,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
