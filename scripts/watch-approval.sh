@@ -106,7 +106,7 @@ while [ $POLLS -lt $MAX_POLLS ]; do
 
   if [ "$APPROVED" = true ]; then
     echo -e "${GREEN}${NC} Approval detected from @$LATEST_AUTHOR!"
-    "$SCRIPT_DIR/notify.sh" "Plan approved" "Issue #$ISSUE_NUMBER — approved by @$LATEST_AUTHOR — developer starting" "$ISSUE_URL"
+    "$SCRIPT_DIR/notify.sh" "Plan approved" "Issue #$ISSUE_NUMBER — approved by @$LATEST_AUTHOR — tester starting" "$ISSUE_URL"
     exit 0
   fi
 

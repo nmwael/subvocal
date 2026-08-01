@@ -13,21 +13,25 @@ This project uses a Human-in-the-Loop (HITL) approval workflow with **architect 
 ```mermaid
 graph TD
     A[Architect Plans] --> B{Human Approves}
-    B -->|Approved| C[Developer Implements]
-    C --> D[Developer Returns to Architect]
-    D --> E{Architect Reviews Implementation}
-    E -->|Approved| F[Tester Writes Tests]
-    F --> G[Tester Returns to Architect]
-    G --> H{Architect Reviews Tests}
-    H -->|Approved| I[Security Auditor Reviews]
-    I --> J[Security Auditor Returns to Architect]
-    J --> K{Final Architect Review}
-    K -->|Approved| L[Architect Creates PR]
-    L --> M{Human Reviews PR}
-    M -->|Approved| N[Merge to Development]
-    K -->|Changes Needed| C
-    E -->|Changes Needed| C
+    B -->|Approved| C[Tester Writes Tests]
+    C --> D[Tester Returns to Architect]
+    D --> E{Architect Reviews Tests}
+    E -->|Approved| F[Developer Implements]
+    F --> G[Developer Returns to Architect]
+    G --> H{Architect Reviews Implementation}
+    H -->|Approved| I[Tester Validates Implementation]
+    I --> J[Tester Returns to Architect]
+    J --> K{Architect Reviews Validation}
+    K -->|Approved| L[Security Auditor Reviews]
+    L --> M[Security Auditor Returns to Architect]
+    M --> N{Final Architect Review}
+    N -->|Approved| O[Architect Creates PR]
+    O --> P{Human Reviews PR}
+    P -->|Approved| Q[Merge to Development]
+    N -->|Changes Needed| F
     H -->|Changes Needed| F
+    E -->|Changes Needed| C
+    K -->|Changes Needed| I
 ```
 
 ### Step-by-Step Process
@@ -40,39 +44,50 @@ graph TD
 
 2. **Human Reviews and Approves** — **HARD GATE**
    - **Option A**: Comment `approved` on the issue, then run `./scripts/watch-approval.sh`
-   - **Option B**: Approve in chat, then run `./scripts/workflow-notify.sh approved "developer starting"`
+   - **Option B**: Approve in chat, then run `./scripts/workflow-notify.sh approved "tester starting"`
 
-3. **Developer Implements**
+3. **Tester Writes Tests**
    - Switches to issue branch: `git checkout issue/{number}-{slug}`
-   - Implements code changes following approved plan
+   - Writes the executable test spec from the architect's plan
+   - Works autonomously, presents completed test spec for review
+   - Notifies architect: `./scripts/workflow-notify.sh tests-done "test spec ready for review"`
+
+4. **Architect Reviews Tests**
+   - Reviews tests against the plan to ensure they cover the intended behavior
+   - If approved, passes to developer
+   - If changes needed, returns to tester
+
+5. **Developer Implements**
+   - Switches to issue branch: `git checkout issue/{number}-{slug}`
+   - Implements code changes against the tester's test spec
    - Works autonomously, presents completed work for review
    - Notifies architect: `./scripts/workflow-notify.sh impl-done "ready for review"`
 
-4. **Architect Reviews Implementation**
-   - Reviews code against plan and clean architecture principles
-   - If approved, passes to tester
+6. **Architect Reviews Implementation**
+   - Reviews code against plan, clean architecture principles, and the tester's test spec
+   - If approved, passes to tester for validation
    - If changes needed, returns to developer
 
-5. **Tester Writes Tests**
-   - Writes and runs tests to validate changes
-   - Works autonomously, presents completed test results
-   - Notifies architect: `./scripts/workflow-notify.sh tests-done "test results ready"`
+7. **Tester Validates Implementation**
+   - Runs the test suite to confirm the implementation passes the spec
+   - Works autonomously, presents validation results
+   - Notifies architect: `./scripts/workflow-notify.sh tests-done "validation complete"`
 
-6. **Architect Reviews Tests**
-   - Reviews test coverage and quality
+8. **Architect Reviews Validation**
+   - Reviews test results and confirms all tests pass
    - If approved, passes to security auditor
    - If changes needed, returns to tester
 
-7. **Security Auditor Reviews**
+9. **Security Auditor Reviews**
    - Inspects code for vulnerabilities (OWASP Top 10, injection, auth flaws)
    - Read-only — cannot modify code
    - Notifies architect: `./scripts/workflow-notify.sh audit-done "audit complete"`
 
-8. **Final Architect Review**
-   - Reviews all work (implementation + tests + security audit)
-   - If approved, creates PR targeting `development`
-   - If changes needed, returns to appropriate stage
-   - **Human reviews and merges the PR to `development`**
+10. **Final Architect Review**
+    - Reviews all work (implementation + tests + security audit)
+    - If approved, creates PR targeting `development`
+    - If changes needed, returns to appropriate stage
+    - **Human reviews and merges the PR to `development`**
 
 ### TDD with BDD
 
@@ -110,7 +125,7 @@ You have a pattern of treating "small" or "obvious" code changes as exempt from 
 ## Agent Roles
 
 ### `@architect`
-Read-only analyst. Explores the codebase, understands existing patterns, and produces structured implementation plans by creating GitHub issues for tracking. Plans must include estimated AI time (time the AI will spend implementing the complete flow) and estimated token usage. Cannot edit files or run commands.
+Read-only analyst. Explores the codebase, understands existing patterns, and produces structured implementation plans by creating GitHub issues for tracking. Plans must include estimated AI time (time the AI will spend implementing the complete flow) and estimated token usage. Cannot edit files or run commands. Reviews the tester's test spec (step 4) and the developer's implementation (step 6) before passing work forward. After creating a PR, always checks it for merge conflicts (e.g. `gh pr view <number> --json mergeable`); if the PR is `CONFLICTING`, reports it and asks the human to approve resolving the conflicts (sync the branch with the base) before the PR is reviewed and merged.
 
 > **Notification gate**: When the plan is ready (issue created/updated), run:
 > ```bash
@@ -121,25 +136,29 @@ Read-only analyst. Explores the codebase, understands existing patterns, and pro
 > ```bash
 > ./scripts/watch-approval.sh
 > ```
-> This polls the issue every 10s for `approved`/`lgtm`/`looks good`/`go ahead`. On detection, it notifies and exits 0. Only then may the developer begin implementation.
+> This polls the issue every 10s for `approved`/`lgtm`/`looks good`/`go ahead`. On detection, it notifies and exits 0. Only then may the tester begin writing the test spec.
 
 ### `@developer`
-Implements code changes following **TDD (red–green–refactor)**: write the failing BDD scenario or unit test first, then the minimal code to make it pass. Edits source files and runs build/compile commands autonomously. When work is complete, presents a summary of all changes and asks for human review. On failure, retries up to 3 times before escalating to the user.
+Implements code changes against the tester's test spec following **TDD (red–green–refactor)**: the failing BDD scenario or unit test is written first, then the minimal code to make it pass. Edits source files and runs build/compile commands autonomously. When work is complete, presents a summary of all changes and asks for human review. On failure, retries up to 3 times before escalating to the user.
 
 > **Notification gate**: When implementation is done and review is requested, run:
 > ```bash
 > ./scripts/workflow-notify.sh impl-done "ready for review"
 > ```
 >
-> **IMPORTANT**: After notification, **do not proceed directly to testing**. Wait for the architect to review your work and either approve (pass to tester) or request changes (return to developer).
+> **IMPORTANT**: After notification, **do not proceed directly to testing**. Wait for the architect to review your work and either approve (pass to tester for validation) or request changes (return to developer).
 
 ### `@tester`
 Writes and runs tests following clean-code principles for readable, deterministic tests. BDD scenarios (Given/When/Then in `test/**/*_bdd_test.dart`) are the living template — behavior is expressed in plain language and auto-exports to `test/features/generated/` for stakeholder review. Validates the developer's work, then closes the GitHub issue when done. Works autonomously and presents completed test results for human review. On failure, retries up to 3 times before escalating to the user.
 
-> **Notification gate**: When tests are done and results are presented, run:
+> **Notification gate**: Notify the architect when a test stage is complete (see the two-stage messages below), run:
 > ```bash
-> ./scripts/workflow-notify.sh tests-done "test results ready"
+> ./scripts/workflow-notify.sh tests-done "test spec ready for review"
 > ```
+
+The tester operates in two stages:
+1. **Before implementation** (step 3): Writes the executable test spec from the architect's plan. Notifies with `tests-done "test spec ready for review"`.
+2. **After implementation** (step 7): Validates the developer's implementation against the test spec. Notifies with `tests-done "validation complete"`.
 
 ### `@security-auditor`
 Security reviewer. Inspects code for OWASP Top 10, injection risks, authentication flaws, and sensitive data exposure. Read-only — cannot modify code or run commands.
