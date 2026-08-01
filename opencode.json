@@ -15,7 +15,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
+      "model": "nvidia/meta/llama-3.3-70b-instruct",
       "temperature": 0.4,
       "steps": 60
     },
@@ -26,7 +26,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "model": "opencode/deepseek-v4-flash-free",
       "temperature": 0.2,
       "steps": 60
     },
@@ -50,7 +50,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/nvidia-nemotron-nano-9b-v2",
+      "model": "opencode/deepseek-v4-flash-free",
       "temperature": 0.3,
       "steps": 30
     },
@@ -63,7 +63,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/llama-3.3-nemotron-super-49b-v1.5",
+      "model": "nvidia/mistralai/mistral-nemotron",
       "temperature": 0.4,
       "steps": 30
     }
