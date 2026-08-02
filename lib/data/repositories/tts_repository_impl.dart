@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_tts/flutter_tts.dart';
 
-import '../../domain/errors/failures.dart';
 import '../../domain/entities/subtitle_entry.dart';
+import '../../domain/errors/failures.dart';
 import '../../domain/repositories/tts_repository.dart';
 
 class TtsRepositoryImpl implements TtsRepository {
@@ -15,10 +15,19 @@ class TtsRepositoryImpl implements TtsRepository {
   double _speed = 0.5;
   Duration _offset = Duration.zero;
   Timer? _scheduleTimer;
+  Timer? _wordTimer;
+  int _wordIndex = 0;
+  int _wordCount = 0;
+  bool _repeating = false;
+
+  static const _wordTickInterval = Duration(milliseconds: 100);
+
   final StreamController<int> _indexController =
       StreamController<int>.broadcast();
   final StreamController<void> _completionController =
       StreamController<void>.broadcast();
+  final StreamController<int> _wordController =
+      StreamController<int>.broadcast();
 
   TtsRepositoryImpl(this._tts);
 
@@ -59,10 +68,29 @@ class TtsRepositoryImpl implements TtsRepository {
 
     final entry = _entries[_currentIndex];
     _indexController.add(_currentIndex);
+    _startWordTimer(entry);
 
     await _tts.speak(entry.text);
 
     _scheduleNext(entry);
+  }
+
+  void _startWordTimer(SubtitleEntry entry) {
+    _wordTimer?.cancel();
+    final words = entry.text.split(' ');
+    _wordCount = words.isEmpty ? 1 : words.length;
+    _wordIndex = 0;
+    _wordController.add(0);
+    _wordIndex = 1;
+    _wordTimer = Timer.periodic(_wordTickInterval, (timer) {
+      if (_wordIndex >= _wordCount) {
+        timer.cancel();
+        _wordController.add(-1);
+      } else {
+        _wordController.add(_wordIndex);
+        _wordIndex++;
+      }
+    });
   }
 
   void _scheduleNext(SubtitleEntry entry) {
@@ -113,6 +141,7 @@ class TtsRepositoryImpl implements TtsRepository {
     _isPaused = true;
     _isPlaying = false;
     _scheduleTimer?.cancel();
+    _wordTimer?.cancel();
     await _tts.stop();
   }
 
@@ -129,6 +158,7 @@ class TtsRepositoryImpl implements TtsRepository {
   @override
   Future<void> seek(Duration position) async {
     _scheduleTimer?.cancel();
+    _wordTimer?.cancel();
     await _tts.stop();
 
     if (_entries.isEmpty) return;
@@ -177,9 +207,11 @@ class TtsRepositoryImpl implements TtsRepository {
     _isPaused = false;
     _currentIndex = 0;
     _scheduleTimer?.cancel();
+    _wordTimer?.cancel();
     await _tts.stop();
     if (wasPlaying) {
       _completionController.add(null);
+      _wordController.add(-1);
     }
   }
 
@@ -233,4 +265,22 @@ class TtsRepositoryImpl implements TtsRepository {
 
   @override
   Stream<void> get onPlaybackComplete => _completionController.stream;
+
+  @override
+  Stream<int> get onWordIndexChanged => _wordController.stream;
+
+  @override
+  Future<void> repeatCurrent() async {
+    if (_entries.isEmpty || _repeating) return;
+    _repeating = true;
+    try {
+      _scheduleTimer?.cancel();
+      _wordTimer?.cancel();
+      await _tts.stop();
+      _isPaused = false;
+      await _speakCurrent();
+    } finally {
+      _repeating = false;
+    }
+  }
 }

@@ -1,5 +1,7 @@
-import '../errors/failures.dart';
+import 'dart:async';
+
 import '../entities/subtitle_entry.dart';
+import '../errors/failures.dart';
 
 abstract class TtsRepository {
   Future<Failure?> init();
@@ -20,4 +22,6 @@ abstract class TtsRepository {
   Duration get currentPosition;
   Stream<int> get onIndexChanged;
   Stream<void> get onPlaybackComplete;
+  Stream<int> get onWordIndexChanged;
+  Future<void> repeatCurrent();
 }

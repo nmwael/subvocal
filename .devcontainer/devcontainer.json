@@ -11,7 +11,7 @@
 
   "postCreateCommand": "sudo apt-get update && sudo apt-get install -y shellcheck && sudo chown -R vscode:vscode /workspaces/subvocal",
 
-  "containerEnv": {
+"containerEnv": {
     "AI_FUN_TOKEN": "${localEnv:AI_FUN_TOKEN}",
     "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",
     "OPENCODE_ZEN_API_KEY": "${localEnv:OPENCODE_ZEN_API_KEY}",
@@ -19,9 +19,9 @@
     "OPENSUBTITLES_API_KEY": "${localEnv:OPENSUBTITLES_API_KEY}",
     "NVIDIA_API_KEY": "${localEnv:NVIDIA_API_KEY}",
     "SUBVOCAL_GROQ_API_KEY": "${localEnv:SUBVOCAL_GROQ_API_KEY}",
-    "omniroute_api_key": "${localEnv:omniroute_api_key}"
-
-  },
+    "omniroute_api_key": "${localEnv:omniroute_api_key}",
+    "SUBVOCAL_HUGGINGFACE_API_KEY": "${localEnv:SUBVOCAL_HUGGINGFACE_API_KEY}"
+},
 
   "customizations": {
     "vscode": {

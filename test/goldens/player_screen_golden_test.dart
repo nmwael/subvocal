@@ -47,6 +47,10 @@ class _MockTtsRepository implements TtsRepository {
   Duration get currentPosition => Duration.zero;
   @override
   Stream<void> get onPlaybackComplete => const Stream.empty();
+  @override
+  Stream<int> get onWordIndexChanged => const Stream.empty();
+  @override
+  Future<void> repeatCurrent() async {}
 }
 
 const _testSubtitle = Subtitle(

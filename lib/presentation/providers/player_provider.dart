@@ -33,6 +33,9 @@ class PlayerState {
   final String? year;
   final int? season;
   final int? episode;
+  final bool repeatMode;
+  final int currentWordIndex; // -1 indicates not speaking or between words
+  final Stream<int>? onWordIndexChanged;
 
   const PlayerState({
     this.isPlaying = false,
@@ -49,6 +52,9 @@ class PlayerState {
     this.year,
     this.season,
     this.episode,
+    this.repeatMode = false,
+    this.currentWordIndex = -1,
+    this.onWordIndexChanged,
   });
 
   double get seekProgress {
@@ -76,6 +82,9 @@ class PlayerState {
     String? year,
     int? season,
     int? episode,
+    bool? repeatMode,
+    int? currentWordIndex,
+    Stream<int>? onWordIndexChanged,
   }) {
     return PlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
@@ -92,6 +101,9 @@ class PlayerState {
       year: year ?? this.year,
       season: season ?? this.season,
       episode: episode ?? this.episode,
+      repeatMode: repeatMode ?? this.repeatMode,
+      currentWordIndex: currentWordIndex ?? this.currentWordIndex,
+      onWordIndexChanged: onWordIndexChanged ?? this.onWordIndexChanged,
     );
   }
 }
@@ -101,12 +113,15 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   final SubtitleRepository? _subtitleRepository;
   StreamSubscription<int>? _indexSubscription;
   StreamSubscription<void>? _completionSubscription;
+  StreamSubscription<int>? _wordSubscription;
   Timer? _positionTimer;
   Duration _entryStartOffset = Duration.zero;
   DateTime? _entryStartWallClock;
 
   PlayerNotifier(this._ttsRepository, [this._subtitleRepository])
-    : super(const PlayerState()) {
+    : super(
+        PlayerState(onWordIndexChanged: _ttsRepository.onWordIndexChanged),
+      ) {
     _indexSubscription = _ttsRepository.onIndexChanged.listen((index) {
       final entryStart = _ttsRepository.currentPosition;
       _entryStartOffset = entryStart;
@@ -115,7 +130,17 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     });
     _completionSubscription = _ttsRepository.onPlaybackComplete.listen((_) {
       _positionTimer?.cancel();
-      state = state.copyWith(isPlaying: false, isPaused: false);
+      final shouldRepeat =
+          state.repeatMode && state.currentIndex < state.entries.length - 1;
+      if (shouldRepeat) {
+        state = state.copyWith(isPlaying: true, isPaused: false);
+        _ttsRepository.repeatCurrent();
+      } else {
+        state = state.copyWith(isPlaying: false, isPaused: false);
+      }
+    });
+    _wordSubscription = _ttsRepository.onWordIndexChanged.listen((wordIndex) {
+      state = state.copyWith(currentWordIndex: wordIndex);
     });
   }
 
@@ -134,6 +159,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   void dispose() {
     _indexSubscription?.cancel();
     _completionSubscription?.cancel();
+    _wordSubscription?.cancel();
     _positionTimer?.cancel();
     super.dispose();
   }
@@ -153,7 +179,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     if (state.isPlaying || state.isPaused) {
       await _ttsRepository.stop();
     }
-    state = const PlayerState();
+    state = PlayerState(onWordIndexChanged: _ttsRepository.onWordIndexChanged);
 
     if (language != null) {
       await _ttsRepository.setLanguage(language);
@@ -223,6 +249,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
       year: year,
       season: season,
       episode: episode,
+      onWordIndexChanged: _ttsRepository.onWordIndexChanged,
     );
     _startPositionTimer();
   }
@@ -248,7 +275,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   void stop() {
     _ttsRepository.stop();
     _positionTimer?.cancel();
-    state = const PlayerState();
+    state = PlayerState(onWordIndexChanged: _ttsRepository.onWordIndexChanged);
   }
 
   void next() {
@@ -282,6 +309,23 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     _ttsRepository.setOffset(
       Duration(milliseconds: (offsetSeconds * 1000).round()),
     );
+  }
+
+  void toggleRepeatMode() {
+    state = state.copyWith(repeatMode: !state.repeatMode);
+  }
+
+  Future<void> repeatPhrase() {
+    return _repeatCurrent();
+  }
+
+  Future<void> repeatCurrent() {
+    return _repeatCurrent();
+  }
+
+  Future<void> _repeatCurrent() {
+    state = state.copyWith(isPlaying: true, isPaused: false);
+    return _ttsRepository.repeatCurrent();
   }
 }
 

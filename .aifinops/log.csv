@@ -48,3 +48,5 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-08-01T12:51:48Z,ses_042e71344ffeRFzZsGmqckyFct,227,tester,deepseek-v4-flash-free,33663,3872,12118,657536,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
 2026-08-01T12:51:48Z,ses_042e3dbfdffeNjtm2mZF85ScDv,227,developer,deepseek-v4-flash-free,33024,4472,11468,747776,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
 2026-08-01T12:51:48Z,ses_042a3290bffeDvcLNHA63nR7Og,227,architect,meta/llama-3.3-70b-instruct,20908,249,0,32,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
+2026-08-01T17:51:45Z,ses_0418c3edeffeyjG1poc5auUtjg,232,build,nvidia/nemotron-3-super-120b-a12b,34509,382,0,45696,0,0.007207,
+2026-08-02T10:16:07Z,ses_03e15c887ffeb93HoKyZBLYBJ4,232,build,big-pickle,151196,21552,46915,6766848,0,0.000000,
