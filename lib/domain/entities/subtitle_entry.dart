@@ -15,6 +15,20 @@ class SubtitleEntry extends Equatable {
 
   Duration get duration => end - start;
 
+  SubtitleEntry copyWith({
+    int? index,
+    Duration? start,
+    Duration? end,
+    String? text,
+  }) {
+    return SubtitleEntry(
+      index: index ?? this.index,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      text: text ?? this.text,
+    );
+  }
+
   @override
   List<Object?> get props => [index, start, end, text];
 }

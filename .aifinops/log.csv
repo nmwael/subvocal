@@ -63,5 +63,16 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-08-02T13:53:33Z,ses_03d48425affenzYHifTW7zrNRn,234,security-auditor,nvidia/nemotron-3-super-120b-a12b,62448,4677,0,10880,0,0.016231,ses_03e15c887ffeb93HoKyZBLYBJ4
 2026-08-02T14:56:23Z,ses_03d0db978ffeuXaa6dDIEt1Tp5,55,build,nvidia/nemotron-3-super-120b-a12b,18536,1107,116,32256,0,0.003665,
 2026-08-02T14:56:23Z,ses_03d0d9626ffeKmF7kDJsfgbkZD,55,architect,gemini-3.5-flash-lite,41471,1886,2154,0,0,0.022541,ses_03d0db978ffeuXaa6dDIEt1Tp5
-2026-08-02T14:56:23Z,ses_03d071c75ffenXmW6Qmd5n6Uqq,55,tester,gemini-3.5-flash-lite,141915,699,2277,95070,0,0.052867,ses_03d0db978ffeuXaa6dDIEt1Tp5
 2026-08-02T15:08:44Z,ses_03cfd2b59ffeC5syhlDhjvmsYC,55,architect,gemini-3.5-flash-lite,23067,332,1238,0,0,0.010845,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03d0db978ffeuXaa6dDIEt1Tp5,12,build,nvidia/nemotron-3-super-120b-a12b,237734,5979,116,502272,0,0.051402,
+2026-08-02T15:34:56Z,ses_03d0d9626ffeKmF7kDJsfgbkZD,12,architect,gemini-3.5-flash-lite,41471,1886,2154,0,0,0.022541,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03d071c75ffenXmW6Qmd5n6Uqq,12,tester,gemini-3.5-flash-lite,153726,970,2528,128142,0,0.058707,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03cfd2b59ffeC5syhlDhjvmsYC,12,architect,gemini-3.5-flash-lite,124642,1494,2701,25168,0,0.048635,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03cf6d482ffeXNXGRSnLbScTxp,12,architect,gemini-3.5-flash-lite,36794,932,1363,0,0,0.016776,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03cefcd4bffezAOw8v4SCxNyZ3,12,architect,gemini-3.5-flash-lite,38850,236,1008,0,0,0.014765,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03ced98f3ffe6xUjatkQurXKsG,12,architect,gemini-3.5-flash-lite,39751,665,1254,0,0,0.016723,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:34:56Z,ses_03ce53a36ffeFdoTSa4C5ZyEtz,12,architect,gemini-3.5-flash-lite,85522,445,1827,0,0,0.031337,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:46:44Z,ses_03cde5a27ffepBvmK0kuZ950mK,12,architect,gemini-3.5-flash-lite,67462,405,1846,0,0,0.025866,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:46:44Z,ses_03cd88e89ffeKymQPWPPUoMwjv,12,architect,gemini-3.5-flash-lite,10864,14,632,0,0,0.004874,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:57:54Z,ses_03cce15b0ffetbvmN1BP117oD8,12,tester,gemini-3.5-flash-lite,82662,154,826,0,0,0.027249,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:58:40Z,ses_03ccdad39ffenpy2wK5Z6sXMVZ,12,developer,gemini-3.5-flash-lite,58145,142,640,0,0,0.019398,ses_03d0db978ffeuXaa6dDIEt1Tp5
