@@ -15,7 +15,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
+      "model": "nvidia/meta/llama-3.3-70b-instruct",
       "temperature": 0.4,
       "steps": 60
     },
@@ -26,7 +26,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "groq/moonshotai/kimi-k2-instruct",
       "temperature": 0.2,
       "steps": 60
     },
@@ -37,7 +37,7 @@
       "permission": {
         "*": "allow"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "groq/moonshotai/kimi-k2-instruct",
       "temperature": 0.2,
       "steps": 80
     },
@@ -50,7 +50,7 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/nvidia/nvidia-nemotron-nano-9b-v2",
+      "model": "groq/moonshotai/kimi-k2-instruct",
       "temperature": 0.3,
       "steps": 30
     },
@@ -63,14 +63,27 @@
         "edit": "deny",
         "bash": "deny"
       },
-      "model": "nvidia/moonshotai/kimi-k2.6",
+      "model": "groq/moonshotai/kimi-k2-instruct",
       "temperature": 0.4,
       "steps": 30
     }
   },
-  "model": "opencode/big-pickle",
-  "small_model": "opencode/big-pickle",
+  "model": "groq/moonshotai/kimi-k2-instruct",
+  "small_model": "groq/moonshotai/kimi-k2-instruct",
   "provider": {
+    "omniroute": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OmniRoute Proxy Engine",
+      "options": {
+        "baseURL": "http://localhost:20128/v1",
+        "apiKey": "{env:omniroute_api_key}"
+      },
+      "models": {
+        "auto/best-free": {
+          "name": "OmniRoute Best Free Tier"
+        }
+      }
+    },
     "opencode": {
       "options": {
         "timeout": 120000,
@@ -88,6 +101,44 @@
         "headerTimeout": 20000,
         "chunkTimeout": 50000,
         "setCacheKey": false
+      }
+    },
+    "groq": {
+      "api": "openai",
+      "options": {
+        "apiKey": "{env:GROQ_API_KEY}",
+        "baseURL": "https://api.groq.com/openai/v1",
+        "timeout": 80000,
+        "headerTimeout": 20000,
+        "chunkTimeout": 50000,
+        "setCacheKey": false
+      },
+      "models": {
+        "groq/moonshotai/kimi-k2-instruct": {
+          "name": "Kimi K2 Instruct"
+        },
+        "groq/qwen/qwen3-32b": {
+          "name": "Qwen Qwen3 32B"
+        }
+      }
+    },
+    "huggingface": {
+      "api": "openai",
+      "options": {
+        "apiKey": "{env:SUBVOCAL_HUGGINGFACE_API_KEY}",
+        "baseURL": "https://router.huggingface.co/v1",
+        "timeout": 80000,
+        "headerTimeout": 20000,
+        "chunkTimeout": 50000,
+        "setCacheKey": false
+      },
+      "models": {
+        "huggingface/meta-llama/Llama-3-8b-chat-hf": {
+          "name": "Llama-3-8B-Chat"
+        },
+        "huggingface/mistralai/Mistral-7B-Instruct-v0.3": {
+          "name": "Mistral-7B-Instruct"
+        }
       }
     }
   }
