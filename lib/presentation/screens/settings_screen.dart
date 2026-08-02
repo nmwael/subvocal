@@ -135,7 +135,9 @@ final availableVoicesProvider =
           )
           .toList();
       final filtered = allVoices.where((v) {
-        final voiceLang = _normalizeLangCode(v['language'] ?? v['locale'] ?? '');
+        final voiceLang = _normalizeLangCode(
+          v['language'] ?? v['locale'] ?? '',
+        );
         return voiceLang == language.toLowerCase();
       }).toList();
       return filtered;
@@ -353,15 +355,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: auth.when(
-                          loading: () => const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                          error: (_, _) => const Text(
-                            'Error checking auth status',
-                          ),
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (_, _) =>
+                              const Text('Error checking auth status'),
                           data: (authState) {
-                            if (authState.status ==
-                                AuthStatus.authenticated) {
+                            if (authState.status == AuthStatus.authenticated) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -379,10 +378,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                         ),
                                       ),
                                       TextButton(
-                                        onPressed: () =>
-                                            ref
-                                                .read(authProvider.notifier)
-                                                .logout(),
+                                        onPressed: () => ref
+                                            .read(authProvider.notifier)
+                                            .logout(),
                                         child: const Text(
                                           'Logout',
                                           style: TextStyle(color: Colors.red),
@@ -399,15 +397,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                             authState.accountInfo!.summary,
                                             style: theme.textTheme.bodySmall
                                                 ?.copyWith(
-                                              color: authState
-                                                          .accountInfo!
-                                                          .level ==
-                                                      'vip'
-                                                  ? Colors.amber
-                                                  : theme.colorScheme
-                                                      .onSurface
-                                                      .withValues(alpha: 0.7),
-                                            ),
+                                                  color:
+                                                      authState
+                                                              .accountInfo!
+                                                              .level ==
+                                                          'vip'
+                                                      ? Colors.amber
+                                                      : theme
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withValues(
+                                                              alpha: 0.7,
+                                                            ),
+                                                ),
                                           ),
                                         ),
                                         Semantics(
@@ -419,8 +421,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                               size: 18,
                                             ),
                                             tooltip: 'Read aloud',
-                                            onPressed: () =>
-                                                HelpReader.from(ref).read(
+                                            onPressed: () => HelpReader.from(ref).read(
                                               'Logged in as ${authState.username ?? "user"}. '
                                               '${authState.accountInfo!.summary}',
                                             ),
@@ -575,8 +576,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                       : Icons.visibility_off,
                                 ),
                                 onPressed: () => setState(
-                                  () =>
-                                      _obscureSubdlKey = !_obscureSubdlKey,
+                                  () => _obscureSubdlKey = !_obscureSubdlKey,
                                 ),
                               ),
                               helperText: 'Get a free key at subdl.com',
@@ -666,8 +666,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               'Raises MyMemory daily limit from 5,000 to 50,000 characters',
                         ),
                         keyboardType: TextInputType.emailAddress,
-                        onChanged: (value) =>
-                            notifier.setMyMemoryEmail(value),
+                        onChanged: (value) => notifier.setMyMemoryEmail(value),
                       ),
                       const SizedBox(height: 16),
                       const Text('Translation Provider'),
@@ -742,8 +741,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                         trailing: const Icon(Icons.open_in_new),
                         onTap: () async {
-                          final opened =
-                              await BugReportHelper().openBugReport();
+                          final opened = await BugReportHelper()
+                              .openBugReport();
                           if (context.mounted && !opened) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -788,17 +787,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   ),
                                 ),
                                 Semantics(
-                                  label:
-                                      'Read subtitle providers help aloud',
+                                  label: 'Read subtitle providers help aloud',
                                   button: true,
                                   child: IconButton(
-                                    icon: const Icon(
-                                      Icons.hearing,
-                                      size: 18,
-                                    ),
+                                    icon: const Icon(Icons.hearing, size: 18),
                                     tooltip: 'Read aloud',
-                                    onPressed: () =>
-                                        HelpReader.from(ref).read(
+                                    onPressed: () => HelpReader.from(ref).read(
                                       'This app searches three subtitle providers. '
                                       'OpenSubtitles is free with 5 downloads per day, or unlimited with a VIP subscription. '
                                       'SubDL gives 2,000 searches per day with a free API key. '
@@ -815,8 +809,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               'SubDL — 2,000 searches/day with free API key (configure above).\n'
                               'Podnapisi — no auth needed, no daily limit.',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.7),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
                               ),
                             ),
                             const Divider(height: 24),
@@ -831,17 +826,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   ),
                                 ),
                                 Semantics(
-                                  label:
-                                      'Read how downloads work aloud',
+                                  label: 'Read how downloads work aloud',
                                   button: true,
                                   child: IconButton(
-                                    icon: const Icon(
-                                      Icons.hearing,
-                                      size: 18,
-                                    ),
+                                    icon: const Icon(Icons.hearing, size: 18),
                                     tooltip: 'Read aloud',
-                                    onPressed: () =>
-                                        HelpReader.from(ref).read(
+                                    onPressed: () => HelpReader.from(ref).read(
                                       'When you search, all providers are queried in parallel. '
                                       'If you are not logged in to OpenSubtitles, only SubDL and Podnapisi results are shown. '
                                       'Tap a result to download and play. '
@@ -856,8 +846,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               'All providers searched in parallel. OpenSubtitles results require login. '
                               'Tap a result to download and start playback.',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.7),
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
                               ),
                             ),
                             const Divider(height: 24),
@@ -872,17 +863,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   ),
                                 ),
                                 Semantics(
-                                  label:
-                                      'Read account creation help aloud',
+                                  label: 'Read account creation help aloud',
                                   button: true,
                                   child: IconButton(
-                                    icon: const Icon(
-                                      Icons.hearing,
-                                      size: 18,
-                                    ),
+                                    icon: const Icon(Icons.hearing, size: 18),
                                     tooltip: 'Read aloud',
-                                    onPressed: () =>
-                                        HelpReader.from(ref).read(
+                                    onPressed: () => HelpReader.from(ref).read(
                                       'Create a free OpenSubtitles account to get 5 downloads per day. '
                                       'Open the signup page in your browser.',
                                     ),
@@ -893,9 +879,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             const SizedBox(height: 4),
                             TextButton.icon(
                               onPressed: () async {
-                                final url = Uri.parse(
-                                  _openSubtitlesSignupUrl,
-                                );
+                                final url = Uri.parse(_openSubtitlesSignupUrl);
                                 if (await canLaunchUrl(url)) {
                                   await launchUrl(
                                     url,
@@ -903,10 +887,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   );
                                 }
                               },
-                              icon: const Icon(
-                                Icons.open_in_new,
-                                size: 16,
-                              ),
+                              icon: const Icon(Icons.open_in_new, size: 16),
                               label: const Text('Open signup page'),
                             ),
                           ],
@@ -1027,9 +1008,9 @@ class _AppVersionState extends State<_AppVersion> {
           tooltip: 'Copy version info',
           onPressed: () {
             // ignore: deprecated_member_use
-            Clipboard.setData(ClipboardData(
-              text: '${info.packageName} v$versionText',
-            ));
+            Clipboard.setData(
+              ClipboardData(text: '${info.packageName} v$versionText'),
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Version copied to clipboard')),
             );

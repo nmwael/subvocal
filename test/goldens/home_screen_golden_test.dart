@@ -24,9 +24,7 @@ class _FakeLocalSource extends RecentSubtitlesLocalSource {
 void main() {
   group('HomeScreen', () {
     setUp(() {
-      SharedPreferences.setMockInitialValues({
-        'welcome_dialog_seen': true,
-      });
+      SharedPreferences.setMockInitialValues({'welcome_dialog_seen': true});
     });
 
     testWidgets('empty recent list', (tester) async {

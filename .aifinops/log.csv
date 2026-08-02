@@ -61,3 +61,7 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-08-02T13:53:33Z,ses_03d50e51fffedStCCTy26e50yC,234,developer,nvidia/nemotron-3-super-120b-a12b,105730,12604,0,278528,0,0.031229,ses_03e15c887ffeb93HoKyZBLYBJ4
 2026-08-02T13:53:33Z,ses_03d497050ffe096zFjfzireZnO,234,tester,nvidia/nemotron-3-super-120b-a12b,74424,1833,0,221952,0,0.016351,ses_03e15c887ffeb93HoKyZBLYBJ4
 2026-08-02T13:53:33Z,ses_03d48425affenzYHifTW7zrNRn,234,security-auditor,nvidia/nemotron-3-super-120b-a12b,62448,4677,0,10880,0,0.016231,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T14:56:23Z,ses_03d0db978ffeuXaa6dDIEt1Tp5,55,build,nvidia/nemotron-3-super-120b-a12b,18536,1107,116,32256,0,0.003665,
+2026-08-02T14:56:23Z,ses_03d0d9626ffeKmF7kDJsfgbkZD,55,architect,gemini-3.5-flash-lite,41471,1886,2154,0,0,0.022541,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T14:56:23Z,ses_03d071c75ffenXmW6Qmd5n6Uqq,55,tester,gemini-3.5-flash-lite,141915,699,2277,95070,0,0.052867,ses_03d0db978ffeuXaa6dDIEt1Tp5
+2026-08-02T15:08:44Z,ses_03cfd2b59ffeC5syhlDhjvmsYC,55,architect,gemini-3.5-flash-lite,23067,332,1238,0,0,0.010845,ses_03d0db978ffeuXaa6dDIEt1Tp5

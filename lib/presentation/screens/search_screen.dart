@@ -141,8 +141,8 @@ class SearchScreen extends ConsumerWidget {
     final query = ref.watch(searchQueryProvider);
     final contentType = ref.watch(searchContentTypeProvider);
     final streamingFilter = ref.watch(searchStreamingProvider);
-    final isLoggedIn = ref.watch(authProvider).valueOrNull?.status ==
-        AuthStatus.authenticated;
+    final isLoggedIn =
+        ref.watch(authProvider).valueOrNull?.status == AuthStatus.authenticated;
     final resultsAsync = query.isNotEmpty
         ? ref.watch(searchResultsProvider((query, contentType)))
         : const AsyncData<List<SearchResult>>([]);
@@ -229,12 +229,12 @@ class SearchScreen extends ConsumerWidget {
                 final visibleResults = isLoggedIn
                     ? results
                     : results
-                        .where((r) => r.providerSource != 'OpenSubtitles')
-                        .toList();
+                          .where((r) => r.providerSource != 'OpenSubtitles')
+                          .toList();
                 if (query.isEmpty) {
-                    return Center(
-                      child: Text(
-                        l10n.enterSearchQuery,
+                  return Center(
+                    child: Text(
+                      l10n.enterSearchQuery,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(
                           context,
@@ -248,15 +248,16 @@ class SearchScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                          Text(
-                            results.isEmpty
-                                ? l10n.noResultsFound(query)
-                                : l10n.noDownloadableResults,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withValues(alpha: 0.5),
-                          ),
+                        Text(
+                          results.isEmpty
+                              ? l10n.noResultsFound(query)
+                              : l10n.noDownloadableResults,
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
                         ),
                         if (results.isNotEmpty) ...[
                           const SizedBox(height: 8),
@@ -264,15 +265,21 @@ class SearchScreen extends ConsumerWidget {
                             onTap: () async {
                               final url = Uri.parse(_openSubtitlesSignupUrl);
                               if (await canLaunchUrl(url)) {
-                                await launchUrl(url, mode: LaunchMode.externalApplication);
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
                               }
                             },
                             child: Text(
                               l10n.createAccountForMore,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                decoration: TextDecoration.underline,
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    decoration: TextDecoration.underline,
+                                  ),
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -282,9 +289,9 @@ class SearchScreen extends ConsumerWidget {
                             child: IconButton(
                               icon: const Icon(Icons.hearing, size: 18),
                               tooltip: l10n.readAloud,
-                              onPressed: () => HelpReader.from(ref).read(
-                                l10n.readHelpAloudNoResults,
-                              ),
+                              onPressed: () => HelpReader.from(
+                                ref,
+                              ).read(l10n.readHelpAloudNoResults),
                             ),
                           ),
                         ],

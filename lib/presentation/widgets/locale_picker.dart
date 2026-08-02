@@ -23,10 +23,7 @@ class LocalePicker extends StatelessWidget {
         final code = locale['code']!;
         final name = locale['name']!;
         final flag = languageCodeToFlag(code);
-        return DropdownMenuItem(
-          value: code,
-          child: Text('$flag  $name'),
-        );
+        return DropdownMenuItem(value: code, child: Text('$flag  $name'));
       }).toList(),
       onChanged: (v) {
         if (v != null) onChanged(v);
