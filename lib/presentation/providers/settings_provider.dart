@@ -20,6 +20,7 @@ class SettingsState {
   final String subdlApiKey;
   final TranslationProviderType selectedTranslationProvider;
   final String appLocale;
+  final bool isAudioSyncEnabled;
 
   const SettingsState({
     this.speechRate = 0.5,
@@ -30,6 +31,7 @@ class SettingsState {
     this.subdlApiKey = '',
     this.selectedTranslationProvider = TranslationProviderType.auto,
     this.appLocale = 'en',
+    this.isAudioSyncEnabled = false,
   });
 
   SettingsState copyWith({
@@ -41,6 +43,7 @@ class SettingsState {
     String? subdlApiKey,
     TranslationProviderType? selectedTranslationProvider,
     String? appLocale,
+    bool? isAudioSyncEnabled,
   }) {
     return SettingsState(
       speechRate: speechRate ?? this.speechRate,
@@ -52,6 +55,7 @@ class SettingsState {
       selectedTranslationProvider:
           selectedTranslationProvider ?? this.selectedTranslationProvider,
       appLocale: appLocale ?? this.appLocale,
+      isAudioSyncEnabled: isAudioSyncEnabled ?? this.isAudioSyncEnabled,
     );
   }
 
@@ -67,6 +71,7 @@ class SettingsState {
         json['selectedTranslationProvider'] as String? ?? 'auto',
       ),
       appLocale: json['appLocale'] as String? ?? 'en',
+      isAudioSyncEnabled: json['isAudioSyncEnabled'] as bool? ?? false,
     );
   }
 
@@ -80,6 +85,7 @@ class SettingsState {
       'subdlApiKey': subdlApiKey,
       'selectedTranslationProvider': selectedTranslationProvider.name,
       'appLocale': appLocale,
+      'isAudioSyncEnabled': isAudioSyncEnabled,
     };
   }
 }
@@ -141,6 +147,16 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     const supported = ['en', 'da', 'es', 'fr'];
     if (!supported.contains(locale)) return;
     state = state.copyWith(appLocale: locale);
+    _persist();
+  }
+
+  void setAudioSyncEnabled(bool enabled) {
+    state = state.copyWith(isAudioSyncEnabled: enabled);
+    _persist();
+  }
+
+  void toggleAudioSync() {
+    state = state.copyWith(isAudioSyncEnabled: !state.isAudioSyncEnabled);
     _persist();
   }
 }
