@@ -84,9 +84,9 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
                 await saved.save(
                   playerState.translatedSubtitle!,
                   playerState.translatedSubtitle!.language ?? '',
-                  year: playerState.year,
-                  season: playerState.season,
-                  episode: playerState.episode,
+                  year: widget.year,
+                  season: widget.season,
+                  episode: widget.episode,
                 );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -152,7 +152,12 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             _TranslationProgressIndicator(
               progress: playerState.translationProgress,
             ),
-          Expanded(child: SubtitleDisplay(currentEntry: currentEntry)),
+          Expanded(
+            child: SubtitleDisplay(
+              currentEntry: currentEntry,
+              currentWordIndex: playerState.currentWordIndex,
+            ),
+          ),
           if (playerState.entries.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -177,6 +182,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> {
             onSpeedChanged: playerNotifier.setSpeed,
             onSyncOffsetChanged: playerNotifier.setSyncOffset,
             onSeek: playerNotifier.seek,
+            onRepeatPhrase: playerNotifier.repeatPhrase,
+            onToggleRepeatMode: playerNotifier.toggleRepeatMode,
           ),
         ],
       ),

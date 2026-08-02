@@ -15,6 +15,8 @@ class PlaybackControls extends StatefulWidget {
   final ValueChanged<double> onSpeedChanged;
   final ValueChanged<double> onSyncOffsetChanged;
   final ValueChanged<Duration> onSeek;
+  final VoidCallback? onRepeatPhrase;
+  final VoidCallback? onToggleRepeatMode;
 
   const PlaybackControls({
     super.key,
@@ -28,6 +30,8 @@ class PlaybackControls extends StatefulWidget {
     required this.onSpeedChanged,
     required this.onSyncOffsetChanged,
     required this.onSeek,
+    this.onRepeatPhrase,
+    this.onToggleRepeatMode,
   });
 
   @override
@@ -130,13 +134,35 @@ class _PlaybackControlsState extends State<PlaybackControls> {
                           }
                         }
                       : null,
-                  tooltip: widget.playerState.isPlaying ? l10n.pause : l10n.play,
+                  tooltip: widget.playerState.isPlaying
+                      ? l10n.pause
+                      : l10n.play,
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
                   icon: Icons.skip_next,
                   onPressed: hasEntries ? widget.onNext : null,
                   tooltip: l10n.next,
+                ),
+                const SizedBox(width: 16),
+                _ControlButton(
+                  icon: Icons.replay_10,
+                  onPressed: hasEntries && widget.onRepeatPhrase != null
+                      ? widget.onRepeatPhrase
+                      : null,
+                  tooltip: 'Repeat phrase',
+                ),
+                const SizedBox(width: 16),
+                _ControlButton(
+                  icon: widget.playerState.repeatMode
+                      ? Icons.repeat_one
+                      : Icons.repeat,
+                  onPressed: hasEntries && widget.onToggleRepeatMode != null
+                      ? widget.onToggleRepeatMode
+                      : null,
+                  tooltip: widget.playerState.repeatMode
+                      ? 'Repeat mode off'
+                      : 'Repeat mode on',
                 ),
                 const SizedBox(width: 16),
                 _ControlButton(
