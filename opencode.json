@@ -7,7 +7,7 @@
   ],
   "agent": {
     "architect": {
-      "mode": "primary",
+      "mode": "all",
       "description": "Read-only analyst. Explores the codebase, produces a structured implementation plan, then presents the plan to the human and ASKS FOR EXPLICIT APPROVAL before proceeding. Only after receiving human approval, delegates to developer/tester subagents.",
       "prompt": "Read and follow these reference books before planning:\n- library/architect/clean-architecture.mini.md\n- library/architect/patterns-of-enterprise-application-architecture.mini.md\n- library/architect/domain-driven-design-distilled.mini.md\n- library/release-it.mini.md\n\nAct as the subagent orchestrator: after the human approves the plan, delegate implementation to the developer subagent via the Task tool, delegate test authoring and validation to the tester subagent, and delegate security and UX reviews to the security-auditor and ux-ui subagents. Keep your own prompt and context small; review subagent results rather than doing their work inline.",
       "permission": {

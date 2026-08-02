@@ -19,6 +19,12 @@ void main() {
       expect(baseUrl, equals('https://generativelanguage.googleapis.com/v1beta'));
     });
 
+    test('agent.architect.mode is all (invocable as subagent)', () {
+      final mode = config['agent']['architect']['mode'] as String;
+      expect(mode, equals('all'),
+          reason: 'architect must be mode=all so it can be invoked via the Task tool');
+    });
+
     test('agent.architect.model is google/gemini-3.5-flash-lite', () {
       final model = config['agent']['architect']['model'] as String;
       expect(model, equals('google/gemini-3.5-flash-lite'));
