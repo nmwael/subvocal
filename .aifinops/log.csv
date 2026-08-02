@@ -50,3 +50,14 @@ timestamp,session_id,issue,agent,model,tokens_input,tokens_output,tokens_reasoni
 2026-08-01T12:51:48Z,ses_042a3290bffeDvcLNHA63nR7Og,227,architect,meta/llama-3.3-70b-instruct,20908,249,0,32,0,0.000000,ses_043aaf85dffeaIPNt5yvIy4von
 2026-08-01T17:51:45Z,ses_0418c3edeffeyjG1poc5auUtjg,232,build,nvidia/nemotron-3-super-120b-a12b,34509,382,0,45696,0,0.007207,
 2026-08-02T10:16:07Z,ses_03e15c887ffeb93HoKyZBLYBJ4,232,build,big-pickle,151196,21552,46915,6766848,0,0.000000,
+2026-08-02T13:53:33Z,ses_03de8bcaeffejCCJzn5jYfgcFr,234,general,big-pickle,7489,4,0,6272,0,0.000000,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03ddc0ea3ffehZaqnBgdaHy0A2,234,tester,meta/llama-3.3-70b-instruct,24049,76,0,32,0,0.000000,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03dd1a845ffeNEFW79ZZxh7xcL,234,tester,nvidia/nemotron-3-super-120b-a12b,26255,2091,0,0,0,0.006924,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03dd0bf41ffePCveG45gGlLcJj,234,tester,nvidia/nemotron-3-super-120b-a12b,77758,14508,0,208896,0,0.027158,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03dcb4678ffe2D7KrZ8mndl5DT,234,developer,nvidia/nemotron-3-super-120b-a12b,35051,2865,0,15232,0,0.009302,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03dc8c76bffen74C6SSwFyBT8c,234,developer,nvidia/nemotron-3-super-120b-a12b,20435,7899,0,158848,0,0.010406,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03dc31faeffeR2EY2bsZyrErIm,234,security-auditor,nvidia/nemotron-3-super-120b-a12b,39825,1806,0,21760,0,0.009410,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03d528c27ffeRmwm4774TdkzVe,234,tester,nvidia/nemotron-3-super-120b-a12b,73718,4454,0,163200,0,0.018307,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03d50e51fffedStCCTy26e50yC,234,developer,nvidia/nemotron-3-super-120b-a12b,105730,12604,0,278528,0,0.031229,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03d497050ffe096zFjfzireZnO,234,tester,nvidia/nemotron-3-super-120b-a12b,74424,1833,0,221952,0,0.016351,ses_03e15c887ffeb93HoKyZBLYBJ4
+2026-08-02T13:53:33Z,ses_03d48425affenzYHifTW7zrNRn,234,security-auditor,nvidia/nemotron-3-super-120b-a12b,62448,4677,0,10880,0,0.016231,ses_03e15c887ffeb93HoKyZBLYBJ4

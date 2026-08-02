@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "subagent_depth": 2,
   "lsp": true,
   "instructions": [
     "AGENTS.md",
@@ -7,16 +8,17 @@
   ],
   "agent": {
     "architect": {
-      "mode": "primary",
+      "mode": "all",
       "description": "Read-only analyst. Explores the codebase, produces a structured implementation plan, then presents the plan to the human and ASKS FOR EXPLICIT APPROVAL before proceeding. Only after receiving human approval, delegates to developer/tester subagents.",
-      "prompt": "Read and follow these reference books before planning:\n- library/architect/clean-architecture.mini.md\n- library/architect/patterns-of-enterprise-application-architecture.mini.md\n- library/architect/domain-driven-design-distilled.mini.md\n- library/release-it.mini.md",
+      "prompt": "Read and follow these reference books before planning:\n- library/architect/clean-architecture.mini.md\n- library/architect/patterns-of-enterprise-application-architecture.mini.md\n- library/architect/domain-driven-design-distilled.mini.md\n- library/release-it.mini.md\n\nAct as the subagent orchestrator: after the human approves the plan, delegate implementation to the developer subagent via the Task tool, delegate test authoring and validation to the tester subagent, and delegate security and UX reviews to the security-auditor and ux-ui subagents. Keep your own prompt and context small; review subagent results rather than doing their work inline.",
       "permission": {
         "*": "allow",
         "edit": "deny",
         "bash": "deny",
-        "lsp": "allow"
+        "lsp": "allow",
+        "task": "allow"
       },
-      "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
+      "model": "google/gemini-3.5-flash-lite",
       "temperature": 0.4,
       "steps": 60
     },
@@ -28,7 +30,7 @@
         "*": "allow",
         "lsp": "allow"
       },
-      "model": "groq/openai/gpt-oss-120b",
+      "model": "google/gemini-3.5-flash-lite",
       "temperature": 0.2,
       "steps": 60
     },
@@ -40,7 +42,7 @@
         "*": "allow",
         "lsp": "allow"
       },
-      "model": "groq/openai/gpt-oss-20b",
+      "model": "google/gemini-3.5-flash-lite",
       "temperature": 0.2,
       "steps": 80
     },
@@ -54,7 +56,7 @@
         "bash": "deny",
         "lsp": "allow"
       },
-      "model": "nvidia/openai/gpt-oss-20b",
+      "model": "google/gemini-3.5-flash-lite",
       "temperature": 0.3,
       "steps": 30
     },
@@ -68,7 +70,7 @@
         "bash": "deny",
         "lsp": "allow"
       },
-      "model": "nvidia/nvidia/nemotron-3-super-120b-a12b",
+      "model": "google/gemini-3.5-flash-lite",
       "temperature": 0.4,
       "steps": 30
     }
@@ -165,31 +167,13 @@
       }
     },
     "google": {
-      "api": "openai",
       "options": {
         "apiKey": "{env:GOOGLE_GENERATIVE_AI_API_KEY}",
-        "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "baseURL": "https://generativelanguage.googleapis.com/v1beta",
         "timeout": 80000,
         "headerTimeout": 20000,
         "chunkTimeout": 50000,
         "setCacheKey": false
-      },
-      "models": {
-        "gemini-1.5-pro-latest": {
-          "id": "gemini-1.5-pro-latest",
-          "name": "Gemini 1.5 Pro"
-        }
-      }
-    },
-    "groq": {
-      "api": "openai",
-      "options": {
-        "apiKey": "{env:SUBVOCAL_GROQ_API_KEY}",
-        "baseURL": "https://api.groq.com/openai/v1",
-        "timeout": 120000,
-        "headerTimeout": 30000,
-        "chunkTimeout": 60000,
-        "setCacheKey": true
       }
     }
   }
