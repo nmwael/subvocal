@@ -19,6 +19,12 @@ void main() {
       expect(baseUrl, equals('https://generativelanguage.googleapis.com/v1beta'));
     });
 
+    test('subagent_depth allows one level of nested subagents', () {
+      final depth = config['subagent_depth'] as int;
+      expect(depth, greaterThanOrEqualTo(2),
+          reason: 'architect (depth 1) must be able to spawn developer (depth 2)');
+    });
+
     test('agent.architect.mode is all (invocable as subagent)', () {
       final mode = config['agent']['architect']['mode'] as String;
       expect(mode, equals('all'),
