@@ -17,10 +17,6 @@ class _FakeTtsRepository implements TtsRepository {
   bool _isPlaying = false;
   int _currentIndex = 0;
   Duration _currentPosition = Duration.zero;
-  double _speed = 0.5;
-  double _offset = 0.0;
-  String _language = 'en';
-  Map<String, String> _voice = const {};
 
   @override
   Future<Failure?> init() async => null;
@@ -63,19 +59,13 @@ class _FakeTtsRepository implements TtsRepository {
   }
 
   @override
-  Future<void> setSpeed(double rate) async {
-    _speed = rate;
-  }
+  Future<void> setSpeed(double rate) async {}
 
   @override
-  Future<void> setOffset(Duration offset) async {
-    _offset = offset.inMilliseconds.toDouble();
-  }
+  Future<void> setOffset(Duration offset) async {}
 
   @override
-  Future<void> setLanguage(String languageCode) async {
-    _language = languageCode;
-  }
+  Future<void> setLanguage(String languageCode) async {}
 
   @override
   Future<List<Map<String, String>>> getVoices() async => [
@@ -83,9 +73,7 @@ class _FakeTtsRepository implements TtsRepository {
       ];
 
   @override
-  Future<void> setVoice(Map<String, String> voice) async {
-    _voice = voice;
-  }
+  Future<void> setVoice(Map<String, String> voice) async {}
 
   @override
   bool get isPlaying => _isPlaying;
@@ -111,7 +99,6 @@ class _FakeTtsRepository implements TtsRepository {
     return Future.value();
   }
 
-  @override
   Future<void> dispose() async {
     await _indexChangedController.close();
     await _playbackCompleteController.close();
