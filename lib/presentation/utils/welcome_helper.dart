@@ -20,7 +20,10 @@ class WelcomeHelper {
     await prefs.setBool(_key, true);
   }
 
-  static Future<void> showIfFirstLaunch(BuildContext context, WidgetRef ref) async {
+  static Future<void> showIfFirstLaunch(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     if (!await shouldShow) return;
     if (!context.mounted) return;
 
@@ -43,7 +46,10 @@ class WelcomeHelper {
                 children: [
                   Text(l10n.welcomeIntro),
                   const SizedBox(height: 16),
-                  Text(l10n.welcomeGettingStarted, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(
+                    l10n.welcomeGettingStarted,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   Text(l10n.welcomeStep1),
                   Text(l10n.welcomeStep2),
@@ -54,7 +60,10 @@ class WelcomeHelper {
                   Text(l10n.welcomeHelpHint),
                   const SizedBox(height: 16),
                   const Divider(),
-                  Text(l10n.language, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(
+                    l10n.language,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   LocalePicker(
                     value: currentSettings.appLocale,

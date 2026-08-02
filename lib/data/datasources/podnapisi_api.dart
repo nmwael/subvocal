@@ -118,10 +118,7 @@ class PodnapisiApi implements SubtitleProvider {
         }
 
         if (response.statusCode != 200) {
-          return (
-            null,
-            NetworkFailure('Fetch failed: ${response.statusCode}'),
-          );
+          return (null, NetworkFailure('Fetch failed: ${response.statusCode}'));
         }
 
         final bytes = response.bodyBytes;

@@ -21,7 +21,8 @@ class UserAccountInfo {
     required this.allowedDownloads,
   });
 
-  String get summary => '$level — $remainingDownloads/$allowedDownloads downloads remaining today';
+  String get summary =>
+      '$level — $remainingDownloads/$allowedDownloads downloads remaining today';
 }
 
 class OpenSubtitlesApi implements SubtitleProvider {

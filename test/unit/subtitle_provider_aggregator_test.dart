@@ -13,11 +13,7 @@ class _FakeProvider implements SubtitleProvider {
   int searchCallCount = 0;
   String? lastQuery;
 
-  _FakeProvider({
-    required this.name,
-    this.results,
-    this.failure,
-  });
+  _FakeProvider({required this.name, this.results, this.failure});
 
   @override
   Future<(List<SearchResult>?, Failure?)> search(

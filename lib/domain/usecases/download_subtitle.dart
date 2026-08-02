@@ -12,6 +12,10 @@ class DownloadSubtitle {
     String? title,
     String? providerSource,
   }) {
-    return _repository.download(fileId, title: title, providerSource: providerSource);
+    return _repository.download(
+      fileId,
+      title: title,
+      providerSource: providerSource,
+    );
   }
 }

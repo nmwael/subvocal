@@ -41,19 +41,19 @@ void main() {
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('dev.fluttercommunity.plus/package_info'),
-      (MethodCall methodCall) async {
-        if (methodCall.method == 'getAll') {
-          return <String, dynamic>{
-            'appName': 'subvocal',
-            'packageName': 'com.example.subvocal',
-            'version': '1.0.0',
-            'buildNumber': '1',
-          };
-        }
-        return null;
-      },
-    );
+          const MethodChannel('dev.fluttercommunity.plus/package_info'),
+          (MethodCall methodCall) async {
+            if (methodCall.method == 'getAll') {
+              return <String, dynamic>{
+                'appName': 'subvocal',
+                'packageName': 'com.example.subvocal',
+                'version': '1.0.0',
+                'buildNumber': '1',
+              };
+            }
+            return null;
+          },
+        );
   });
 
   group('SettingsScreen', () {
