@@ -72,5 +72,11 @@ void main() {
       expect(lowerDesc, contains('task'), reason: 'architect prompt should mention Task tool for delegation');
       expect(lowerDesc, contains('delegat'), reason: 'architect prompt should mention delegation');
     });
+
+    test('agent.architect has explicit task permission to invoke subagents', () {
+      final permission = config['agent']['architect']['permission'] as Map<String, dynamic>;
+      expect(permission['task'], equals('allow'),
+          reason: 'architect must have explicit task:allow so the Task tool is not stripped from it');
+    });
   });
 }
